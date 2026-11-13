@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trở thành đối tác LOCALMATE — nhà xe, đơn vị tour, khách sạn. Nhận đơn trực tiếp từ khách du lịch miền Tây.">
+    <title>Đối tác | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+    <link rel="stylesheet" href="css/partner.css?v=11">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="lm inner-page">
+
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link active" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <div class="nav-actions">
+                <button id="logout-btn" class="btn-book-nav hidden" onclick="Partner.logout()"><i data-lucide="log-out"></i> Đăng xuất</button>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav hidden">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_rooms">Chỗ nghỉ</a>
+            <a href="dacsan.html">Đặc sản</a>
+            <a href="khampha.html" data-i18n="nav_explore">Điểm đến</a>
+            <a href="doitac.html">Đối tác</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- ═══ CHƯA ĐĂNG NHẬP ═══ -->
+        <div id="guest-view">
+            <section class="page-hero" style="min-height:380px">
+                <div class="page-hero-bg"><img src="assets/nui-cam-2.jpg" alt="Bảy Núi"></div>
+                <div class="page-hero-overlay"></div>
+                <div class="page-hero-content">
+                    <span class="hero-badge"><i data-lucide="handshake" style="width:15px;height:15px;color:#f6a06b"></i>Cổng đối tác</span>
+                    <h1 data-i18n="partner_hero_h1">Cùng LOCALMATE đón khách</h1>
+                    <p>Homestay, nhà xe, đơn vị tour và cơ sở đặc sản khắp miền Tây — nhận đơn trực tiếp từ khách du lịch, không qua trung gian.</p>
+                </div>
+            </section>
+
+            <section class="section-container" style="padding-top:clamp(36px,5vw,60px)">
+                <div class="partner-benefits">
+                    <div class="benefit-card">
+                        <span class="benefit-icon"><i data-lucide="bell-ring"></i></span>
+                        <h3>Nổ đơn theo vị trí</h3>
+                        <p>Khách đặt xe ở đâu, tài xế gần đó nhận được lời mời trước. Có 30 giây để bấm nhận.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <span class="benefit-icon"><i data-lucide="map-pin"></i></span>
+                        <h3>Khách tìm thấy bạn</h3>
+                        <p>Khách xem Núi Cấm sẽ thấy ngay khách sạn của bạn nếu ở gần đó — kèm giá và khoảng cách thật.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <span class="benefit-icon"><i data-lucide="wallet"></i></span>
+                        <h3>Hoa hồng rõ ràng</h3>
+                        <p>Lưu trú 10% · Nhà xe 12% · Tour 15% · Đặc sản 10%. Khách thanh toán trực tiếp cho bạn.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-container">
+                <div class="auth-grid">
+                    <!-- Đăng ký -->
+                    <div class="glass-card auth-card">
+                        <span class="section-tag">Đăng ký</span>
+                        <h2 class="card-title" style="margin-top:10px" data-i18n="partner_reg_title">Trở thành đối tác</h2>
+                        <p class="contact-form-desc">Điền thông tin, LOCALMATE duyệt và liên hệ trong 24 giờ.</p>
+
+                        <form onsubmit="Partner.register(event)">
+                            <div class="form-group">
+                                <label>Bạn muốn hợp tác mảng nào? *</label>
+                                <div class="type-picker">
+                                    <label class="type-option">
+                                        <input type="radio" name="ptype" value="transport" checked onchange="Partner.onTypeChange()">
+                                        <span><i data-lucide="car"></i> Nhà xe / Tài xế</span>
+                                    </label>
+                                    <label class="type-option">
+                                        <input type="radio" name="ptype" value="hotel" onchange="Partner.onTypeChange()">
+                                        <span><i data-lucide="hotel"></i> Khách sạn / Nhà nghỉ</span>
+                                    </label>
+                                    <label class="type-option">
+                                        <input type="radio" name="ptype" value="tour" onchange="Partner.onTypeChange()">
+                                        <span><i data-lucide="route"></i> Đơn vị tour</span>
+                                    </label>
+                                    <label class="type-option">
+                                        <input type="radio" name="ptype" value="food" onchange="Partner.onTypeChange()">
+                                        <span><i data-lucide="utensils"></i> Cơ sở đặc sản</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group"><label>Tên đơn vị / tên bạn *</label><input type="text" id="reg-name" class="form-input" required placeholder="Nhà xe Bảy Núi"></div>
+                                <div class="form-group"><label>Số điện thoại *</label><input type="tel" id="reg-phone" class="form-input" required placeholder="0909 xxx xxx"></div>
+                            </div>
+                            <div class="form-group"><label>Địa chỉ hoạt động</label><input type="text" id="reg-address" class="form-input" placeholder="Tri Tôn, An Giang"></div>
+
+                            <!-- Riêng nhà xe -->
+                            <div id="vehicle-fields">
+                                <div class="form-grid">
+                                    <div class="form-group"><label>Loại xe *</label>
+                                        <select id="reg-vehicle" class="form-input">
+                                            <option value="4-seat">Xe 4 chỗ</option>
+                                            <option value="7-seat">Xe 7 chỗ</option>
+                                            <option value="16-seat">Xe 16 chỗ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label>Biển số xe</label><input type="text" id="reg-plate" class="form-input" placeholder="67A-123.45"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group"><label>Email đăng nhập *</label><input type="email" id="reg-email" class="form-input" required placeholder="ban@example.com"></div>
+                                <div class="form-group"><label>Mật khẩu *</label><input type="password" id="reg-password" class="form-input" required minlength="6" placeholder="Ít nhất 6 ký tự"></div>
+                            </div>
+                            <div class="form-group"><label>Giới thiệu ngắn</label><textarea id="reg-note" class="form-input" rows="2" placeholder="Ví dụ: xe đời mới, tài xế biết đường lên Núi Cấm"></textarea></div>
+
+                            <!-- ── Giấy tờ tuỳ thân ──
+                                 Khách đặt phòng là chuyển tiền cọc cho người
+                                 lạ. Có đối chiếu CCCD thì khách mới dám đặt,
+                                 và mình mới biết ai đứng sau tài khoản. -->
+                            <div class="kyc-block">
+                                <div class="kyc-head">
+                                    <i data-lucide="shield-check"></i>
+                                    <div>
+                                        <b>Xác minh danh tính</b>
+                                        <span>Bắt buộc — LOCALMATE đối chiếu xong mới duyệt hồ sơ.</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Họ tên trên CCCD *</label>
+                                        <input type="text" id="reg-idname" class="form-input" required
+                                               placeholder="NGUYỄN VĂN A">
+                                        <small class="form-hint">Ghi đúng như in trên thẻ, kể cả khi khác tên đơn vị.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Số CCCD *</label>
+                                        <input type="text" id="reg-idnumber" class="form-input" required
+                                               inputmode="numeric" maxlength="14" placeholder="079xxxxxxxxx">
+                                        <small class="form-hint">12 số. CMND cũ 9 số vẫn dùng được.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Ảnh mặt trước *</label>
+                                        <input type="file" id="reg-idfront" class="form-input"
+                                               accept="image/jpeg,image/png,image/webp" required>
+                                        <div class="kyc-preview" id="reg-idfront-pv"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ảnh mặt sau *</label>
+                                        <input type="file" id="reg-idback" class="form-input"
+                                               accept="image/jpeg,image/png,image/webp" required>
+                                        <div class="kyc-preview" id="reg-idback-pv"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="reg-error" class="auth-error hidden"></div>
+                            <p style="font-size:12.5px;color:var(--muted-ink);line-height:1.65;margin:0 0 12px">
+                                Gửi hồ sơ nghĩa là bạn đồng ý với
+                                <a href="dieukhoan.html" target="_blank" rel="noopener"
+                                   style="color:var(--brand);font-weight:600">Điều khoản &amp; Chính sách riêng tư</a>
+                                của LOCALMATE.
+                            </p>
+                            <button type="submit" id="reg-btn" class="btn-primary" style="width:100%;padding:16px">Gửi hồ sơ đối tác</button>
+                        </form>
+                    </div>
+
+                    <!-- Đăng nhập -->
+                    <div class="glass-card auth-card">
+                        <span class="section-tag">Đã là đối tác</span>
+                        <h2 class="card-title" style="margin-top:10px" data-i18n="partner_login_title">Đăng nhập</h2>
+                        <p class="contact-form-desc">Xem đơn mới, xác nhận và theo dõi doanh thu.</p>
+                        <form onsubmit="Partner.login(event)">
+                            <div class="form-group"><label>Email *</label><input type="email" id="login-email" class="form-input" required></div>
+                            <div class="form-group"><label>Mật khẩu *</label><input type="password" id="login-password" class="form-input" required></div>
+                            <div id="login-error" class="auth-error hidden"></div>
+                            <button type="submit" id="login-btn" class="btn-primary" style="width:100%;padding:16px">Đăng nhập</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══ ĐÃ ĐĂNG NHẬP ═══ -->
+        <div id="partner-view" class="hidden">
+            <section class="section-container" style="padding-top:110px">
+                <div id="partner-header"></div>
+
+                <!-- Nhac nop CCCD khi ho so con thieu giay -->
+                <div id="kyc-panel"></div>
+
+                <!-- Lối vào kênh làm việc. Trang doitac.html để giới thiệu và
+                     đăng ký; đối tác đã duyệt thì làm việc ở trang riêng cho gọn. -->
+                <a class="btn-primary" href="doitac-quanly.html"
+                   style="display:inline-flex;align-items:center;gap:9px;margin:6px 0 20px">
+                    <i data-lucide="layout-dashboard"></i> Mở kênh đối tác
+                </a>
+                <div id="driver-panel"></div>
+                <div id="partner-stats" class="partner-stats"></div>
+
+                <!-- Đối soát doanh thu: đối tác nào cũng hỏi ba câu — chạy được
+                     bao nhiêu đơn, trừ hoa hồng bao nhiêu, nhận về bao nhiêu. -->
+                <section class="rv-block">
+                    <div class="rv-head">
+                        <h2>Đối soát doanh thu</h2>
+                        <input type="month" id="rv-month" onchange="Partner.loadRevenue()">
+                    </div>
+                    <div id="partner-revenue"></div>
+                </section>
+
+                <!-- Khách sạn / đơn vị tour tự đăng dịch vụ của mình -->
+                <div id="listing-panel"></div>
+
+                <div class="section-head-row" style="margin-top:36px">
+                    <div class="section-header" style="margin-bottom:0">
+                        <span class="section-tag">Đơn hàng</span>
+                        <h2 class="section-title" style="font-size:clamp(24px,3vw,34px)">Đơn của bạn</h2>
+                    </div>
+                    <div class="filter-bar" id="order-filter">
+                        <button class="filter-btn active" onclick="Partner.filter('all', this)">Tất cả</button>
+                        <button class="filter-btn" onclick="Partner.filter('pending', this)">Chờ xác nhận</button>
+                        <button class="filter-btn" onclick="Partner.filter('confirmed', this)">Đã nhận</button>
+                        <button class="filter-btn" onclick="Partner.filter('completed', this)">Hoàn thành</button>
+                    </div>
+                </div>
+                <div id="partner-orders"></div>
+            </section>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"><div><i data-lucide="check-circle"></i></div><span id="toast-msg">Success!</span></div>
+
+    <script src="js/ngonngu.js?v=7"></script>
+
+    <script src="js/auth-token.js?v=2"></script>
+    <script src="js/kyc.js?v=1"></script>
+    <script src="js/partner.js?v=9"></script>
+    <script src="js/listing.js?v=6"></script>
+    <script src="js/notify.js?v=1"></script>
+    <script>
+        // Trang nay khong nap app.js — tu dinh nghia ham mo menu tren dien
+        // thoai, khong thi bam nut ba gach se nem ReferenceError.
+        function toggleMobileMenu() {
+            const m = document.getElementById('mobile-nav');
+            if (m) m.classList.toggle('hidden');
+        }
+
+        // Xem truoc anh CCCD vua chon o bieu mau dang ky
+        document.addEventListener('DOMContentLoaded', function () {
+            BayNuiKyc.ganXemTruoc('reg-idfront', 'reg-idfront-pv');
+            BayNuiKyc.ganXemTruoc('reg-idback', 'reg-idback-pv');
+        });
+    </script>
+</body>
+</html>

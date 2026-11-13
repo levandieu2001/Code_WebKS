@@ -1,0 +1,972 @@
+/* ============================================================
+   LOCALMATE — bộ giao diện mới
+   ============================================================
+   Màu lấy từ chính logo: xanh biển của chữ LOCALMATE, xanh lá của hòn đảo,
+   cam của mặt trời. Cam chỉ dùng cho nút hành động chính — dùng cam tràn lan
+   thì không còn chỗ nào nổi bật nữa.
+
+   Tệp này nạp SAU styles.css và chỉ đè phần cần đổi, nên các trang chưa dựng
+   lại vẫn chạy bình thường.
+   ============================================================ */
+
+:root {
+    /* Xanh chủ đạo — lấy từ chữ trong logo */
+    --lm-blue: #0f6fd0;
+    --lm-blue-dark: #0a4f97;
+    --lm-blue-deep: #012d6b;      /* chân trang */
+    --lm-blue-soft: #eaf4fe;      /* nền nhạt */
+
+    /* Cam — chỉ cho nút hành động chính */
+    --lm-orange: #ff7a2f;
+    --lm-orange-dark: #ed6414;
+
+    --lm-green: #16a34a;
+    --lm-ink: #16233a;
+    --lm-body: #46536b;
+    --lm-muted: #7a879c;
+    --lm-line: #e3e9f2;
+    --lm-bg: #ffffff;
+    --lm-bg-soft: #f6f9fd;
+
+    --lm-r: 14px;
+    --lm-r-lg: 20px;
+    --lm-shadow: 0 4px 18px rgba(18, 38, 63, .08);
+    --lm-shadow-lg: 0 12px 40px rgba(18, 38, 63, .13);
+    --lm-max: 1200px;
+}
+
+body.lm {
+    background: var(--lm-bg);
+    color: var(--lm-body);
+    font-family: 'Be Vietnam Pro', 'Segoe UI', system-ui, sans-serif;
+}
+body.lm h1, body.lm h2, body.lm h3, body.lm h4 { color: var(--lm-ink); font-weight: 700; }
+body.lm a { color: inherit; text-decoration: none; }
+.lm-wrap { max-width: var(--lm-max); margin: 0 auto; padding: 0 20px; }
+
+/* ── Thanh điều hướng ───────────────────────────────────── */
+.lm-nav {
+    position: sticky; top: 0; z-index: 90;
+    background: #fff;
+    border-bottom: 1px solid var(--lm-line);
+}
+.lm-nav-inner {
+    max-width: var(--lm-max); margin: 0 auto;
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 26px;
+}
+.lm-logo img { height: 42px; width: auto; display: block; }
+.lm-links { display: flex; align-items: center; gap: 22px; margin-left: 8px; }
+.lm-links a {
+    font-size: 15px; font-weight: 600; color: var(--lm-body);
+    padding: 6px 0; border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+.lm-links a:hover { color: var(--lm-blue); }
+.lm-links a.active { color: var(--lm-blue); border-bottom-color: var(--lm-blue); }
+
+.lm-nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lm-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 14.5px; font-weight: 700; white-space: nowrap;
+    border: 0; cursor: pointer; transition: background .2s, transform .2s;
+}
+.lm-btn i, .lm-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+.lm-btn-primary { background: var(--lm-blue); color: #fff; }
+.lm-btn-primary:hover { background: var(--lm-blue-dark); }
+.lm-btn-cta { background: var(--lm-orange); color: #fff; }
+.lm-btn-cta:hover { background: var(--lm-orange-dark); }
+.lm-btn-ghost { background: #fff; color: var(--lm-blue); border: 1.5px solid var(--lm-line); }
+.lm-btn-ghost:hover { border-color: var(--lm-blue); }
+
+.lm-menu-btn { display: none; background: none; border: 0; cursor: pointer; color: var(--lm-ink); }
+
+/* ── Ảnh bìa ─────────────────────────────────────────────── */
+.lm-hero { position: relative; }
+.lm-hero-bg { position: relative; height: clamp(380px, 46vw, 560px); overflow: hidden; }
+.lm-hero-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── Bang truot anh bia ─────────────────────────────────────
+   Nam tam nam ngang hang trong mot dai, doi anh bang cach keo ca dai sang
+   trai. Keo ca dai thi trinh duyet chi phai tinh mot phep bien hinh, muot
+   hon nhieu so voi lam mo dan tung tam. */
+.lm-bia-track {
+    display: flex; height: 100%;
+    transition: transform .75s cubic-bezier(.4, 0, .2, 1);
+    will-change: transform;
+}
+.lm-bia-slide { flex: 0 0 100%; position: relative; height: 100%; margin: 0; }
+.lm-bia-slide figcaption {
+    /* Cao hon day anh 80px: the tim kiem de len 62px cuoi cua anh bia, dat
+       thap hon nua la chu chui xuong duoi the, khach chi thay mot nua. */
+    position: absolute; right: 18px; bottom: 80px; z-index: 3;
+    padding: 7px 15px;
+    border-radius: 999px;
+    background: rgba(1, 24, 54, .5);
+    backdrop-filter: blur(6px);
+    color: #fff; font-size: 12.5px; font-weight: 600;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .45s .2s, transform .45s .2s;
+}
+.lm-bia-slide.on figcaption { opacity: 1; transform: none; }
+
+/* Lop phu phai nam TREN dai anh nhung DUOI chu, khong thi chu chim vao anh */
+.lm-hero-bg::after { z-index: 1; }
+
+.lm-bia-nut {
+    position: absolute; top: 50%; z-index: 4;
+    transform: translateY(-50%);
+    display: grid; place-items: center;
+    width: 44px; height: 44px;
+    border: 0; border-radius: 50%;
+    background: rgba(255, 255, 255, .82);
+    color: var(--lm-blue-dark);
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(1, 24, 54, .22);
+    transition: background .18s, transform .18s;
+}
+.lm-bia-nut:hover { background: #fff; transform: translateY(-50%) scale(1.06); }
+.lm-bia-nut i, .lm-bia-nut svg { width: 22px; height: 22px; }
+.lm-bia-nut.truoc { left: 18px; }
+.lm-bia-nut.sau { right: 18px; }
+
+.lm-bia-cham {
+    position: absolute; left: 0; right: 0; bottom: 80px; z-index: 4;
+    display: flex; justify-content: center; gap: 8px;
+}
+.lm-cham {
+    width: 8px; height: 8px; padding: 0;
+    border: 0; border-radius: 999px;
+    background: rgba(255, 255, 255, .5);
+    cursor: pointer;
+    transition: width .25s, background .25s;
+}
+.lm-cham.on { width: 26px; background: #fff; }
+
+@media (max-width: 720px) {
+    /* Man hinh hep: nut mui ten che mat anh, de lai hang cham va vuot tay */
+    .lm-bia-nut { display: none; }
+    /* Hep thi hang cham va chu chu thich khong con du cho nam chung mot
+       hang — xep chu len tren, cham o duoi. */
+    .lm-bia-slide figcaption { right: 12px; bottom: 108px; font-size: 11.5px; padding: 6px 12px; }
+}
+.lm-hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    /* Lớp phủ phải ĐỦ ĐẬM bên trái: ảnh rừng tràm sáng màu, phủ nhạt là chữ
+       trắng chìm nghỉm. Đo thử trên chính ảnh đang dùng rồi mới chốt mức này. */
+    background:
+        linear-gradient(96deg, rgba(1, 24, 54, .86) 0%, rgba(1, 24, 54, .64) 38%,
+                        rgba(1, 24, 54, .28) 66%, rgba(1, 24, 54, .06) 100%),
+        linear-gradient(to top, rgba(1, 24, 54, .35), transparent 45%);
+}
+.lm-hero-text {
+    position: absolute; inset: 0; z-index: 2;
+    max-width: var(--lm-max); margin: 0 auto; padding: 0 20px;
+    display: flex; flex-direction: column; justify-content: center;
+    color: #fff;
+}
+body.lm .lm-hero-text h1 {
+    color: #fff; margin: 0;
+    font-size: clamp(34px, 5.4vw, 62px); line-height: 1.06; letter-spacing: -.02em;
+    text-shadow: 0 2px 18px rgba(0, 18, 42, .55);
+}
+body.lm .lm-hero-text h1 em {
+    display: block; font-style: normal; font-weight: 600;
+    font-size: clamp(20px, 2.5vw, 30px); margin-top: 12px;
+}
+.lm-hero-text p {
+    margin: 16px 0 0; max-width: 520px;
+    font-size: clamp(15px, 1.4vw, 17.5px); line-height: 1.6;
+    color: rgba(255, 255, 255, .93);
+}
+
+/* ── Thẻ tìm kiếm nằm đè lên ảnh bìa ─────────────────────── */
+.lm-search {
+    max-width: var(--lm-max); margin: -62px auto 0; padding: 0 20px;
+    position: relative; z-index: 5;
+}
+.lm-search-card {
+    background: #fff; border-radius: var(--lm-r-lg);
+    box-shadow: var(--lm-shadow-lg);
+    padding: 10px 10px 14px;
+}
+.lm-tabs { display: flex; gap: 4px; overflow-x: auto; padding: 4px; }
+.lm-tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 18px; border-radius: 12px;
+    background: none; border: 0; cursor: pointer;
+    font: inherit; font-size: 14.5px; font-weight: 600; color: var(--lm-body);
+    white-space: nowrap;
+}
+.lm-tab i, .lm-tab svg { width: 18px; height: 18px; }
+.lm-tab.active { background: var(--lm-blue-soft); color: var(--lm-blue); }
+.lm-tab:hover:not(.active) { background: #f4f7fb; }
+
+.lm-fields { display: grid; grid-template-columns: 2fr 1.2fr 1fr auto; gap: 10px; padding: 8px 6px 0; }
+.lm-field {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border: 1.5px solid var(--lm-line); border-radius: 12px;
+    background: #fff; position: relative;
+}
+.lm-field:focus-within { border-color: var(--lm-blue); }
+.lm-field i, .lm-field svg { width: 18px; height: 18px; color: var(--lm-muted); flex-shrink: 0; }
+.lm-field input, .lm-field select {
+    border: 0; outline: none; width: 100%; font: inherit; font-size: 15px; color: var(--lm-ink);
+    background: transparent;
+}
+.lm-field input::placeholder { color: var(--lm-muted); }
+.lm-auto-menu {
+    position: absolute; z-index: 80; top: calc(100% + 6px); left: 0; right: 0;
+    max-height: 240px; overflow-y: auto; padding: 6px;
+    border: 1px solid var(--lm-line); border-radius: 12px;
+    background: #fff; box-shadow: var(--lm-shadow-lg);
+}
+.lm-auto-menu[hidden] { display: none; }
+.lm-auto-option {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    border: 0; border-radius: 9px; padding: 10px 11px; background: #fff;
+    color: var(--lm-ink); cursor: pointer; text-align: left; font: inherit; font-size: 14px;
+}
+.lm-auto-option:hover, .lm-auto-option:focus { background: var(--lm-blue-soft); outline: none; }
+.lm-auto-option svg { width: 15px; height: 15px; color: var(--lm-blue); flex: none; }
+
+/* ── Dải cam kết ─────────────────────────────────────────── */
+.lm-trust {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 8px; padding: 30px 0 6px;
+}
+.lm-trust-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; }
+.lm-trust-ic {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: grid; place-items: center;
+    background: var(--lm-blue-soft); color: var(--lm-blue);
+}
+.lm-trust-ic i, .lm-trust-ic svg { width: 21px; height: 21px; }
+.lm-trust-item b { display: block; font-size: 14.5px; color: var(--lm-ink); }
+.lm-trust-item span { font-size: 12.5px; color: var(--lm-muted); }
+
+/* ── Tiêu đề mục ─────────────────────────────────────────── */
+.lm-sec { padding: 38px 0 8px; }
+.lm-sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.lm-sec-head h2 { margin: 0; font-size: clamp(21px, 2.4vw, 27px); }
+.lm-sec-ic { color: var(--lm-blue); display: grid; place-items: center; }
+.lm-sec-ic i, .lm-sec-ic svg { width: 25px; height: 25px; }
+.lm-sec-more { margin-left: auto; color: var(--lm-blue); font-weight: 600; font-size: 14.5px; }
+
+/* ── Thẻ dịch vụ ─────────────────────────────────────────── */
+.lm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 20px; }
+.lm-card {
+    background: #fff; border: 1px solid var(--lm-line); border-radius: var(--lm-r);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: box-shadow .22s, transform .22s;
+}
+.lm-card:hover { box-shadow: var(--lm-shadow-lg); transform: translateY(-3px); }
+.lm-card-img { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--lm-bg-soft); }
+.lm-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lm-tag {
+    position: absolute; top: 12px; left: 12px;
+    padding: 5px 11px; border-radius: 8px;
+    font-size: 12px; font-weight: 700; color: #fff;
+    background: var(--lm-orange);
+}
+.lm-tag.blue { background: var(--lm-blue); }
+.lm-tag.green { background: var(--lm-green); }
+.lm-tag.grey { background: #64748b; }
+.lm-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; flex: 1; }
+.lm-card-body h3 { margin: 0 0 4px; font-size: 16.5px; }
+.lm-provider {
+    display: flex; align-items: flex-start; gap: 6px;
+    margin: 2px 0 7px; color: var(--lm-blue); font-size: 12.5px; line-height: 1.4;
+}
+.lm-provider i, .lm-provider svg { width: 14px; height: 14px; margin-top: 1px; flex: none; }
+.lm-provider b { font-weight: 700; }
+.lm-card-desc { margin: 0 0 10px; font-size: 13.5px; color: var(--lm-muted); line-height: 1.5; }
+.lm-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--lm-muted); margin-bottom: 12px; }
+.lm-meta span { display: inline-flex; align-items: center; gap: 5px; }
+.lm-meta i, .lm-meta svg { width: 14px; height: 14px; }
+/* Chan the: gia ben trai, nut ben phai — va gia cua moi the trong cung mot
+   hang phai nam ngang nhau.
+
+   Truoc day cho chan the xuong dong. The nao don vi ngan ("/hop 6 cai") thi
+   gia va nut nam chung mot hang; the nao don vi dai ("/con (1,2-1,5 kg)") thi
+   nut bi day xuong dong duoi, chan the cao gap doi, va vi chan the dinh day
+   the nen con so gia bi day len cao hon han the ben canh. Nhin xuong mot hang
+   the la thay gia cai cao cai thap.
+
+   Gio chua san cho hai dong va cho con so luon nam DONG DAU: don vi dai thi
+   no xuong dong duoi trong chinh o gia, khong day gi ca. */
+.lm-card-foot {
+    margin-top: auto;
+    /* 50px = vua du hai dong gia (con so 19px + don vi 12,5px). The nao gia
+       chi mot dong cung cao bang the co gia hai dong, nen con so luon thang
+       hang voi the ben canh. */
+    min-height: 50px;
+    display: flex; flex-wrap: nowrap;
+    align-items: flex-start; justify-content: space-between;
+    gap: 10px;
+}
+.lm-card-foot .lm-btn { flex: 0 0 auto; }
+.lm-price {
+    min-width: 0;
+    color: var(--lm-orange); font-size: 19px; font-weight: 800;
+    line-height: 1.3;
+}
+.lm-price small { font-size: 12.5px; font-weight: 600; color: var(--lm-muted); }
+/* Gia goc gach ngang nam SAU con so, khong nam tren mot dong rieng: dong
+   rieng thi the nao co giam gia se co con so tut xuong thap hon the khong
+   giam — lai lech hang. */
+.lm-price del { font-size: 12.5px; color: var(--lm-muted); font-weight: 500; margin-left: 7px; }
+
+/* ── Ô điểm đến ──────────────────────────────────────────── */
+.lm-dest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr)); gap: 16px; }
+.lm-dest {
+    position: relative; aspect-ratio: 1 / 1; border-radius: var(--lm-r);
+    overflow: hidden; display: block;
+}
+.lm-dest img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.lm-dest:hover img { transform: scale(1.06); }
+.lm-dest::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(1, 25, 55, .78) 0%, rgba(1, 25, 55, .12) 55%, transparent 100%);
+}
+.lm-dest-text { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 2; color: #fff; }
+.lm-dest-text b { display: block; font-size: 16px; }
+.lm-dest-text span { font-size: 12.5px; opacity: .88; }
+
+/* ── Dải khuyến mãi ──────────────────────────────────────── */
+.lm-promo { margin: 34px 0 8px; border-radius: var(--lm-r-lg); overflow: hidden; position: relative; }
+.lm-promo img { width: 100%; display: block; }
+
+/* ── Chân trang ──────────────────────────────────────────── */
+.lm-foot { background: var(--lm-blue-deep); color: rgba(255, 255, 255, .78); margin-top: 46px; }
+.lm-foot-in {
+    max-width: var(--lm-max); margin: 0 auto; padding: 46px 20px 26px;
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr; gap: 32px;
+}
+.lm-foot img.lm-foot-logo { height: 40px; margin-bottom: 12px; }
+body.lm .lm-foot h4 { color: #fff; font-size: 15.5px; margin: 0 0 14px; }
+.lm-foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.lm-foot a:hover { color: #fff; }
+.lm-foot p { font-size: 13.5px; line-height: 1.65; margin: 0 0 14px; }
+.lm-foot li { font-size: 13.5px; display: flex; gap: 9px; align-items: flex-start; }
+.lm-foot li i, .lm-foot li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+.lm-foot-bottom {
+    border-top: 1px solid rgba(255, 255, 255, .14);
+    padding: 16px 20px; font-size: 12.5px;
+    max-width: var(--lm-max); margin: 0 auto;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.lm-social { display: flex; gap: 10px; margin-top: 14px; }
+.lm-social a {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255, 255, 255, .12); display: grid; place-items: center;
+}
+.lm-social a:hover { background: var(--lm-blue); }
+.lm-social i, .lm-social svg { width: 17px; height: 17px; }
+
+.lm-sub { display: flex; gap: 8px; margin-top: 12px; }
+.lm-sub input {
+    flex: 1; min-width: 0; padding: 11px 14px; border-radius: 10px;
+    border: 0; font: inherit; font-size: 14px;
+}
+.lm-empty {
+    grid-column: 1 / -1; text-align: center; padding: 40px 20px;
+    color: var(--lm-muted); font-size: 14.5px;
+    border: 1.5px dashed var(--lm-line); border-radius: var(--lm-r);
+}
+
+/* ── Màn hình nhỏ ────────────────────────────────────────── */
+@media (max-width: 980px) {
+    .lm-links { display: none; }
+    .lm-menu-btn { display: grid; place-items: center; }
+    .lm-fields { grid-template-columns: 1fr 1fr; }
+    .lm-fields .lm-btn { grid-column: 1 / -1; justify-content: center; }
+    .lm-foot-in { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+    .lm-search { margin-top: -34px; padding: 0 12px; width: 100%; }
+    .lm-search-card { width: 100%; padding: 8px 8px 12px; }
+    .lm-fields { grid-template-columns: 1fr; }
+
+    /* Bon tab xep thanh hai hang, khong cuon ngang.
+       Do tren may 375px: bon tab khong du cho nen thanh mot dai cuon ngang,
+       khach chi thay hai tab dau va khong biet con hai cai nua o sau. Cai
+       thanh cuon do nho xiu, khong ai doan ra la cuon duoc. */
+    .lm-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; overflow-x: visible; }
+    .lm-tab { justify-content: center; padding: 11px 8px; font-size: 13.5px; gap: 6px; }
+    .lm-tab i, .lm-tab svg { width: 16px; height: 16px; }
+    .lm-foot-in { grid-template-columns: 1fr; gap: 26px; }
+    .lm-hero-bg { height: 400px; }
+    .lm-nav-inner { gap: 12px; }
+    .lm-logo img { height: 34px; }
+    .lm-field input, .lm-field select { font-size: 16px; min-width: 0; }
+    .lm-menu-btn { width: 40px; height: 40px; }
+}
+
+/* Nút mở menu trên máy nhỏ */
+.lm-drawer {
+    display: none; flex-direction: column; gap: 4px;
+    padding: 10px 20px 16px; border-bottom: 1px solid var(--lm-line); background: #fff;
+}
+.lm-drawer.open { display: flex; }
+.lm-drawer a { padding: 11px 4px; font-weight: 600; border-bottom: 1px solid var(--lm-line); }
+.lm-drawer a:last-child { border-bottom: 0; }
+
+/* ── Khối mời đối tác ────────────────────────────────────── */
+/* ── Bảng mời đối tác ─────────────────────────────────────
+   Bảng ngang THẤP, không phải khối cao: dòng nhỏ ở trên, tiêu đề kiểu chữ
+   viết tay, một câu ngắn có phần nổi bật màu cam, rồi nút bo tròn.
+
+   Lớp phủ là một lớp xanh nhạt dần chứ không phải màn đen: nền là trời và
+   biển sáng, phủ đen thì ảnh xỉn hẳn đi, mà phủ quá nhạt thì chữ trắng chìm
+   vào mây. Xanh đậm bên trái, tan dần sang phải — ảnh vẫn sáng, chữ vẫn đọc
+   được, kể cả ngoài nắng trên điện thoại. */
+.lm-cta {
+    position: relative;
+    margin: 40px 0 8px;
+    border-radius: var(--lm-r-lg);
+    overflow: hidden;
+    background: var(--lm-blue-deep);   /* màu đỡ trong lúc ảnh chưa tải xong */
+    color: #fff;
+    isolation: isolate;
+    min-height: 210px;
+    display: flex; align-items: center;
+}
+.lm-cta-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 62% 42%;
+    z-index: -2;
+}
+.lm-cta::before {
+    content: '';
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(97deg,
+        rgba(2, 45, 107, .92) 0%,
+        rgba(3, 74, 150, .80) 34%,
+        rgba(11, 106, 190, .42) 56%,
+        rgba(20, 130, 210, .06) 78%,
+        rgba(20, 130, 210, 0) 100%);
+}
+.lm-cta-in {
+    position: relative;
+    padding: 30px 40px;
+    max-width: 560px;
+}
+.lm-cta-eyebrow {
+    display: block; margin-bottom: 2px;
+    font-size: 13.5px; font-weight: 600;
+    color: rgba(255, 255, 255, .9);
+    text-shadow: 0 1px 8px rgba(0, 25, 55, .5);
+}
+/* Chữ viết tay. Dancing Script có bộ dấu tiếng Việt đầy đủ — mấy font viết
+   tay khác hay thiếu dấu ngã với dấu nặng, chữ ra là sai chính tả. */
+body.lm .lm-cta h2 {
+    font-family: 'Dancing Script', 'Be Vietnam Pro', cursive;
+    color: #fff; margin: 0 0 8px;
+    font-size: clamp(34px, 4.6vw, 52px); font-weight: 700; line-height: 1.1;
+    text-shadow: 0 3px 16px rgba(0, 25, 55, .5);
+}
+.lm-cta p {
+    margin: 0 0 18px; font-size: 15px; line-height: 1.65;
+    color: rgba(255, 255, 255, .95);
+    text-shadow: 0 1px 10px rgba(0, 25, 55, .55);
+}
+.lm-cta p b { color: var(--lm-orange); font-weight: 700; }
+.lm-cta .lm-btn {
+    padding: 12px 26px; font-size: 14.5px; border-radius: 999px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .25);
+}
+.lm-cta .lm-btn i, .lm-cta .lm-btn svg { width: 16px; height: 16px; }
+
+/* Dòng viết tay nghiêng bên phải */
+.lm-cta-note {
+    position: absolute; right: 42px; top: 50%;
+    transform: translateY(-50%) rotate(-7deg);
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(19px, 2.1vw, 27px); font-weight: 600;
+    color: #fff; text-align: center; max-width: 220px; line-height: 1.25;
+    text-shadow: 0 2px 12px rgba(0, 30, 60, .55);
+    pointer-events: none;
+}
+@media (max-width: 1080px) { .lm-cta-note { display: none; } }
+
+@media (max-width: 900px) {
+    /* Màn hẹp thì ảnh chỉ còn là nền mờ phía sau — chỗ đâu nữa mà khoe cảnh,
+       chữ mới là thứ chính. */
+    .lm-cta { min-height: 0; }
+    .lm-cta-in { max-width: none; padding: 28px 24px; }
+    .lm-cta::before {
+        background: linear-gradient(158deg,
+            rgba(2, 45, 107, .93) 0%, rgba(4, 74, 150, .9) 100%);
+    }
+}
+@media (max-width: 560px) {
+    .lm-cta-in { padding: 24px 20px; }
+    .lm-cta .lm-btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   ĐỒNG BỘ MÀU CHO CÁC TRANG CŨ
+   ============================================================
+   Giao diện cũ dựng hoàn toàn bằng biến CSS, nên chỉ cần gán lại bộ biến đó
+   trong phạm vi body.lm là mọi thành phần cũ — thẻ phòng, chip lọc, nút, ô
+   tìm kiếm — đổi sang màu mới mà KHÔNG phải viết lại một dòng HTML nào.
+
+   Cách này còn có cái lợi thứ hai: trang nào chưa gắn class="lm" thì vẫn
+   nguyên màu cũ, nên chuyển dần từng trang được, không phải làm một lượt rồi
+   hỏng cả web.
+   ============================================================ */
+body.lm {
+    /* Nền và mặt phẳng */
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f6f9fd;
+    --alt: #eaf4fe;
+    --cream: #ffffff;
+
+    /* Chữ */
+    --ink: #16233a;
+    --ink-2: #16233a;
+    --body-ink: #46536b;
+    --muted: #7a879c;
+    --subtle: #93a0b4;
+    --line: #e3e9f2;
+    --line-2: #d4deeb;
+
+    /* Thương hiệu: xanh là chính. Nút hành động chính đổi sang cam riêng ở
+       dưới, chứ không gán --brand thành cam — --brand còn dùng cho chữ link
+       và nhãn, mà link màu cam thì rối mắt. */
+    --brand: #0f6fd0;
+    --brand-mid: #0a4f97;
+    --brand-dark: #0a4f97;
+    --brand-deep: #012d6b;
+    --peach: #ff7a2f;
+    --peach-light: #ffd6bd;
+    --peach-bg: #fff1e8;
+
+    /* Nhóm màu rừng cũ → chuyển sang xanh biển đậm cho các mảng tối */
+    --forest: #012d6b;
+    --forest-2: #0a4f97;
+    --forest-deep: #011f4a;
+    --sage: #6b93c4;
+    --sage-2: #0f6fd0;
+    --sage-light: #9dc0e6;
+    --leaf: #eaf4fe;
+    --leaf-2: #d8e9fb;
+    --moss: #0f6fd0;
+    --moss-2: #0a4f97;
+
+    --color-primary: #0f6fd0;
+}
+
+/* Nút hành động chính: cam, đúng như bố cục mẫu */
+body.lm .btn-primary,
+body.lm .btn-book-room,
+body.lm .btn-book-nav {
+    background: var(--lm-orange);
+    color: #fff !important;
+    border-radius: 10px;
+}
+body.lm .btn-primary:hover,
+body.lm .btn-book-room:hover,
+body.lm .btn-book-nav:hover { background: var(--lm-orange-dark); }
+
+/* Chip lọc đang chọn dùng xanh, để cam chỉ còn nghĩa "bấm vào đây để đặt" */
+body.lm .filter-btn.active { background: var(--lm-blue); border-color: var(--lm-blue); color: #fff; }
+
+/* Ảnh bìa các trang trong: phủ xanh đậm thay vì nâu */
+body.lm .page-hero-overlay {
+    background: linear-gradient(96deg, rgba(1, 24, 54, .82) 0%, rgba(1, 24, 54, .5) 52%, rgba(1, 24, 54, .18) 100%);
+}
+body.lm .page-hero-content h1 { color: #fff; }
+
+/* Logo ngang trong thanh điều hướng cũ: khối cũ vốn là hình tròn 42px, giờ là
+   ảnh chữ nằm ngang nên phải bỏ bo tròn và cho rộng theo tỉ lệ. */
+body.lm .nav-logo-img {
+    width: auto; height: 40px;
+    border-radius: 0;
+    object-fit: contain;
+}
+body.lm .nav-logo { gap: 0; }
+/* Chân trang nền tối: logo có chữ xanh đậm, để nguyên thì chìm — đảo sang trắng */
+body.lm .site-footer .nav-logo-img,
+body.lm .footer-brand .nav-logo-img { filter: brightness(0) invert(1); }
+
+/* Mục đang mở trong thanh điều hướng cũ: nền kem → nền xanh nhạt */
+body.lm .nav-link.active,
+body.lm .nav-container.scrolled .nav-link.active {
+    background: var(--lm-blue-soft);
+    color: var(--lm-blue);
+}
+body.lm .nav-link { color: var(--lm-body); }
+
+/* Nut bieu tuong tren thanh dieu huong (chuong thong bao, tro ly ao).
+   Kieu goc ve chu MAU TRANG vi thanh dieu huong cu nam de len anh bia toi.
+   Thanh moi nen trang, nen tren trang chu cai chuong thanh trang tren trang:
+   nhin ra mot vong tron rong khong co gi ben trong. */
+body.lm .nav-icon-btn {
+    background: var(--lm-bg-soft);
+    border: 1px solid var(--lm-line);
+    color: var(--lm-body);
+}
+body.lm .nav-icon-btn:hover { background: var(--lm-blue-soft); color: var(--lm-blue); }
+
+/* ── Thu gon cum ben phai dau trang ─────────────────────────
+   Nam thu do (VI/EN, tro ly, tai khoan, chuong, nut cam) truoc day chiem
+   gan nua be ngang thanh dieu huong, day cac muc Trang chu / Cho nghi /
+   Dac san... dinh vao logo. Van du ca nam thu, chi la nho lai va sat nhau,
+   nen phan menu tho duoc.
+
+   Nut bam nho nhat o day la 34x34 — van tren muc 32px thuong duoc coi la
+   toi thieu cho ngon tay, khong bop them nua. */
+body.lm .lm-nav-right, body.lm .nav-actions { gap: 6px; }
+
+body.lm .lang-toggle {
+    padding: 2px; gap: 0;
+    border-radius: 999px;
+    background: var(--lm-bg-soft);
+    border: 1px solid var(--lm-line);
+}
+body.lm .lang-toggle-btn {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    color: var(--lm-muted); background: transparent; border: 0;
+}
+body.lm .lang-toggle-btn.active { background: var(--lm-blue); color: #fff; }
+
+body.lm .nav-icon-btn { width: 34px; height: 34px; }
+body.lm .nav-icon-btn i, body.lm .nav-icon-btn svg { width: 17px; height: 17px; }
+
+body.lm .acc-btn {
+    padding: 5px 12px 5px 9px; gap: 7px;
+    border-width: 1px; border-color: var(--lm-line);
+    border-radius: 999px;
+    font-size: 13.5px; color: var(--lm-ink);
+}
+body.lm .acc-btn:hover { border-color: var(--lm-blue); color: var(--lm-blue); }
+body.lm .acc-btn i, body.lm .acc-btn svg { width: 17px; height: 17px; }
+body.lm .acc-name { max-width: 84px; }
+
+body.lm .lm-nav-right .btn-book-nav,
+body.lm .nav-actions .btn-book-nav { padding: 9px 15px; font-size: 13.5px; }
+
+@media (max-width: 1240px) {
+    /* Con hep nua thi nut cam bo chu, giu bieu tuong — no van la nut chinh
+       nhung khong duoc an het cho cua thanh dieu huong. */
+    body.lm .lm-nav-right .btn-book-nav span,
+    body.lm .nav-actions .btn-book-nav span { display: none; }
+    body.lm .lm-nav-right .btn-book-nav,
+    body.lm .nav-actions .btn-book-nav { padding: 9px 12px; }
+    body.lm .acc-name { display: none; }
+}
+body.lm .nav-bot-btn { padding: 0; overflow: hidden; }
+body.lm .nav-bot-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+body.lm .nav-container.scrolled .nav-link { color: var(--lm-body); }
+body.lm .nav-link:hover { color: var(--lm-blue); }
+/* Thanh điều hướng trang trong: nền trắng, viền mảnh — bỏ nền kem cũ */
+body.lm.inner-page .nav-container,
+body.lm .nav-container.scrolled {
+    background: #fff;
+    box-shadow: 0 1px 0 var(--lm-line), 0 6px 20px rgba(18, 38, 63, .05);
+}
+
+/* ── Trang đối tác ───────────────────────────────────────────
+   Kênh đối tác và trang đăng ký dùng vài biến chưa có trong bảng gốc
+   (--terracotta, --gold). Trước đây chúng không được định nghĩa ở đâu cả nên
+   trình duyệt bỏ qua, màu rơi về mặc định. Khai báo ở đây để hai trang này
+   ăn đúng bộ màu mới thay vì mỗi chỗ một kiểu. */
+body.lm {
+    --terracotta: #ff7a2f;
+    --gold: #f0a500;
+}
+/* Thanh bên của kênh đối tác: nền xanh đậm thay cho nền rừng */
+body.lm .pw-side { background: var(--lm-blue-deep); }
+body.lm .pw-nav.active { background: var(--lm-blue); }
+body.lm .pw-main { background: var(--lm-bg-soft); }
+body.lm .pw-card.dark { background: var(--lm-blue-deep); }
+body.lm .pw-card.dark .v { color: #ffd9a8; }
+body.lm .pw-badge.ok { background: rgba(22, 163, 74, .12); color: var(--lm-green); }
+body.lm .pw-badge.wait { background: rgba(255, 122, 47, .14); color: var(--lm-orange-dark); }
+body.lm .pw-in { color: var(--lm-green); }
+body.lm .pw-out { color: var(--lm-orange-dark); }
+
+
+/* ── Nút đổi ngôn ngữ trên nền trắng ──────────────────────
+   styles.css vẽ nút này cho thanh điều hướng NỀN TỐI (chữ màu kem). Thanh
+   của LOCALMATE nền trắng, để nguyên thì chữ VI/EN trắng trên nền trắng —
+   nút vẫn bấm được nhưng không ai nhìn thấy. */
+body.lm .lang-toggle {
+    background: #eef2f7;
+    border: 1px solid var(--lm-line, #dfe6ee);
+    margin-right: 4px;
+}
+body.lm .lang-toggle-btn { color: var(--lm-muted, #5b6b7f); }
+body.lm .lang-toggle-btn:hover { color: var(--lm-blue, #0f6fd0); }
+body.lm .lang-toggle-btn.active {
+    background: var(--lm-blue, #0f6fd0) !important;
+    color: #fff !important;
+}
+/* Màn hình hẹp: thanh điều hướng đã chật, thu nút lại cho vừa */
+@media (max-width: 520px) {
+    body.lm .lang-toggle-btn { padding: 5px 8px; font-size: 11.5px; }
+}
+
+/* ============================================================
+   TRANG KHÁM PHÁ — thanh tìm & khối "Đi sâu vào từng điểm đến"
+   ============================================================ */
+
+/* ── Thanh tìm đè lên chân ảnh bìa ──────────────────────────
+   Ảnh bìa chừa thêm chỗ trống bên dưới để thanh tìm nằm đè lên mà không
+   che mất dòng mô tả. */
+.dp-hero .page-hero-content { padding-bottom: 122px; }
+.dp-over {
+    position: relative; z-index: 5;
+    margin-top: -104px;
+    padding-top: 0 !important;
+}
+
+.dp-tabs {
+    display: inline-flex; gap: 4px;
+    padding: 6px 6px 0;
+    background: rgba(2, 32, 74, .46);
+    backdrop-filter: blur(9px);
+    border-radius: 16px 16px 0 0;
+    max-width: 100%;
+}
+.dp-tab {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px 13px;
+    border: 0; border-radius: 11px 11px 0 0;
+    background: transparent;
+    color: rgba(255, 255, 255, .88);
+    font: inherit; font-size: 14.5px; font-weight: 600;
+    white-space: nowrap; cursor: pointer;
+    transition: background .18s, color .18s;
+}
+.dp-tab i, .dp-tab svg { width: 17px; height: 17px; flex: none; }
+.dp-tab:hover { background: rgba(255, 255, 255, .16); color: #fff; }
+.dp-tab.active { background: #fff; color: var(--lm-blue); }
+
+.dp-bar {
+    display: flex; align-items: center;
+    padding: 9px;
+    background: #fff;
+    border-radius: 0 18px 18px 18px;
+    box-shadow: 0 16px 44px rgba(4, 29, 66, .26);
+}
+.dp-field {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; gap: 11px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: text;
+    transition: background .18s;
+}
+.dp-field:hover, .dp-field:focus-within { background: var(--lm-bg-soft); }
+.dp-field > i, .dp-field > svg { width: 19px; height: 19px; flex: none; color: var(--lm-blue); }
+.dp-field input, .dp-field select {
+    flex: 1; min-width: 0;
+    border: 0; outline: 0; background: transparent;
+    font: inherit; font-size: 15.5px; font-weight: 500; color: var(--lm-ink);
+}
+.dp-field input::placeholder { color: var(--lm-muted); font-weight: 400; }
+.dp-field input::-webkit-search-cancel-button { display: none; }
+.dp-field select { cursor: pointer; appearance: none; }
+.dp-field-area { flex: 0 1 250px; }
+.dp-clear {
+    display: grid; place-items: center;
+    width: 26px; height: 26px; flex: none;
+    border: 0; border-radius: 50%;
+    background: var(--lm-line); color: var(--lm-body);
+    cursor: pointer;
+}
+.dp-clear:hover { background: var(--lm-blue-soft); color: var(--lm-blue); }
+.dp-clear i, .dp-clear svg { width: 14px; height: 14px; }
+.dp-sep { width: 1px; align-self: stretch; margin: 8px 2px; background: var(--lm-line); flex: none; }
+.dp-go {
+    display: inline-flex; align-items: center; gap: 9px;
+    margin-left: 6px; padding: 15px 26px;
+    border: 0; border-radius: 12px;
+    background: var(--lm-orange); color: #fff;
+    font: inherit; font-size: 15px; font-weight: 700;
+    white-space: nowrap; cursor: pointer;
+    transition: background .18s;
+}
+.dp-go i, .dp-go svg { width: 18px; height: 18px; }
+.dp-go:hover { background: var(--lm-orange-dark); }
+
+@media (max-width: 900px) {
+    /* Ảnh bìa hẹp lại thì thanh tìm không đè lên nữa — đè tiếp là chữ
+       chồng lên nhau. Cho nó tụt xuống nền trắng và xếp dọc. */
+    .dp-hero .page-hero-content { padding-bottom: 56px; }
+    .dp-over { margin-top: 0; padding-top: 26px !important; }
+    .dp-tabs {
+        display: flex; width: 100%; gap: 2px;
+        padding: 5px 5px 0;
+        background: var(--lm-bg-soft); backdrop-filter: none;
+        border-radius: 14px 14px 0 0;
+        /* Ba tab vua khit man hinh 360px; an thanh cuon di cho khoi lo ra
+           mot vach xam ngay duoi hang tab. */
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .dp-tabs::-webkit-scrollbar { display: none; }
+    .dp-tab {
+        flex: 1; justify-content: center;
+        padding: 11px 6px 12px; gap: 6px;
+        font-size: 13.5px; color: var(--lm-body);
+    }
+    .dp-tab i, .dp-tab svg { width: 15px; height: 15px; }
+}
+
+/* Man hinh rat hep (320px): bop them chut cho du ba tab, khong phai vuot */
+@media (max-width: 360px) {
+    .dp-tab { font-size: 12.5px; padding: 11px 4px 12px; gap: 5px; }
+    .dp-tab:hover { background: rgba(15, 111, 208, .09); color: var(--lm-blue); }
+    .dp-tab.active { background: #fff; box-shadow: 0 -2px 0 var(--lm-blue) inset; }
+    .dp-bar {
+        flex-direction: column; align-items: stretch;
+        border-radius: 0 0 18px 18px;
+        border: 1px solid var(--lm-line); border-top: 0;
+        box-shadow: var(--lm-shadow);
+    }
+    .dp-field { background: var(--lm-bg-soft); }
+    .dp-sep { width: auto; height: 1px; align-self: auto; margin: 7px 12px; }
+    .dp-field-area { flex: none; }
+    .dp-go { margin: 4px 0 0; justify-content: center; }
+}
+
+/* ── Khối "Đi sâu vào từng điểm đến" ────────────────────────
+   Danh sách bên trái, khung chi tiết dính theo bên phải. */
+.pex {
+    display: grid;
+    grid-template-columns: minmax(270px, 344px) minmax(0, 1fr);
+    gap: 24px; align-items: start;
+}
+.pex-list {
+    max-height: 616px; overflow-y: auto;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--lm-line);
+    border-radius: var(--lm-r-lg);
+    scrollbar-width: thin;
+}
+.pex-group {
+    position: sticky; top: 0; z-index: 1;
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 12px 7px;
+    background: #fff;
+    font-size: 11.5px; font-weight: 800;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--lm-muted);
+}
+.pex-group span {
+    display: grid; place-items: center;
+    min-width: 20px; height: 20px; padding: 0 6px;
+    border-radius: 999px;
+    background: var(--lm-blue-soft); color: var(--lm-blue-dark);
+    font-size: 11px; letter-spacing: 0;
+}
+.pex-item {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 8px 10px;
+    border: 0; border-radius: 13px;
+    background: transparent;
+    font: inherit; text-align: left; cursor: pointer;
+    transition: background .16s, box-shadow .16s;
+}
+.pex-item:hover { background: var(--lm-bg-soft); }
+.pex-item.on { background: var(--lm-blue-soft); box-shadow: inset 0 0 0 1.5px rgba(15, 111, 208, .34); }
+.pex-item img {
+    width: 52px; height: 52px; flex: none;
+    border-radius: 10px; object-fit: cover;
+    background: var(--lm-bg-soft);
+}
+.pex-item-txt { min-width: 0; flex: 1; }
+.pex-item-txt b {
+    display: block;
+    font-size: 14.5px; font-weight: 600; line-height: 1.35; color: var(--lm-ink);
+}
+.pex-item-txt small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--lm-muted); }
+.pex-item .chev { width: 17px; height: 17px; flex: none; color: var(--lm-muted); }
+.pex-item.on .chev { color: var(--lm-blue); }
+
+.pex-panel { position: sticky; top: 88px; scroll-margin-top: 84px; }
+.pex-card {
+    background: #fff;
+    border: 1px solid var(--lm-line);
+    border-radius: var(--lm-r-lg);
+    overflow: hidden;
+    box-shadow: var(--lm-shadow);
+}
+.pex-photo { position: relative; aspect-ratio: 16 / 7; background: var(--lm-bg-soft); }
+.pex-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pex-cat, .pex-rate {
+    position: absolute; top: 16px;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .95);
+    font-size: 12.5px; font-weight: 700;
+    box-shadow: 0 2px 10px rgba(4, 29, 66, .18);
+}
+.pex-cat { left: 16px; color: var(--lm-blue-dark); }
+.pex-rate { right: 16px; color: var(--lm-ink); }
+.pex-rate i, .pex-rate svg { width: 15px; height: 15px; color: #f5a623; fill: #f5a623; }
+
+.pex-body { padding: 22px 24px 24px; }
+.pex-body h3 { margin: 0; font-size: clamp(20px, 2.3vw, 27px); line-height: 1.25; }
+.pex-area {
+    display: flex; align-items: center; gap: 7px;
+    margin: 9px 0 0;
+    font-size: 14px; color: var(--lm-muted);
+}
+.pex-area i, .pex-area svg { width: 16px; height: 16px; flex: none; }
+.pex-sum { margin: 13px 0 0; font-size: 15.5px; line-height: 1.68; color: var(--lm-body); }
+
+.pex-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 17px; }
+.pex-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 14px;
+    border: 1px solid var(--lm-line); border-radius: 999px;
+    background: var(--lm-bg-soft);
+    font-size: 13px; font-weight: 600; color: var(--lm-body);
+}
+.pex-chip i, .pex-chip svg { width: 15px; height: 15px; flex: none; color: var(--lm-blue); }
+
+.pex-notes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    gap: 12px; margin-top: 18px;
+}
+.pex-note { padding: 14px 16px; border-radius: 14px; background: var(--lm-blue-soft); }
+.pex-note.warn { background: #fff3e8; }
+.pex-note b {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13.5px; color: var(--lm-ink);
+}
+.pex-note b i, .pex-note b svg { width: 16px; height: 16px; flex: none; color: var(--lm-blue); }
+.pex-note.warn b i, .pex-note.warn b svg { color: var(--lm-orange-dark); }
+.pex-note p { margin: 7px 0 0; font-size: 14px; line-height: 1.62; color: var(--lm-body); }
+
+.pex-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+@media (max-width: 900px) {
+    /* Hẹp thì danh sách thành dải trượt ngang, khung chi tiết nằm dưới. */
+    .pex { grid-template-columns: 1fr; gap: 14px; }
+    .pex-list {
+        display: flex; gap: 10px;
+        max-height: none; overflow-x: auto; overflow-y: hidden;
+        padding: 10px;
+        scroll-snap-type: x mandatory;
+    }
+    .pex-group { display: none; }
+    .pex-item { flex: 0 0 214px; scroll-snap-align: start; }
+    .pex-item .chev { display: none; }
+    .pex-panel { position: static; }
+    .pex-body { padding: 18px 18px 20px; }
+    .pex-acts .lm-btn { flex: 1; justify-content: center; }
+}

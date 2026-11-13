@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <script src="js/room-validation.js?v=1"></script>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* ── Bảng màu LOCALMATE ──
+           Trang này trước đây dùng bảng màu kem của bản cũ, mở cạnh trang
+           khách là thấy lệch hẳn. Không viết lại cả trang: mọi thứ ở đây đều
+           vẽ theo BIẾN màu, nên đổi giá trị biến là cả trang đổi theo. Sửa tay
+           từng dòng vừa lâu vừa chắc chắn bỏ sót.
+
+           Tên biến giữ nguyên (--brand, --forest…) dù giờ không còn là màu
+           đất và màu rừng nữa. Đổi tên biến thì phải sửa cả nghìn chỗ dùng,
+           đổi lấy một cái tên đẹp hơn — không đáng. */
+        :root{
+            --bg:#f4f7fb; --surface:#ffffff; --surface-2:#f7f9fc; --alt:#eaf1fa; --cream:#ffffff;
+            --ink:#16233a; --ink-2:#22314b; --body:#46536b; --muted:#6b7a92; --subtle:#8b98ac;
+            --line:rgba(22,35,58,.09); --line-2:rgba(22,35,58,.16);
+
+            /* Màu hành động chính là xanh — cùng màu với thanh điều hướng
+               bên trang khách, để quản trị và trang khách nhìn ra là một hệ. */
+            --brand:#0f6fd0; --brand-mid:#0c5fb4; --brand-dark:#0a4f97; --brand-deep:#012d6b;
+
+            /* Cam giữ lại làm màu nhấn: giá tiền, cảnh báo, số cần chú ý */
+            --peach:#ff7a2f; --peach-bg:#fff0e6;
+
+            /* Nền tối (màn đăng nhập, thanh bên) đổi từ xanh rừng sang xanh đậm */
+            --forest:#0a4f97; --forest-deep:#012d6b; --sage:#5b9bd5; --sage-2:#3b7fc4;
+            --leaf:#eaf4fe; --moss:#16a34a; --moss-2:#128a3e;
+
+            --font-body:'Be Vietnam Pro',system-ui,sans-serif;
+            --font-display:'Be Vietnam Pro',system-ui,sans-serif;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:var(--font-body);background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+        h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:-.02em}
+
+        /* ── ĐĂNG NHẬP ── */
+        .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+            background:linear-gradient(150deg,var(--forest),var(--forest-deep))}
+        .login-card{background:var(--surface);border-radius:28px;padding:38px;width:100%;max-width:420px;box-shadow:0 28px 70px rgba(0,0,0,.3)}
+        .login-logo{text-align:center;margin-bottom:26px}
+        .login-logo .mark{width:56px;height:56px;border-radius:999px;margin:0 auto 12px;display:block;object-fit:cover}
+        .login-logo h1{font-size:24px}
+        .login-logo p{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--subtle);margin-top:4px}
+
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:13px 15px;border:1px solid var(--line-2);
+            border-radius:14px;font-size:14.5px;font-family:inherit;background:var(--surface-2);color:var(--ink);transition:border-color .2s,box-shadow .2s}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--brand);
+            background:var(--surface);box-shadow:0 0 0 3px rgba(198,113,57,.14)}
+        .form-group textarea{resize:vertical;min-height:80px}
+        .btn-primary{width:100%;padding:15px;border:none;border-radius:999px;background:var(--brand);color:var(--cream);
+            font-weight:600;font-size:15.5px;cursor:pointer;font-family:inherit;transition:background .2s,transform .2s}
+        .btn-primary:hover{background:var(--brand-mid);transform:translateY(-1px)}
+        .login-error{color:#9a3d2c;background:#fbe9e6;border:1px solid #e8b4ab;padding:11px 14px;border-radius:12px;
+            font-size:13.5px;text-align:center;margin-top:12px;display:none}
+
+        /* ── KHUNG QUẢN TRỊ ── */
+        .admin-layout{display:flex;min-height:100vh}
+        .sidebar{width:264px;background:linear-gradient(165deg,var(--forest),var(--forest-deep));color:var(--cream);
+            padding:24px 18px;display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto}
+        .sidebar-logo{display:flex;align-items:center;gap:11px;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid rgba(240,250,225,.12)}
+        .sidebar-logo .mark{width:40px;height:40px;border-radius:999px;flex-shrink:0;display:block;object-fit:cover}
+        .sidebar-logo b{display:block;font-family:var(--font-display);font-size:17px}
+        .sidebar-logo small{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,250,225,.55)}
+        .sidebar-nav{flex:1;display:flex;flex-direction:column;gap:3px}
+        .sidebar-link{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:14px;color:rgba(240,250,225,.72);
+            cursor:pointer;font-size:14.5px;font-weight:500;border:none;background:none;width:100%;text-align:left;
+            font-family:inherit;transition:background .2s,color .2s}
+        .sidebar-link:hover{background:rgba(240,250,225,.08);color:var(--cream)}
+        .sidebar-link.active{background:var(--brand);color:var(--cream);font-weight:600}
+        .sidebar-link svg{width:18px;height:18px;flex-shrink:0}
+        .sidebar-link .count{margin-left:auto;background:var(--peach);color:var(--brand-deep);font-size:11.5px;
+            font-weight:700;padding:2px 8px;border-radius:999px}
+        .sidebar-link.active .count{background:var(--cream);color:var(--brand-dark)}
+        .sidebar-user{padding-top:16px;border-top:1px solid rgba(240,250,225,.12);font-size:12.5px;color:rgba(240,250,225,.6)}
+        .sidebar-user strong{display:block;color:var(--cream);font-size:14px;margin-bottom:2px;word-break:break-all}
+        .sidebar-logout{margin-top:12px;padding:9px 14px;border-radius:999px;border:1px solid rgba(240,250,225,.22);
+            background:none;color:var(--cream);cursor:pointer;font-size:13px;font-family:inherit;transition:background .2s;width:100%}
+        .sidebar-logout:hover{background:rgba(240,250,225,.1)}
+
+        .main-content{margin-left:264px;flex:1;padding:30px}
+        .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+        .page-head .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--brand-dark)}
+        .page-head h2{font-size:clamp(24px,3vw,32px);margin-top:6px}
+        .page-head p{color:var(--muted);font-size:14.5px;margin-top:6px}
+
+        /* ── Thẻ thống kê ── */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:14px;margin-bottom:26px}
+        .stat-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px}
+        .stat-icon{width:42px;height:42px;border-radius:999px;display:grid;place-items:center;margin-bottom:12px}
+        .stat-icon svg{width:19px;height:19px}
+        .stat-label{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+        .stat-value{font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--ink)}
+        .stat-sub{font-size:12px;color:var(--subtle);margin-top:2px}
+
+        /* ── Bảng dữ liệu ── */
+        .content-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;margin-bottom:20px}
+        .content-card-header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+            justify-content:space-between;gap:14px;flex-wrap:wrap}
+        .content-card-header h3{font-size:18px}
+        .content-card-body{padding:22px}
+        .table-wrap{overflow-x:auto}
+        .data-table{width:100%;border-collapse:collapse;min-width:720px}
+        .data-table th{text-align:left;padding:13px 18px;font-size:11.5px;font-weight:700;color:var(--muted);
+            text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line-2);white-space:nowrap}
+        .data-table td{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+        .data-table tr:last-child td{border-bottom:none}
+        .data-table tr:hover td{background:var(--surface-2)}
+        .data-table img{width:64px;height:44px;object-fit:cover;border-radius:10px}
+        .order-id{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 9px;
+            border:1px solid var(--line);border-radius:99px;background:var(--surface-2);
+            font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;letter-spacing:.03em;
+            color:var(--muted);cursor:pointer;transition:background .15s,color .15s}
+        .order-id:hover{background:var(--color-primary);border-color:var(--color-primary);color:#fff}
+        .order-search-bar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+        .order-search-bar > i{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+        .order-search-bar input{flex:1;border:none;outline:none;background:transparent;
+            font:inherit;font-size:15px;color:var(--ink)}
+        .order-search-bar input::placeholder{color:var(--muted)}
+        .order-search-bar button{display:grid;place-items:center;width:26px;height:26px;flex-shrink:0;
+            border:none;border-radius:99px;background:var(--surface-2);color:var(--muted);cursor:pointer}
+        .order-search-bar button:hover{background:var(--line);color:var(--ink)}
+        .order-search-bar button i{width:14px;height:14px}
+        #order-result-count{font-size:13px;color:var(--muted);white-space:nowrap}
+        .cell-main{font-weight:600;color:var(--ink)}
+        .cell-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+        /* ── Nhãn ── */
+        .badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+        .badge-green{background:var(--leaf);color:var(--moss)}
+        .badge-yellow{background:#fdf0dc;color:#8a6116}
+        .badge-red{background:#fbe9e6;color:#9a3d2c}
+        .badge-blue{background:#e6eef8;color:#1a4d8f}
+        .badge-brand{background:var(--peach-bg);color:var(--brand-dark)}
+        .badge-grey{background:var(--alt);color:var(--muted)}
+
+        /* ── Nút ── */
+        .btn{padding:9px 16px;border-radius:999px;border:none;font-size:13.5px;font-weight:600;cursor:pointer;
+            font-family:inherit;transition:background .18s,transform .18s;display:inline-flex;align-items:center;gap:6px}
+        .btn:hover{transform:translateY(-1px)}
+        .btn-sm{padding:7px 13px;font-size:12.5px}
+        /* Hang nut thao tac trong bang: khong cho xuong dong.
+           Truoc day ba nut la ba the roi nhau trong o, cot hep mot chut la
+           cai thung rac roi xuong dong duoi, nhin nhu bi loi. */
+        .row-acts{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;white-space:nowrap}
+        .row-acts .btn{flex:none}
+        .data-table td:last-child{white-space:nowrap}
+        .btn-green{background:var(--leaf);color:var(--moss)}.btn-green:hover{background:#e2f0cd}
+        .btn-red{background:#fbe9e6;color:#9a3d2c}.btn-red:hover{background:#f6d9d3}
+        .btn-blue{background:#e6eef8;color:#1a4d8f}.btn-blue:hover{background:#d6e2f2}
+        .btn-dark{background:var(--brand);color:var(--cream)}.btn-dark:hover{background:var(--brand-mid)}
+        .btn-outline{background:var(--surface);color:var(--body);border:1px solid var(--line-2)}
+        .btn-outline:hover{border-color:var(--brand);color:var(--brand-dark)}
+
+        /* ── Bộ lọc ── */
+        .filter-row{display:flex;gap:8px;flex-wrap:wrap}
+        .filter-chip{padding:8px 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);
+            color:var(--body);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+        .filter-chip:hover{background:rgba(198,113,57,.1)}
+        .filter-chip.active{background:var(--brand);border-color:var(--brand);color:var(--cream)}
+
+        /* ── Modal ── */
+        .modal-overlay{position:fixed;inset:0;background:rgba(32,30,29,.55);backdrop-filter:blur(5px);z-index:100;
+            display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s}
+        .modal-overlay.show{opacity:1;pointer-events:all}
+        .modal{background:var(--surface);border-radius:26px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;
+            box-shadow:0 28px 70px rgba(29,34,20,.35)}
+        .modal-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+        .modal-header h3{font-size:20px}
+        .modal-close{background:var(--surface-2);border:none;width:34px;height:34px;border-radius:999px;font-size:16px;
+            cursor:pointer;color:var(--ink-2)}
+        .modal-close:hover{background:var(--peach-bg);color:var(--brand-dark)}
+        .modal-body{padding:24px}
+
+        /* ── Đối chiếu sao kê ── */
+        .bank-group{margin-top:22px}
+        .bank-group h3{font-size:16px;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+        .bank-group .why{font-size:12.8px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+        .bank-pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+        .bank-pill.ok{background:rgba(22,163,74,.12);color:#128a3e}
+        .bank-pill.warn{background:rgba(255,122,47,.14);color:#c85a12}
+        .bank-pill.grey{background:var(--surface-2);color:var(--muted)}
+        .bank-pill.bad{background:rgba(192,57,43,.12);color:#c0392b}
+        .bank-note{font-size:12.5px;color:var(--muted);line-height:1.6;padding:14px 16px;
+            background:var(--surface-2);border-radius:12px;margin-top:10px}
+
+        /* ── Cửa sổ đối chiếu CCCD ──
+           Ảnh nền tối để chữ trên thẻ nổi rõ; thẻ CCCD nền sáng nên đặt trên
+           nền trắng thì mép ảnh lẫn vào trang, khó biết ảnh đã tải hết chưa. */
+        .identity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+        .identity-grid span{display:block;font-size:12px;color:var(--muted-ink);margin-bottom:3px}
+        .identity-grid b{font-size:16px;letter-spacing:.4px}
+        .identity-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+        .identity-photo span{display:block;font-size:12px;color:var(--muted-ink);margin-bottom:6px}
+        .identity-photo img{width:100%;border-radius:12px;border:1px solid var(--line);background:#11151a;display:block}
+        .identity-note{margin:18px 0 0;font-size:12.5px;line-height:1.7;color:var(--muted-ink);
+            padding:12px 14px;border-radius:12px;background:var(--surface-2)}
+        .modal-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+
+        .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:14px}
+        .img-preview{width:100%;max-height:220px;object-fit:cover;border-radius:16px;margin-top:10px;display:none}
+        .upload-area{border:2px dashed var(--line-2);border-radius:16px;padding:24px;text-align:center;cursor:pointer;
+            transition:border-color .2s,background .2s,color .2s;color:var(--muted);font-size:14px}
+        .upload-area:hover{border-color:var(--brand);color:var(--brand-dark);background:var(--surface-2)}
+        .upload-area.has-file{border-color:var(--sage-2);background:var(--leaf);color:var(--moss)}
+
+        .tab-section{display:none}.tab-section.active{display:block}
+        .empty-state{text-align:center;padding:56px 20px;color:var(--subtle)}
+        .empty-state svg{width:44px;height:44px;margin-bottom:12px;opacity:.55}
+        .empty-state p{font-size:14.5px}
+
+        @media(max-width:900px){
+            .sidebar{width:100%;height:auto;position:relative}
+            .admin-layout{flex-direction:column}
+            .main-content{margin-left:0;padding:20px}
+            .sidebar-nav{flex-direction:row;flex-wrap:wrap}
+            .sidebar-link{width:auto}
+        }
+
+        #order-detail { width:min(520px, calc(100% - 32px)); max-height:85vh; margin:auto; padding:24px; border:0; border-radius:18px; overflow:auto; }
+        #order-detail::backdrop { background:rgba(0,0,0,.5); }
+        #order-detail dt { margin-top:12px; font-weight:700; }
+        #order-detail dd { margin:4px 0; overflow-wrap:anywhere; }
+        #order-detail form { margin-top:18px; }
+        @media(max-width:640px){
+            .main-content{min-width:0;padding:16px 12px}
+            .mobile-orders,.mobile-orders tbody,.mobile-orders tr,.mobile-orders td{display:block;width:100%;min-width:0}
+            .mobile-orders thead{display:none}
+            .mobile-orders tr{border-bottom:2px solid var(--line);padding:12px}
+            .mobile-orders td{border:0;padding:7px 0;white-space:normal!important;overflow-wrap:anywhere}
+            .mobile-orders td::before{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+            .mobile-orders td:nth-child(2)::before{content:'Khách hàng'}
+            .mobile-orders td:nth-child(3)::before{content:'Thời gian'}
+            .mobile-orders td:nth-child(4)::before{content:'Đối tác'}
+            .mobile-orders td:nth-child(5)::before{content:'Tổng tiền'}
+            .mobile-orders .row-acts{display:flex;flex-wrap:wrap;gap:8px}
+            .mobile-orders .row-acts button{min-height:44px}
+        }
+        /* ── In mã QR đóng dấu Hộ chiếu ── */
+        .pq-warn{background:#fdf0e3;border:1px solid #e8c9a4;color:#8a4b13;
+            border-radius:14px;padding:14px 18px;margin-bottom:18px;font-size:14px;line-height:1.6}
+        #pq-sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+        .pq-card{background:#fff;border:2px solid var(--ink);border-radius:18px;
+            padding:24px 20px;text-align:center;break-inside:avoid}
+        .pq-brand{font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--terracotta,#C67139)}
+        .pq-card h3{font-family:var(--font-display);font-size:26px;margin:8px 0 2px;color:var(--ink);line-height:1.2}
+        .pq-area{font-size:13px;color:var(--muted);margin-bottom:14px}
+        .pq-qr{width:100%;max-width:230px;height:auto;display:block;margin:0 auto 14px}
+        /* Ảnh QR tải hỏng thì phải thấy rõ, không được in ra tấm trống */
+        .pq-qr.pq-broken{min-height:180px;border:2px dashed #c00}
+        .pq-how{font-size:15px;line-height:1.5;margin:0 0 4px;color:var(--ink)}
+        .pq-sub{font-size:12px;color:var(--muted);margin:0 0 12px}
+        .pq-url{font-size:9px;color:#999;word-break:break-all;line-height:1.35;
+            border-top:1px dashed #ddd;padding-top:8px}
+
+        @media print{
+            /* Chỉ in tấm dán, giấu toàn bộ khung quản trị */
+            body{background:#fff}
+            .sidebar,.topbar,.no-print,.page-head,.sidebar-link{display:none !important}
+            .tab-section:not(#tab-passport){display:none !important}
+            .main,.content{margin:0 !important;padding:0 !important}
+            #pq-sheet{grid-template-columns:repeat(2,1fr);gap:10mm}
+            .pq-card{border-color:#000;page-break-inside:avoid}
+            .pq-url{color:#666}
+        }
+
+        .pq-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:26px 0 12px}
+        .pq-bar h3{font-family:var(--font-display);font-size:19px;margin:0}
+        .pq-dlg{position:fixed;inset:0;z-index:400;display:grid;place-items:center;
+            padding:20px;background:rgba(0,0,0,.5)}
+        .pq-dlg-box{background:var(--surface);border-radius:20px;padding:24px;
+            width:100%;max-width:440px;max-height:88vh;overflow-y:auto}
+        .pq-dlg-box h4{font-family:var(--font-display);font-size:20px;margin:0 0 4px}
+        .pq-dlg-box .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+        .pq-dlg-box label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+        .pq-dlg-box input,.pq-dlg-box textarea{width:100%;padding:11px 13px;font:inherit;font-size:14px;
+            border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+        .pq-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .pq-dlg-err{color:var(--terracotta,#C67139);font-weight:600;font-size:13px;margin-top:10px}
+        .pq-dlg-actions{display:flex;gap:9px;margin-top:16px}
+        .pq-dlg-actions button{flex:1;padding:12px;border:0;border-radius:11px;cursor:pointer;
+            font:inherit;font-weight:700}
+        .pq-save{background:var(--terracotta,#C67139);color:#fff}
+        .pq-cancel{background:var(--surface-2);color:var(--ink)}
+        .pq-off{opacity:.5}
+        .pq-select{width:100%;padding:11px 13px;font:inherit;font-size:14px;
+            border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+    </style>
+</head>
+<body>
+
+<!-- ═══ ĐĂNG NHẬP ═══ -->
+<div id="login-page" class="login-page">
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="/assets/logo.png" alt="LOCALMATE" class="mark">
+            <h1>LOCALMATE</h1>
+            <p>Trang quản trị</p>
+        </div>
+        <form id="login-form">
+            <div class="form-group">
+                <label>Email quản trị</label>
+                <input type="email" id="login-email" placeholder="Email quản trị được cấp" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary" id="login-btn">Đăng nhập</button>
+            <div class="login-error" id="login-error"></div>
+        </form>
+    </div>
+</div>
+
+<!-- ═══ BẢNG ĐIỀU KHIỂN ═══ -->
+<div id="dashboard" class="admin-layout" style="display:none">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/assets/logo.png" alt="LOCALMATE" class="mark">
+            <div><b>LOCALMATE</b><small>Quản trị</small></div>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="sidebar-link active" data-tab="overview" onclick="showTab('overview', this)"><i data-lucide="layout-dashboard"></i>Tổng quan</button>
+            <button class="sidebar-link" data-tab="orders" onclick="showTab('orders', this)"><i data-lucide="receipt-text"></i>Đơn hàng<span class="count" id="count-orders">0</span></button>
+            <button class="sidebar-link" data-tab="partners" onclick="showTab('partners', this)"><i data-lucide="handshake"></i>Đối tác<span class="count" id="count-partners">0</span></button>
+            <button class="sidebar-link" data-tab="rooms" onclick="showTab('rooms', this)"><i data-lucide="bed-double"></i>Phòng nghỉ</button>
+            <button class="sidebar-link" data-tab="events" onclick="showTab('events', this)"><i data-lucide="party-popper"></i>Lễ hội<span class="count" id="count-events">0</span></button>
+            <button class="sidebar-link" data-tab="contacts" onclick="showTab('contacts', this)"><i data-lucide="mail"></i>Liên hệ<span class="count" id="count-contacts">0</span></button>
+            <button class="sidebar-link" data-tab="ledger" onclick="showTab('ledger', this)"><i data-lucide="book-open"></i>Sổ quỹ</button>
+            <button class="sidebar-link" data-tab="passport" onclick="showTab('passport', this)"><i data-lucide="stamp"></i>Hộ chiếu</button>
+            <button class="sidebar-link" data-tab="bank" onclick="showTab('bank', this)"><i data-lucide="landmark"></i>Sao kê ngân hàng</button>
+            <button class="sidebar-link" data-tab="revenue" onclick="showTab('revenue', this)"><i data-lucide="wallet"></i>Đối soát</button>
+            <button class="sidebar-link" data-tab="settings" onclick="showTab('settings', this)"><i data-lucide="settings"></i>Cài đặt</button>
+        </nav>
+        <div class="sidebar-user">
+            <strong id="admin-email">Admin</strong>
+            Đang đăng nhập
+            <button class="sidebar-logout" onclick="handleLogout()">Đăng xuất</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <!-- ── TỔNG QUAN ── -->
+        <div class="tab-section active" id="tab-overview">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Tổng quan</span>
+                    <h2>Hôm nay của LOCALMATE</h2>
+                    <p>Số liệu cập nhật theo thời gian thực từ web và app.</p>
+                </div>
+            </div>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#fdf0dc;color:#8a6116"><i data-lucide="bell"></i></div>
+                    <div class="stat-label">Đơn chờ xử lý</div>
+                    <div class="stat-value" id="stat-pending">0</div>
+                    <div class="stat-sub" id="stat-pending-sub">Tất cả loại dịch vụ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#f0fae1;color:#3d472b"><i data-lucide="receipt-text"></i></div>
+                    <div class="stat-label">Tổng đơn</div>
+                    <div class="stat-value" id="stat-orders">0</div>
+                    <div class="stat-sub" id="stat-orders-sub">Phòng · Xe · Tour</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#ffe1d0;color:#8c491a"><i data-lucide="handshake"></i></div>
+                    <div class="stat-label">Đối tác chờ duyệt</div>
+                    <div class="stat-value" id="stat-partners">0</div>
+                    <div class="stat-sub" id="stat-partners-sub">Nhà xe · Tour · Lưu trú</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:#e6eef8;color:#1a4d8f"><i data-lucide="wallet"></i></div>
+                    <div class="stat-label">Doanh thu đã chốt</div>
+                    <div class="stat-value" id="stat-revenue">0đ</div>
+                    <div class="stat-sub">Đơn đã duyệt và hoàn thành</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h3>Đơn mới nhất</h3>
+                    <button class="btn btn-outline btn-sm" onclick="showTab('orders', document.querySelector('[data-tab=orders]'))">Xem tất cả</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Dịch vụ</th><th>Khách</th><th>Thời gian</th><th>Đối tác</th><th>Tổng tiền</th><th>Trạng thái</th>
+                    </tr></thead><tbody id="recent-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── ĐƠN HÀNG ── -->
+        <div class="tab-section" id="tab-orders">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Đơn hàng</span>
+                    <h2>Tất cả đơn đặt dịch vụ</h2>
+                    <p>Đơn từ website và app Android đổ về cùng một chỗ.</p>
+                </div>
+                <div class="filter-row" id="order-filters">
+                    <button class="filter-chip active" onclick="filterOrders('all', this)">Tất cả</button>
+                    <button class="filter-chip" onclick="filterOrders('hotel', this)">Phòng</button>
+                    <button class="filter-chip" onclick="filterOrders('transport', this)">Xe</button>
+                    <button class="filter-chip" onclick="filterOrders('tour', this)">Tour</button>
+                    <button class="filter-chip" onclick="filterOrders('food', this)">Đặc sản</button>
+                    <button class="filter-chip" onclick="filterOrders('pending', this)">Chờ duyệt</button>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="order-search-bar">
+                    <i data-lucide="search"></i>
+                    <input type="search" id="order-search" placeholder="Tìm theo mã đơn, tên khách, số điện thoại, phòng, đối tác…"
+                           oninput="searchOrders(this.value)" autocomplete="off">
+                    <button id="order-search-clear" style="display:none" onclick="clearOrderSearch()" title="Xoá tìm kiếm">
+                        <i data-lucide="x"></i>
+                    </button>
+                    <span id="order-result-count"></span>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Dịch vụ</th><th>Khách hàng</th><th>Thời gian</th><th>Đối tác</th><th>Tổng tiền</th><th>Trạng thái</th><th>Thao tác</th>
+                    </tr></thead><tbody id="orders-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-section" id="tab-ledger">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Kế toán</span>
+                    <h2>Sổ quỹ — tiền vào, tiền ra</h2>
+                    <p>Mỗi dòng đều truy được về đơn hàng gốc. Chỉ ghi tiền THẬT SỰ đi qua tài khoản
+                       LOCALMATE; phần khách trả thẳng cho đối tác không nằm ở đây.</p>
+                </div>
+                <div class="filter-row">
+                    <input type="month" id="lg-month" onchange="AdminLedger.load()"
+                           style="padding:9px 13px;border:1.5px solid var(--line);border-radius:10px;font:inherit">
+                    <select id="lg-type" onchange="AdminLedger.load()"
+                           style="padding:9px 13px;border:1.5px solid var(--line);border-radius:10px;font:inherit">
+                        <option value="">Tất cả khoản</option>
+                    </select>
+                </div>
+            </div>
+            <div id="lg-totals" class="stats-grid"></div>
+            <div id="lg-warn"></div>
+            <div id="lg-split"></div>
+            <h3 style="font-family:var(--font-display);font-size:19px;margin:26px 0 12px">Chi tiết từng khoản</h3>
+            <div class="table-wrap"><table class="data-table" id="lg-table"></table></div>
+        </div>
+
+        <div class="tab-section" id="tab-passport">
+            <div class="page-head no-print">
+                <div>
+                    <span class="eyebrow">Hộ chiếu LOCALMATE</span>
+                    <h2>Mã QR đóng dấu tại điểm</h2>
+                    <p>In những tấm này ra, ép plastic rồi dán tại từng điểm. Khách giơ camera lên là đóng
+                       được dấu — không cần cài app. Con dấu chỉ đóng khi khách đứng trong bán kính
+                       <b id="pq-radius">600</b> m, nên phải dán đúng chỗ.</p>
+                </div>
+                <div class="filter-row">
+                    <button class="filter-chip active" onclick="window.print()">In tất cả</button>
+                </div>
+            </div>
+
+            <div class="pq-warn no-print" id="pq-warn" hidden></div>
+
+            <div class="no-print">
+                <div class="pq-bar">
+                    <h3>Điểm đóng dấu</h3>
+                    <button class="filter-chip active" onclick="AdminPassport.editStation()">+ Thêm điểm</button>
+                </div>
+                <div class="table-wrap"><table class="data-table" id="pq-stations"></table></div>
+
+                <div class="pq-bar">
+                    <h3>Phần thưởng</h3>
+                    <button class="filter-chip active" onclick="AdminPassport.editReward()">+ Thêm phần thưởng</button>
+                </div>
+                <div class="table-wrap"><table class="data-table" id="pq-rewards"></table></div>
+
+                <div class="pq-bar"><h3>Tấm dán để in</h3></div>
+            </div>
+
+            <div id="pq-sheet"></div>
+            <div id="pq-form"></div>
+        </div>
+
+        <!-- ══ SAO KÊ NGÂN HÀNG ══
+     Trước đây tiền vào hệ thống bằng hai cái bấm tin nhau: khách bấm "tôi đã
+     chuyển cọc", quản trị bấm "đã nhận", không ai đối chiếu với ngân hàng.
+     Vài đơn một ngày còn nhớ được; vài chục đơn là lẫn. -->
+<div class="tab-section" id="tab-bank">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow">Tiền cọc</span>
+            <h2>Đối chiếu với sao kê ngân hàng</h2>
+            <p>Tải sao kê từ ngân hàng (dạng CSV hoặc copy cả bảng), dán vào ô dưới.
+               Hệ thống tìm mã đơn trong nội dung chuyển khoản rồi đối chiếu số tiền.
+               <b>Máy chỉ ghép và báo cáo — bạn vẫn là người bấm xác nhận.</b></p>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div style="padding:20px">
+            <div class="form-group">
+                <label>Dán sao kê vào đây</label>
+                <textarea id="bank-input" rows="8"
+                          placeholder="Ví dụ:&#10;05/09/2026;350.000;BAYNUI A1B2C3D4 CHUYEN TIEN&#10;05/09/2026;500.000;NGUYEN VAN A chuyen khoan"
+                          style="font-family:ui-monospace,monospace;font-size:13px"></textarea>
+                <small style="display:block;margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.6">
+                    Mỗi giao dịch một dòng, có cột số tiền và cột nội dung. Ngăn cột bằng
+                    dấu phẩy, chấm phẩy hay tab đều được — hệ thống tự nhận.
+                    Dòng tiền ra (số âm) sẽ bị bỏ qua.
+                </small>
+            </div>
+            <button class="btn btn-primary" onclick="runReconcile()">
+                <i data-lucide="search-check"></i> Đối chiếu
+            </button>
+            <span id="bank-msg" style="margin-left:14px;font-size:13.5px"></span>
+        </div>
+    </div>
+
+    <div id="bank-result"></div>
+</div>
+
+<div class="tab-section" id="tab-revenue">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Dòng tiền</span>
+                    <h2>Đối soát với đối tác</h2>
+                    <p>Chỉ tính đơn đã hoàn thành — đơn đang chờ chưa phải tiền thật.
+                       Đối tác thấy đúng bảng này ở cổng của họ, nên hai bên không lệch số.</p>
+                </div>
+                <div class="filter-row">
+                    <input type="month" id="rev-month" onchange="AdminRevenue.load()"
+                           style="padding:9px 13px;border:1.5px solid var(--line);border-radius:10px;font:inherit">
+                </div>
+            </div>
+            <div id="rev-totals" class="stats-grid"></div>
+            <div class="table-wrap"><table class="data-table" id="rev-table"></table></div>
+        </div>
+
+        <div class="tab-section" id="tab-events">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Lễ hội &amp; sự kiện</span>
+                    <h2>Lịch lễ hội vùng Bảy Núi</h2>
+                    <p>Lễ Khmer chạy theo âm lịch Khmer nên năm nào cũng lệch ngày — nhập tay để luôn đúng.
+                       Chuyến của khách trùng ngày nào, lịch trình tự chèn sự kiện vào ngày đó.</p>
+                </div>
+                <div class="filter-row">
+                    <button class="filter-chip" onclick="Events.seed()">Tạo mẫu</button>
+                    <button class="filter-chip active" onclick="Events.openForm()">+ Thêm sự kiện</button>
+                </div>
+            </div>
+
+            <div class="content-card" id="event-form-card" style="display:none">
+                <div style="padding:22px">
+                    <h3 id="event-form-title" style="margin-bottom:16px">Thêm sự kiện</h3>
+                    <input type="hidden" id="ev-id">
+                    <div class="form-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:14px">
+                        <div class="form-group"><label>Tên sự kiện *</label>
+                            <input type="text" id="ev-name" class="form-input" placeholder="Hội đua bò Bảy Núi"></div>
+                        <div class="form-group"><label>Loại</label>
+                            <select id="ev-category" class="form-input"></select></div>
+                        <div class="form-group"><label>Ngày bắt đầu *</label>
+                            <input type="date" id="ev-start" class="form-input"></div>
+                        <div class="form-group"><label>Ngày kết thúc</label>
+                            <input type="date" id="ev-end" class="form-input"></div>
+                        <div class="form-group"><label>Giờ bắt đầu</label>
+                            <input type="time" id="ev-time" class="form-input" value="08:00"></div>
+                        <div class="form-group"><label>Khu vực</label>
+                            <input type="text" id="ev-area" class="form-input" placeholder="Tri Tôn, An Giang"></div>
+                        <div class="form-group"><label>Vé</label>
+                            <input type="text" id="ev-ticket" class="form-input" placeholder="Miễn phí"></div>
+                        <div class="form-group"><label>Gắn với điểm đến</label>
+                            <select id="ev-place" class="form-input"></select></div>
+                    </div>
+                    <div class="form-group" style="margin-top:12px"><label>Mô tả ngắn</label>
+                        <input type="text" id="ev-summary" class="form-input" placeholder="Di sản văn hoá phi vật thể quốc gia."></div>
+                    <div class="form-group" style="margin-top:12px"><label>Chi tiết / lời khuyên cho khách</label>
+                        <textarea id="ev-detail" class="form-input" rows="3" placeholder="Nên tới sớm 1 tiếng để có chỗ đứng đẹp."></textarea></div>
+                    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+                        <button class="btn btn-primary" onclick="Events.save()">Lưu sự kiện</button>
+                        <button class="btn btn-outline" onclick="Events.closeForm()">Huỷ</button>
+                        <span id="ev-error" style="color:#b3261e;font-size:14px;align-self:center"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Sự kiện</th><th>Loại</th><th>Thời gian</th><th>Khu vực</th><th>Vé</th><th>Thao tác</th>
+                    </tr></thead><tbody id="events-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-section" id="tab-partners">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Đối tác</span>
+                    <h2>Nhà xe · Đơn vị tour · Lưu trú</h2>
+                    <p>Mở giấy tờ đối chiếu danh tính rồi mới duyệt. Hồ sơ chưa đủ giấy sẽ không có nút Duyệt.</p>
+                </div>
+                <div class="filter-row" id="partner-filters">
+                    <button class="filter-chip active" onclick="filterPartners('all', this)">Tất cả</button>
+                    <button class="filter-chip" onclick="filterPartners('pending', this)">Chờ duyệt</button>
+                    <button class="filter-chip" onclick="filterPartners('approved', this)">Đã duyệt</button>
+                    <label>Loại đối tác
+                        <select onchange="filterPartnerType(this.value)">
+                            <option value="all">Tất cả dịch vụ</option><option value="hotel">Lưu trú</option>
+                            <option value="transport">Nhà xe</option><option value="tour">Tour</option>
+                            <option value="food">Đặc sản</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Đơn vị</th><th>Loại</th><th>Liên hệ</th><th>Khu vực</th><th>Hoa hồng</th><th>Giấy tờ</th><th>Trạng thái</th><th>Thao tác</th>
+                    </tr></thead><tbody id="partners-tbody"></tbody></table>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="content-card-header"><h3>Đối tác có sẵn trong hệ thống</h3></div>
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Đơn vị</th><th>Loại</th><th>Khu vực</th><th>Đánh giá</th><th>Email đăng nhập</th>
+                    </tr></thead><tbody id="seed-partners-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── PHÒNG NGHỈ ── -->
+        <div class="tab-section" id="tab-rooms">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Lưu trú</span>
+                    <h2>Phòng nghỉ của homestay</h2>
+                    <p>Phòng hiển thị trên website và app.</p>
+                </div>
+                <button class="btn btn-dark" onclick="openRoomModal()"><i data-lucide="plus"></i>Thêm phòng</button>
+            </div>
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Ảnh</th><th>Tên phòng</th><th>Giá/đêm</th><th>Sức chứa</th><th>Trạng thái</th><th>Thao tác</th>
+                    </tr></thead><tbody id="rooms-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── LIÊN HỆ ── -->
+        <div class="tab-section" id="tab-contacts">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Hộp thư</span>
+                    <h2>Tin nhắn từ khách</h2>
+                    <p>Gửi từ form liên hệ trên website.</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table class="data-table"><thead><tr>
+                        <th>Người gửi</th><th>Email</th><th>Nội dung</th><th>Ngày</th><th>Trạng thái</th><th>Thao tác</th>
+                    </tr></thead><tbody id="contacts-tbody"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CÀI ĐẶT ── -->
+        <div class="tab-section" id="tab-settings">
+            <div class="page-head">
+                <div>
+                    <span class="eyebrow">Cấu hình</span>
+                    <h2>Cài đặt chung</h2>
+                    <p>Thông tin hiển thị trên website và app.</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="content-card-body">
+                    <form id="settings-form">
+                        <div class="form-row">
+                            <div class="form-group"><label>Tên homestay</label><input type="text" id="set-name" value="LOCALMATE"></div>
+                            <div class="form-group"><label>Hotline</label><input type="text" id="set-phone" value="0833 385 601"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Email</label><input type="email" id="set-email" value="mrdieu37@gmail.com"></div>
+                            <div class="form-group"><label>Địa chỉ</label><input type="text" id="set-address" value="Núi Cấm, Tịnh Biên, An Giang"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Giờ check-in</label><input type="time" id="set-checkin" value="14:00"></div>
+                            <div class="form-group"><label>Giờ check-out</label><input type="time" id="set-checkout" value="12:00"></div>
+                        </div>
+                        <button type="submit" class="btn btn-dark" style="margin-top:12px"><i data-lucide="save"></i>Lưu cài đặt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ═══ MODAL PHÒNG ═══ -->
+<div class="modal-overlay" id="room-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="room-modal-title">Thêm phòng mới</h3>
+            <button class="modal-close" onclick="closeRoomModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="room-edit-id">
+            <div class="form-row">
+                <div class="form-group"><label>Tên phòng (VI)</label><input type="text" id="room-name" placeholder="VD: Phòng Sun-view Núi Cấm"></div>
+                <div class="form-group"><label>Tên phòng (EN)</label><input type="text" id="room-nameEn" placeholder="VD: Mountain View Room"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Giá/đêm (VNĐ)</label><input type="number" id="room-price" required min="1" step="1" placeholder="850000"></div>
+                <div class="form-group"><label>Sức chứa (người)</label><input type="number" id="room-capacity" required min="1" step="1" placeholder="2"></div>
+            </div>
+            <div class="form-group"><label>Mô tả (VI)</label><textarea id="room-desc" placeholder="Mô tả phòng tiếng Việt..."></textarea></div>
+            <div class="form-group"><label>Mô tả (EN)</label><textarea id="room-descEn" placeholder="Room description in English..."></textarea></div>
+            <div class="form-row">
+                <div class="form-group"><label>Tiện nghi (VI)</label><input type="text" id="room-amenities" placeholder="WiFi, điều hòa, nước nóng"></div>
+                <div class="form-group"><label>Tiện nghi (EN)</label><input type="text" id="room-amenitiesEn" placeholder="WiFi, A/C, hot water"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Trạng thái</label><select id="room-status"><option value="available">Còn phòng</option><option value="booked">Đã đặt</option><option value="maintenance">Bảo trì</option></select></div>
+                <div class="form-group"><label>Thứ tự hiển thị</label><input type="number" id="room-order" required min="1" step="1" placeholder="1" value="1"></div>
+            </div>
+            <div class="form-group">
+                <label>Ảnh phòng</label>
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('room-image-file').click()">
+                    <span>📷 Bấm để chọn ảnh</span>
+                    <input type="file" id="room-image-file" accept="image/*" style="display:none" onchange="handleImagePreview(this)">
+                </div>
+                <img class="img-preview" id="room-img-preview">
+                <input type="hidden" id="room-imageUrl">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeRoomModal()">Huỷ</button>
+            <button class="btn btn-dark" id="room-save-btn" onclick="saveRoom()"><i data-lucide="save"></i>Lưu phòng</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cửa sổ đối chiếu giấy tờ.
+     Số CCCD đầy đủ và ảnh thẻ chỉ xuất hiện ở đây, sau một cú bấm có chủ ý,
+     và máy chủ ghi nhật ký mỗi lần mở. Bảng danh sách bên ngoài chỉ thấy 4 số
+     cuối — bảng đó mở suốt ngày trên màn hình, ai đi ngang cũng đọc được. -->
+<div class="modal-overlay" id="identity-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Đối chiếu danh tính</h3>
+            <button class="modal-close" onclick="closeIdentity()">&times;</button>
+        </div>
+        <div class="modal-body" id="identity-body"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js?v=5"></script>
+<script src="js/auth-token.js?v=1"></script>
+<script src="js/admin.js?v=16"></script>
+<script src="js/admin-bank.js?v=1"></script>
+    <script src="js/admin-revenue.js?v=1"></script>
+    <script src="js/admin-passport.js?v=1"></script>
+    <script src="js/admin-ledger.js?v=1"></script>
+</body>
+</html>

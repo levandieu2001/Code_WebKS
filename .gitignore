@@ -1,0 +1,32 @@
+.env
+node_modules/
+*.apk
+*.aab
+.idea/
+.gradle/
+.kotlin/
+local.properties
+**/build/
+/data/
+uploads/
+
+# Bản sao lưu đơn đặt — chứa tên, email, số điện thoại của khách. Là dữ liệu
+# vận hành chứ không phải mã nguồn, không đưa lên kho công khai.
+backup-*.json
+public/uploads/
+
+# Khoá quản trị Firebase — có quyền đọc/ghi toàn bộ Firestore và tạo token
+# đăng nhập cho bất kỳ tài khoản nào. Lộ ra là mất trắng dữ liệu.
+*firebase-adminsdk*.json
+serviceAccountKey.json
+google-services.json
+
+# File cau hinh may chu da dien khoa that (sinh tu dong de dan len server).
+# Tuyet doi khong len Git — chua khoa Gemini, OpenAI va khoa admin Firebase.
+deploy/CAU-HINH-MAY-CHU.txt
+
+# Khoa ky app Android. Mat khoa nay la KHONG con cap nhat duoc app da cai tren
+# may nguoi dung — Android chi cho cai de len ban cu khi hai ban ky bang cung
+# mot khoa. Giu ban sao o cho an toan, dung de lot len kho ma cong khai.
+*.jks
+*.keystore

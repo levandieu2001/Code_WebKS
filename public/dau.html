@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đóng dấu Hộ chiếu LOCALMATE</title>
+<link rel="icon" href="/assets/favicon.png">
+<style>
+/* Trang này khách mở bằng camera điện thoại khi đang đứng giữa rừng tràm
+   hoặc trên đỉnh núi — sóng yếu, nắng chói, một tay cầm điện thoại.
+   Vì vậy: tự chứa toàn bộ CSS (không chờ tải file khác), chữ to, một nút duy
+   nhất, và nói rõ ràng chuyện gì đang xảy ra ở từng bước. */
+:root{
+    --forest:#1D2214; --sand:#F5EAD8; --cream:#FFFBF4; --terracotta:#C67139;
+    --gold:#D7B46A; --ink:#27291F; --muted:#6F7168; --success:#3E7C59;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:var(--sand); color:var(--ink);
+    min-height:100dvh; display:flex; align-items:center; justify-content:center;
+    padding:22px;
+}
+.card{
+    width:100%; max-width:430px; text-align:center;
+    background:var(--cream); border-radius:26px; padding:30px 24px 26px;
+    box-shadow:0 14px 44px rgba(0,0,0,.12);
+}
+.brand{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--terracotta); font-weight:700}
+h1{font-size:25px; line-height:1.25; margin:10px 0 6px}
+p{color:var(--muted); font-size:15px; line-height:1.6}
+
+/* Con dấu — vòng tròn có viền đứt như dấu mộc thật */
+.seal{
+    width:132px; height:132px; margin:22px auto 16px;
+    border-radius:50%; display:grid; place-items:center;
+    border:3px dashed var(--gold); background:var(--forest); color:var(--gold);
+    font-size:52px; font-weight:800;
+    transition:transform .5s cubic-bezier(.2,1.4,.4,1);
+}
+.seal.stamped{animation:thump .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes thump{0%{transform:scale(2.2) rotate(-14deg);opacity:0}60%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+.seal.waiting{border-color:var(--muted); background:#e7e2d6; color:var(--muted); font-size:30px}
+
+.bar{height:9px; border-radius:9px; background:#e2dccd; overflow:hidden; margin:18px 0 8px}
+.bar i{display:block; height:100%; background:var(--terracotta); transition:width .7s ease}
+.count{font-size:14px; color:var(--muted)}
+
+button{
+    width:100%; margin-top:20px; padding:16px;
+    border:0; border-radius:16px; cursor:pointer;
+    font:inherit; font-size:16px; font-weight:700;
+    background:var(--terracotta); color:#fff;
+}
+button:disabled{opacity:.55}
+button.ghost{background:transparent; color:var(--terracotta); margin-top:8px; padding:12px}
+a.link{display:inline-block; margin-top:14px; color:var(--terracotta); font-weight:600; text-decoration:none}
+
+input{
+    width:100%; margin-top:14px; padding:15px 16px;
+    border:1.5px solid #ddd5c4; border-radius:14px;
+    font:inherit; font-size:17px; text-align:center; background:#fff;
+}
+.err{color:var(--terracotta); font-weight:600}
+.ok{color:var(--success); font-weight:600}
+.hint{font-size:13px; margin-top:12px}
+</style>
+</head>
+<body>
+<main class="card">
+    <div class="brand">Hộ chiếu LOCALMATE</div>
+    <div class="seal waiting" id="seal">…</div>
+    <h1 id="title">Đang chuẩn bị…</h1>
+    <p id="msg">Giữ máy yên một chút nhé.</p>
+
+    <div id="progress" hidden>
+        <div class="bar"><i id="bar" style="width:0"></i></div>
+        <div class="count" id="count"></div>
+    </div>
+
+    <div id="phonebox" hidden>
+        <input id="phone" type="tel" inputmode="numeric" maxlength="11" placeholder="Số điện thoại của bạn">
+        <p class="hint">Dùng để giữ con dấu cho bạn. Không cần tạo tài khoản.</p>
+    </div>
+
+    <button id="action" hidden></button>
+    <button id="retry" class="ghost" hidden>Thử lại</button>
+    <a class="link" id="book" href="/hochieu.html" hidden>Xem cuốn hộ chiếu của tôi →</a>
+</main>
+
+<script>
+(() => {
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('s') || '';
+    const code = params.get('k') || '';
+    const KEY_PHONE = 'baynui_lookup_phone';
+
+    const set = (title, msg, cls = '') => {
+        $('title').textContent = title;
+        $('msg').innerHTML = msg;
+        $('msg').className = cls;
+    };
+
+    if (!slug || !code) {
+        set('Mã không hợp lệ', 'Bạn quét lại mã QR dán tại điểm nhé.', 'err');
+        return;
+    }
+
+    let phone = (localStorage.getItem(KEY_PHONE) || '').replace(/[\s.-]/g, '');
+    const token = localStorage.getItem('baynui_token');
+
+    /** Xin vị trí. Đây là bước bắt buộc — con dấu chỉ có giá trị khi khách tới tận nơi. */
+    function locate() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error('Máy không hỗ trợ định vị.'));
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+                err => reject(new Error(
+                    err.code === 1
+                        ? 'Bạn chưa cho phép truy cập vị trí. Con dấu chỉ đóng được khi xác nhận bạn đang ở đây.'
+                        : 'Chưa lấy được vị trí. Ra chỗ thoáng rồi thử lại giúp mình nhé.',
+                )),
+                { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 },
+            );
+        });
+    }
+
+    async function stamp() {
+        $('action').hidden = true;
+        $('retry').hidden = true;
+        $('phonebox').hidden = true;
+        set('Đang xác nhận vị trí…', 'Giữ máy yên vài giây.');
+
+        let here;
+        try {
+            here = await locate();
+        } catch (err) {
+            set('Cần bật định vị', err.message, 'err');
+            $('retry').hidden = false;
+            return;
+        }
+
+        set('Đang đóng dấu…', 'Sắp xong rồi.');
+        try {
+            const res = await fetch('/v1/passport/claim', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: 'Bearer ' + token } : {}),
+                },
+                body: JSON.stringify({ slug, code, lat: here.lat, lng: here.lng, phone }),
+            });
+            const body = await res.json();
+
+            if (!res.ok) {
+                set('Chưa đóng được dấu', body.error?.message || 'Có lỗi xảy ra.', 'err');
+                $('retry').hidden = false;
+                $('book').hidden = false;
+                return;
+            }
+
+            const seal = $('seal');
+            seal.className = 'seal stamped';
+            seal.textContent = body.data.symbol;
+
+            const p = body.passport;
+            set(`Đã đóng dấu ${body.data.name}!`, `Bạn là <b>${p.level_name}</b>.`, 'ok');
+            $('progress').hidden = false;
+            $('bar').style.width = Math.round((p.count / p.total) * 100) + '%';
+            $('count').textContent = `${p.count}/${p.total} dấu`
+                + (p.next_level_in > 0 ? ` · còn ${p.next_level_in} dấu nữa lên cấp` : ' · đã đủ bộ!');
+            $('book').hidden = false;
+
+            // Ưu đãi vừa mở khoá thì khoe ngay, đó là phần thưởng thật
+            const justOpen = (p.rewards || []).filter(r => r.unlocked && r.need === p.count)[0];
+            if (justOpen) {
+                $('msg').innerHTML += `<br><br>Mở khoá: <b>${justOpen.title}</b><br>Mã <b>${justOpen.code}</b>`;
+            }
+        } catch (_) {
+            set('Mất mạng', 'Chỗ này sóng yếu. Bạn thử lại khi có sóng nhé — dấu vẫn còn đó.', 'err');
+            $('retry').hidden = false;
+        }
+    }
+
+    // Chưa biết khách là ai thì hỏi số điện thoại trước, rồi mới đóng dấu
+    if (!token && !/^0\d{9}$/.test(phone)) {
+        set('Bạn là ai nhỉ?', 'Nhập số điện thoại để LOCALMATE giữ con dấu này cho bạn.');
+        $('phonebox').hidden = false;
+        $('action').hidden = false;
+        $('action').textContent = 'Đóng dấu';
+        $('action').addEventListener('click', () => {
+            const value = $('phone').value.replace(/[\s.-]/g, '');
+            if (!/^0\d{9}$/.test(value)) {
+                set('Số chưa đúng', 'Số điện thoại gồm 10 số, bắt đầu bằng 0.', 'err');
+                $('phonebox').hidden = false;
+                $('action').hidden = false;
+                return;
+            }
+            phone = value;
+            localStorage.setItem(KEY_PHONE, phone);
+            stamp();
+        });
+    } else {
+        stamp();
+    }
+
+    $('retry').addEventListener('click', stamp);
+})();
+</script>
+</body>
+</html>

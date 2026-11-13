@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hộ chiếu LOCALMATE | LOCALMATE</title>
+<link rel="icon" href="/assets/favicon.png">
+<link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+<link rel="stylesheet" href="css/enhancements.css?v=3">
+<link rel="stylesheet" href="css/chatbot.css?v=6">
+<link rel="stylesheet" href="css/account.css?v=4">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="lm inner-page">
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <div class="nav-actions">
+                <a href="phongnghi.html" class="btn-book-nav"><i data-lucide="calendar-check"></i><span>Đặt phòng</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <header class="page-head">
+            <span class="eyebrow">LOCALMATE Passport</span>
+            <h1>Hộ chiếu LOCALMATE</h1>
+            <p>Tới tận nơi, quét mã QR dán tại điểm, nhận một con dấu. Đủ dấu thì mở khoá ưu đãi.</p>
+        </header>
+
+        <section class="hc-lookup">
+            <form id="hc-form" onsubmit="Passport.load(event)">
+                <input id="hc-phone" type="tel" inputmode="numeric" maxlength="11"
+                       placeholder="Số điện thoại của bạn" aria-label="Số điện thoại">
+                <button class="btn-primary" type="submit">Xem hộ chiếu</button>
+            </form>
+            <p class="hc-status" id="hc-status"></p>
+        </section>
+
+        <section id="hc-book"></section>
+
+        <section class="hc-how">
+            <h2>Đóng dấu thế nào?</h2>
+            <ol>
+                <li><b>Tới điểm</b> — Núi Cấm, Trà Sư, Hồ Tà Pạ, Chùa Khmer…</li>
+                <li><b>Giơ camera</b> lên mã QR dán tại đó. Không cần cài app.</li>
+                <li><b>Cho phép định vị</b> — LOCALMATE xác nhận bạn đang có mặt rồi mới đóng dấu.</li>
+            </ol>
+            <p class="hc-note">Con dấu chỉ đóng được khi bạn ở trong bán kính <b id="hc-radius">600</b> m
+               quanh điểm. Đó là lý do mỗi con dấu đều đáng tin.</p>
+        </section>
+    </main>
+
+    <script src="js/ngonngu.js?v=7"></script>
+
+    <script src="js/reviews.js?v=1"></script>
+    <script src="js/app.js?v=12"></script>
+    <script src="js/auth-token.js?v=2"></script>
+    <script src="js/account.js?v=8"></script>
+    <script src="js/passport.js?v=1"></script>
+    <script src="js/notify.js?v=1"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

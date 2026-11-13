@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Đường dẫn mà app cho phép chương trình khác đọc qua FileProvider.
+
+    Chỉ mở đúng một thư mục: nơi để file cài đặt vừa tải về. Trình cài đặt của
+    Android là một ứng dụng riêng, nó không đọc được thẳng file nằm trong vùng
+    riêng của app — phải đưa qua đường content:// như thế này.
+-->
+<paths>
+    <cache-path name="tai-app" path="update/" />
+</paths>

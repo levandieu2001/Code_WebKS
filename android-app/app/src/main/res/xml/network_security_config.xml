@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mặc định CHẶN http:// — chỉ cho https://. Đây là hành vi đúng cho bản phát
+    hành: dữ liệu khách gửi đi (tên, số điện thoại, vị trí GPS) không được đi
+    qua đường không mã hoá.
+
+    Hai ngoại lệ bên dưới chỉ dùng khi kiểm thử ở máy lập trình:
+      - 10.0.2.2 · localhost : máy chủ chạy trên máy tính, nhìn từ máy ảo.
+
+    Máy chủ thật đã có https://localmate.click nên KHÔNG còn ngoại lệ nào cho nó:
+    mọi lời gọi ra Internet đều đi đường mã hoá.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

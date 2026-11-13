@@ -1,0 +1,29 @@
+{
+  "name": "baynuistay",
+  "version": "1.0.0",
+  "description": "Bảy Núi Stay — nền tảng du lịch văn hoá vùng Thất Sơn, An Giang",
+  "main": "server.js",
+  "engines": {
+    "//": "Máy chủ đám mây đọc dòng này để chọn phiên bản Node. Không khai báo thì nhiều nơi mặc định Node 18 — server.js dùng cú pháp và API của Node 22.",
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node scripts/check-syntax.cjs && node scripts/test-links.cjs && node scripts/test-api-regressions.cjs && node scripts/test-commerce.cjs",
+    "test:ui": "node scripts/test-regressions.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "node-fetch": "^2.7.0",
+    "openai": "^6.33.0"
+  }
+}

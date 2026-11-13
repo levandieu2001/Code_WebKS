@@ -1,0 +1,9 @@
+{
+  "version_code": 12,
+  "version_name": "1.0.1",
+  "apk_path": "tai-app/LOCALMATE-1.0.1.apk",
+  "sha256": "fcde757f1b81ae97f5ad08abe72778875de101cf0fc02a8318858c483d44b4ea",
+  "mandatory": false,
+  "notes": "Cải thiện đặt phòng, tour, xe và đặc sản; giữ ngày đã chọn, hiện mã đơn và nút xem đơn. Sửa lỗi giao diện điện thoại, tính giá xe khứ hồi/ghép chuyến và bổ sung nút hiện mật khẩu trên website. Mời bạn cập nhật để dùng bản mới.",
+  "notes_en": "Improved bookings, order access and mobile usability. Fixed return/shared ride estimates and preserved selected stay dates. Please update to the latest version."
+}

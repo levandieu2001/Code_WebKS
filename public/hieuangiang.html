@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hiểu về An Giang | LOCALMATE</title>
+<link rel="icon" href="/assets/favicon.png">
+<link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+<link rel="stylesheet" href="css/enhancements.css?v=4">
+<link rel="stylesheet" href="css/chatbot.css?v=6">
+<link rel="stylesheet" href="css/account.css?v=4">
+<link rel="stylesheet" href="css/hieuangiang.css?v=1">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="lm inner-page">
+<!-- Trang nay thuoc ban cu, khi web con la "homestay o An Giang". Gio da mo
+     ra ca mien Tay nen khong con duong dan nao tro toi nua, nhung ai go dung
+     dia chi van vao duoc. Doi de trang, nhung noi ro va chi loi ra. -->
+<div class="lm-chuyen-huong" style="background:#eaf4fe;border-bottom:1px solid #cfe3fa;
+     padding:14px 20px;text-align:center;font-size:14px;line-height:1.7;color:#16233a">
+    Trang này thuộc bản cũ, khi LOCALMATE mới chỉ làm ở An Giang.
+    Giờ chúng tôi đã mở ra khắp miền Tây —
+    <a href="khampha.html" style="color:#0f6fd0;font-weight:700">xem toàn bộ điểm đến</a>.
+</div>
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button class="lang-toggle-btn active" data-lang="vi" onclick="changeLanguage('vi')">VI</button>
+                    <button class="lang-toggle-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+                </div>
+                <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                    <img src="assets/chatbot.png" alt="Bot">
+                </button>
+                <a href="phongnghi.html" class="btn-book-nav"><i data-lucide="calendar-check"></i><span data-i18n="nav_book">Đặt phòng</span></a>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav hidden">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a>
+            <a href="khampha.html" data-i18n="nav_explore">Khám phá</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </div>
+    </div>
+    </nav>
+
+    <main class="page ag-page">
+        <header class="page-head">
+            <span class="eyebrow">Understand An Giang</span>
+            <h1>Hiểu về An Giang</h1>
+            <p>Ba thứ khách lần đầu tới đây hay hiểu sai: đi tháng nào, gặp ai,
+               và sắp lịch thế nào cho khỏi chạy lòng vòng.</p>
+        </header>
+
+        <nav class="ag-tabs" id="ag-tabs">
+            <button class="ag-tab active" data-tab="mua">Đi tháng nào</button>
+            <button class="ag-tab" data-tab="dantoc">Bốn dân tộc</button>
+            <button class="ag-tab" data-tab="cum">Sắp lịch mấy ngày</button>
+        </nav>
+
+        <section id="ag-body"><p class="ag-loading">Đang tải…</p></section>
+    </main>
+
+    <script src="js/ngonngu.js?v=7"></script>
+
+    <script src="js/reviews.js?v=1"></script>
+    <script src="js/app.js?v=12"></script>
+    <script src="js/auth-token.js?v=2"></script>
+    <script src="js/account.js?v=8"></script>
+    <script src="js/enhancements.js"></script>
+    <script src="js/hieuangiang.js?v=1"></script>
+    <script src="js/notify.js?v=2"></script>
+<script src="js/chatbot.js?v=11"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

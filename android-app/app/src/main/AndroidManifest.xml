@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Gần bạn / Live Trip: lấy vị trí người dùng -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Quét QR nhận Digital Stamp & Culture Lens -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Nhắc lịch trình, xe sắp đến, cảnh báo mưa (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Dịch vụ nền giữ cho app tài xế còn nghe được chuyến khi thu nhỏ.
+         Không có nó thì Android đóng băng tiến trình và tài xế mất đơn. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <!-- App phát bằng file APK chứ không qua Google Play, nên phải tự mời khách
+         cập nhật. Không có quyền này thì app không gọi được trình cài đặt và
+         khách phải tự vào trình duyệt tải rồi tìm file trong Tệp đã tải. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- Không bắt buộc, để máy không có camera/GPS vẫn cài được app -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+
+    <application
+        android:name=".BayNuiApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LOCALMATE">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep link cho QR check-in: baynuistay://checkin?entity=<id> -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="baynuistay" android:host="checkin" />
+            </intent-filter>
+        </activity>
+
+        <!-- Android đánh thức dịch vụ này khi có push, kể cả app đã tắt hẳn -->
+        <service
+            android:name=".core.notify.BayNuiMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Đưa file APK vừa tải cho trình cài đặt của Android đọc. Từ Android 7
+             trở đi không được truyền file:// giữa hai ứng dụng nữa. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <service
+            android:name=".core.notify.DriverOnlineService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+    </application>
+</manifest>

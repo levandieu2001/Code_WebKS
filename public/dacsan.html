@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Đặc sản miền Tây đặt trực tiếp từ cơ sở sản xuất và nhà vườn: mật ong U Minh, khô cá, thốt nốt, bánh dân gian. Giá do chính chủ hàng đăng.">
+    <title>Đặc sản địa phương | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=12">
+    <link rel="stylesheet" href="css/account.css?v=4">
+    <link rel="stylesheet" href="css/chatbot.css?v=6">
+    <link rel="stylesheet" href="css/localmate.css?v=19">
+    <script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ══ Ô đặt đặc sản ══ */
+.ds-modal { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center;
+    background: rgba(12, 24, 40, .55); padding: 20px; overflow-y: auto; }
+.ds-modal[hidden] { display: none; }
+.ds-box { background: #fff; border-radius: 20px; width: min(480px, 100%);
+    padding: 24px; box-shadow: 0 24px 70px rgba(12,24,40,.3); max-height: 92vh; overflow-y: auto; }
+.ds-box h2 { font-size: 20px; margin: 0 0 4px; color: var(--lm-ink, #16233a); }
+/* Nút huỷ mua luôn nằm ở góc phải dù biểu mẫu dài và đang cuộn. */
+#ds-dat-noi .ds-dong {
+    position: sticky; top: 0; right: auto;
+    margin: -10px -10px -24px auto;
+}
+#ds-dat-noi > h2 { padding-right: 44px; }
+.ds-mon { display: flex; gap: 13px; align-items: center; margin: 16px 0 18px;
+    padding: 12px; border-radius: 13px; background: var(--lm-bg-soft, #f6f9fd); }
+.ds-mon img { width: 62px; height: 62px; border-radius: 10px; object-fit: cover; flex: none; }
+.ds-mon b { display: block; font-size: 15px; color: var(--lm-ink, #16233a); }
+.ds-mon span { font-size: 13.5px; color: var(--lm-muted, #7a879c); }
+.ds-f { margin-bottom: 14px; }
+.ds-f label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;
+    color: var(--lm-ink, #16233a); }
+.ds-f select { width: 100%; padding: 11px 13px; font: inherit; font-size: 14.5px;
+    border: 1.5px solid var(--lm-line, #e3e9f2); border-radius: 11px; background: #fff;
+    color: var(--lm-ink, #16233a); }
+.ds-f input, .ds-f textarea { width: 100%; padding: 11px 13px; font: inherit; font-size: 14.5px;
+    border: 1.5px solid var(--lm-line, #e3e9f2); border-radius: 11px; background: #fff; }
+.ds-f input:focus, .ds-f textarea:focus { outline: none; border-color: var(--lm-blue, #0f6fd0); }
+.ds-f small { display: block; margin-top: 5px; font-size: 12px; color: var(--lm-muted, #7a879c);
+    line-height: 1.6; }
+.ds-sl { display: flex; align-items: center; gap: 8px; flex-wrap:wrap; }
+.ds-sl button { width: 40px; height: 40px; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid var(--lm-line, #e3e9f2); background: #fff; font-size: 19px;
+    color: var(--lm-ink, #16233a); }
+.ds-sl button:hover { border-color: var(--lm-blue, #0f6fd0); color: var(--lm-blue, #0f6fd0); }
+.ds-sl input { width: 64px; text-align: center; }
+.ds-sl .con { font-size: 13px; color: var(--lm-muted, #7a879c); }
+.ds-tong { display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; border-radius: 13px; background: var(--lm-blue-soft, #eaf4fe);
+    margin: 6px 0 14px; font-size: 15px; }
+.ds-tong b { font-size: 21px; color: var(--lm-orange, #ff7a2f); }
+.ds-luu-y { font-size: 12.5px; line-height: 1.7; color: var(--lm-muted, #7a879c);
+    padding: 12px 14px; border-radius: 11px; background: var(--lm-bg-soft, #f6f9fd);
+    margin-bottom: 16px; }
+.ds-loi { color: #c0392b; font-size: 13.5px; margin-bottom: 12px; line-height: 1.6; }
+.ds-nut { display: flex; gap: 10px; }
+.ds-nut .lm-btn { flex: 1; justify-content: center; padding: 13px; }
+.ds-xong { text-align: center; padding: 10px 0; }
+.ds-xong .ma { display: inline-block; margin: 12px 0; padding: 9px 18px; border-radius: 999px;
+    background: var(--lm-blue-soft, #eaf4fe); color: var(--lm-blue, #0f6fd0);
+    font-weight: 800; letter-spacing: .08em; font-size: 17px; }
+
+/* ══ Hàng lọc ══ */
+.ds-loc { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; }
+.ds-loc-o { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--lm-muted, #7a879c); }
+.ds-loc-o select {
+    padding: 8px 12px; font: inherit; font-size: 13.5px;
+    border: 1px solid var(--lm-line, #e3e9f2); border-radius: 999px;
+    background: #fff; color: var(--lm-ink, #16233a); cursor: pointer;
+}
+.ds-loc-tick {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--lm-line, #e3e9f2); background: #fff;
+    font-size: 13.5px; font-weight: 600; color: var(--lm-body, #46536b); cursor: pointer;
+}
+.ds-loc-tick input { width: 15px; height: 15px; accent-color: var(--lm-blue, #0f6fd0); cursor: pointer; }
+.ds-loc-xoa {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 13px; border: 0; border-radius: 999px;
+    background: var(--lm-blue-soft, #eaf4fe); color: var(--lm-blue, #0f6fd0);
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.ds-loc-xoa i, .ds-loc-xoa svg { width: 14px; height: 14px; }
+/* display:inline-flex MANH HON quy tac [hidden]{display:none} san co cua
+   trinh duyet, nen dat hidden ma nut van hien. Phai noi ro mot cau. */
+.ds-loc-xoa[hidden] { display: none; }
+.ds-loc-dem { margin-left: auto; font-size: 13px; color: var(--lm-muted, #7a879c); }
+.ds-no-result {
+    grid-column: 1 / -1; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:16px 18px; border:1px dashed var(--lm-line,#e3e9f2); border-radius:16px;
+    background:var(--lm-bg-soft,#f6f9fd); color:var(--lm-muted,#7a879c);
+}
+.ds-no-result b { color:var(--lm-ink,#16233a); font-size:15px; }
+.ds-no-result span { flex:1; min-width:180px; font-size:13.5px; line-height:1.55; }
+.ds-no-result button {
+    border:0; border-radius:999px; padding:9px 14px; cursor:pointer; font:inherit;
+    font-size:13px; font-weight:700; background:var(--lm-blue,#0f6fd0); color:#fff;
+}
+.ds-suggest-title {
+    grid-column:1 / -1; margin-top:4px; font-size:17px; font-weight:800;
+    color:var(--lm-ink,#16233a);
+}
+
+/* ══ Thẻ món: chỉ giữ thứ cần để CHỌN ══
+   Tên và ảnh bấm được, mở thẳng ô chi tiết — khách quen bấm vào ảnh. */
+.ds-card .lm-card-img { cursor: pointer; }
+.ds-card .ds-ten {
+    cursor: pointer; font-size: 16px; line-height: 1.35;
+    min-height: 43px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ds-card .ds-ten:hover { color: var(--lm-blue, #0f6fd0); }
+/* Ten co so ban dat NGAY DUOI ten mon: khach mua do an gui di xa thi "mua
+   cua ai" quan trong ngang cai gia. */
+.ds-shop {
+    display: flex; align-items: center; gap: 5px;
+    margin: 6px 0 0; font-size: 13px; font-weight: 600;
+    color: var(--lm-blue, #0f6fd0);
+}
+.ds-shop i, .ds-shop svg { width: 13px; height: 13px; flex: none; }
+.ds-noi {
+    display: flex; align-items: center; gap: 5px;
+    margin: 4px 0 0; font-size: 13px; color: var(--lm-muted, #7a879c);
+}
+.ds-noi i, .ds-noi svg { width: 13px; height: 13px; flex: none; }
+.ds-nut { display: flex; gap: 8px; margin-top: 12px; }
+.ds-nut .lm-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13.5px; }
+
+/* ══ Ô xem chi tiết ══
+   Ban cu xep thanh mot chong khoi vuong: anh, ten, gia, ba hop xam bang
+   nhau — nhin nhu bang ke khai. Gio ten nam tren anh co lop chuyen mau,
+   ba dong thong tin bo nen xam chi con bieu tuong tron va duong ke manh,
+   nut dat dinh day o. */
+.ds-box-xem {
+    width: min(540px, 100%); padding: 0;
+    overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    height: min(92vh, 820px); max-height: min(92vh, 820px);
+    border-radius: 24px;
+}
+/* Bong bong tro ly de z-index 999, o nay 400 — no noi len che mat noi dung.
+   Nang han o len tren cung. */
+#ds-xem { z-index: 1200; }
+
+.ds-dong {
+    position: absolute; right: 14px; top: 14px; z-index: 3;
+    display: grid; place-items: center;
+    width: 34px; height: 34px; border: 0; border-radius: 50%;
+    background: rgba(255, 255, 255, .92); color: var(--lm-ink, #16233a);
+    font-size: 14px; cursor: pointer;
+    box-shadow: 0 2px 12px rgba(12, 24, 40, .26);
+    transition: background .18s;
+}
+.ds-dong:hover { background: #fff; }
+
+.ds-xem-anh {
+    position: relative; flex: none;
+    height: clamp(220px, 38vh, 340px);
+    background: var(--lm-bg-soft, #f6f9fd);
+}
+.ds-xem-anh img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Ten dat len anh: o co chieu sau, va con mat khong phai doc mot chong khoi */
+.ds-xem-che {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 46px 22px 18px;
+    /* Anh mon an thuong sang mau (banh vang, thit nuong). Lop chuyen mau
+       phai du dam o phan co chu, khong thi chu trang chim vao anh. Do thu
+       tren chinh hai tam dang co roi moi chot muc nay. */
+    background: linear-gradient(to top, rgba(6, 20, 40, .95) 0%, rgba(6, 20, 40, .9) 48%,
+                                rgba(6, 20, 40, .55) 74%, rgba(6, 20, 40, 0) 100%);
+    color: #fff;
+    text-shadow: 0 1px 12px rgba(3, 12, 26, .5);
+}
+/* PHAI viet ca body.lm o dau: localmate.css co quy tac "body.lm h3" dat mau
+   xanh dam cho moi tieu de, do uu tien cao hon ".ds-xem-che h3" nen chu ten
+   mon bi to xanh dam nam tren lop phu toi — mat hut, tuong khong hien ra. */
+body.lm .ds-xem-che h3 { margin: 0; font-size: 22px; line-height: 1.28; color: #fff; }
+.ds-xem-shop {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 9px; padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .95);
+    color: var(--lm-blue-dark, #0a4f97);
+    font-size: 12.5px; font-weight: 700;
+    text-shadow: none;
+}
+.ds-xem-shop i, .ds-xem-shop svg { width: 14px; height: 14px; }
+.ds-xem-che p {
+    display: flex; align-items: center; gap: 6px;
+    margin: 7px 0 0; font-size: 13.5px; color: rgba(255, 255, 255, .88);
+}
+.ds-xem-che p i, .ds-xem-che p svg { width: 14px; height: 14px; flex: none; }
+
+.ds-xem-than { flex: 1 1 auto; min-height: 0; padding: 20px 22px 4px; overflow-y: auto; }
+.ds-xem-gia { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.ds-xem-gia b { font-size: 27px; font-weight: 800; color: var(--lm-orange, #ff7a2f); }
+.ds-xem-gia small { font-size: 13.5px; color: var(--lm-muted, #7a879c); }
+.ds-xem-gia del { font-size: 14px; color: var(--lm-muted, #7a879c); }
+.ds-xem-giam {
+    padding: 3px 9px; border-radius: 999px;
+    background: #ffece0; color: var(--lm-orange-dark, #ed6414);
+    font-size: 12px; font-weight: 800;
+}
+.ds-xem-ma { margin: 10px 0 0; font-size: 12.5px; color: var(--lm-muted, #7a879c); }
+.ds-xem-ma b { font-weight: 700; letter-spacing: .04em; color: var(--lm-body, #46536b); user-select: all; }
+.ds-xem-mota { margin: 12px 0 0; font-size: 14.5px; line-height: 1.75; color: var(--lm-body, #46536b); }
+
+.ds-xem-bang { margin-top: 6px; }
+.ds-xem-dong {
+    display: flex; gap: 13px; align-items: flex-start;
+    padding: 15px 2px;
+    border-top: 1px solid var(--lm-line, #e3e9f2);
+}
+.ds-xem-bang .ds-xem-dong:first-child { margin-top: 12px; }
+.ds-xem-dong > .ds-xem-ic {
+    display: grid; place-items: center; flex: none;
+    margin-top: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--lm-blue-soft, #eaf4fe); color: var(--lm-blue, #0f6fd0);
+}
+.ds-xem-ic i, .ds-xem-ic svg { width: 17px; height: 17px; }
+.ds-xem-dong b { display: block; font-size: 12.5px; font-weight: 700; color: var(--lm-muted, #7a879c); }
+.ds-xem-dong > div > span { display: block; margin-top: 3px; font-size: 14px; line-height: 1.6; color: var(--lm-ink, #16233a); }
+
+/* Nut dat dinh day: mo ta dai may cung khong cuon mat nut */
+.ds-xem-day {
+    flex: none; padding: 14px 22px 20px;
+    border-top: 1px solid var(--lm-line, #e3e9f2);
+    background: #fff;
+}
+.ds-xem-day .lm-btn { width: 100%; justify-content: center; padding: 14px; font-size: 15.5px; border-radius: 14px; }
+
+@media (max-width: 520px) {
+    .ds-xem-che { padding: 40px 16px 15px; }
+    .ds-xem-che h3 { font-size: 19px; }
+    .ds-xem-anh { height: clamp(190px, 34vh, 270px); }
+    .ds-xem-than { padding: 16px 16px 4px; }
+    .ds-xem-day { padding: 12px 16px 16px; }
+}
+@media (max-height: 600px) {
+    .ds-xem-anh { height: 145px; }
+    .ds-xem-than { padding-top: 12px; }
+}
+</style>
+</head>
+<body class="lm">
+
+<header class="lm-nav" id="main-nav">
+    <div class="lm-nav-inner">
+        <a href="index.html" class="lm-logo"><img src="/assets/logo-ngang.png" alt="LOCALMATE"></a>
+        <nav class="lm-links" id="main-nav-links">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_stay">Chỗ nghỉ</a>
+            <a href="dacsan.html" class="active" data-i18n="nav_food">Đặc sản</a>
+            <a href="khampha.html" data-i18n="nav_dest">Điểm đến</a>
+            <a href="doitac.html" data-i18n="nav_partner">Đối tác</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </nav>
+        <div class="lm-nav-right nav-actions">
+            <button class="lm-menu-btn" onclick="document.getElementById('lm-drawer').classList.toggle('open')" aria-label="Menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                <img src="assets/chatbot.png" alt="Bot">
+            </button>
+            <a href="doitac.html" class="lm-btn lm-btn-cta btn-book-nav">
+                <i data-lucide="store"></i><span data-i18n="nav_partner_cta">Đăng chỗ của bạn</span>
+            </a>
+        </div>
+    </div>
+    <div class="lm-drawer" id="lm-drawer">
+        <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+        <a href="phongnghi.html" data-i18n="nav_stay">Chỗ nghỉ</a>
+        <a href="dacsan.html" data-i18n="nav_food">Đặc sản</a>
+        <a href="khampha.html" data-i18n="nav_dest">Điểm đến</a>
+        <a href="doitac.html" data-i18n="nav_partner">Đối tác</a>
+        <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+    </div>
+</header>
+
+<main class="lm-wrap">
+    <section class="lm-sec">
+        <div class="lm-sec-head">
+            <span class="lm-sec-ic"><i data-lucide="utensils"></i></span>
+            <h2 data-i18n="food_page_h1">Đặc sản địa phương</h2>
+        </div>
+        <p style="margin:-10px 0 22px;max-width:720px;line-height:1.7">
+            <span data-i18n="food_page_p">Hàng đặt thẳng từ cơ sở sản xuất và nhà vườn miền Tây — không qua khâu trung gian. Giá và tình trạng hàng do chính chủ cơ sở cập nhật.</span>
+        </p>
+
+        <div class="lm-fields" style="grid-template-columns:2fr 1.4fr auto;padding:0 0 18px">
+            <label class="lm-field">
+                <i data-lucide="search"></i>
+                <input id="ds-q" list="ds-q-suggestions" autocomplete="off"
+                       aria-autocomplete="list" aria-controls="ds-q-menu"
+                       data-i18n-ph="food_q_ph" placeholder="Tìm món: mật ong, khô cá, thốt nốt…">
+                <datalist id="ds-q-suggestions"></datalist>
+                <div class="lm-auto-menu" id="ds-q-menu" hidden></div>
+            </label>
+            <label class="lm-field">
+                <i data-lucide="map-pin"></i>
+                <input id="ds-area" list="ds-area-suggestions" autocomplete="off"
+                       aria-autocomplete="list" aria-controls="ds-area-menu"
+                       data-i18n-ph="food_area_ph" placeholder="Tỉnh nào? (Cà Mau, An Giang…)">
+                <datalist id="ds-area-suggestions"></datalist>
+                <div class="lm-auto-menu" id="ds-area-menu" hidden></div>
+            </label>
+            <button class="lm-btn lm-btn-primary" id="ds-tim"><i data-lucide="search"></i>Tìm</button>
+        </div>
+
+        <!-- Ba nấc lọc khách hay dùng nhất khi chọn đồ ăn gửi đi xa -->
+        <div class="ds-loc">
+            <label class="ds-loc-o">
+                <span data-i18n="food_sort">Sắp xếp</span>
+                <select id="ds-sort" onchange="DacSan.loc()">
+                    <option value="">Mới đăng trước</option>
+                    <option value="re">Giá thấp → cao</option>
+                    <option value="dat">Giá cao → thấp</option>
+                    <option value="giam">Đang giảm giá</option>
+                </select>
+            </label>
+            <label class="ds-loc-o">
+                <span data-i18n="food_price">Khoảng giá</span>
+                <select id="ds-gia" onchange="DacSan.loc()">
+                    <option value="">Giá nào cũng được</option>
+                    <option value="0-50000">Dưới 50.000đ</option>
+                    <option value="50000-150000">50.000 – 150.000đ</option>
+                    <option value="150000-400000">150.000 – 400.000đ</option>
+                    <option value="400000-0">Trên 400.000đ</option>
+                </select>
+            </label>
+            <label class="ds-loc-tick">
+                <input type="checkbox" id="ds-con" onchange="DacSan.loc()">
+                <span data-i18n="food_instock">Chỉ xem hàng còn bán</span>
+            </label>
+            <button type="button" class="ds-loc-xoa" id="ds-xoa-loc" hidden onclick="DacSan.xoaLoc()">
+                <i data-lucide="x"></i><span data-i18n="food_clear">Bỏ lọc</span>
+            </button>
+            <span class="ds-loc-dem" id="ds-dem"></span>
+        </div>
+
+        <div class="lm-grid" id="ds-list"><div class="lm-empty">Đang tải…</div></div>
+    </section>
+</main>
+
+<footer class="lm-foot">
+    <div class="lm-foot-in">
+        <div>
+            <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="lm-foot-logo" style="filter:brightness(0) invert(1)">
+            <p>Nền tảng kết nối khách du lịch với homestay, tài xế, đơn vị tour và cơ sở đặc sản
+               địa phương khắp Đồng bằng sông Cửu Long.</p>
+        </div>
+        <div>
+            <h4>Khách du lịch</h4>
+            <ul>
+                <li><a href="phongnghi.html">Tìm chỗ nghỉ</a></li>
+                <li><a href="dacsan.html">Đặt đặc sản</a></li>
+                <li><a href="khampha.html" data-i18n="nav_dest">Điểm đến</a></li>
+                <li><a href="donhang.html">Đơn của tôi</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Đối tác</h4>
+            <ul>
+                <li><a href="doitac.html">Đăng ký làm đối tác</a></li>
+                <li><a href="doitac-quanly.html">Kênh đối tác</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Liên hệ</h4>
+            <ul>
+                <li><i data-lucide="phone"></i> <span data-lienhe="hotline">0833 385 601</span></li>
+                <li><i data-lucide="map-pin"></i> Núi Cấm, Tịnh Biên, An Giang</li>
+            </ul>
+        </div>
+    </div>
+    <div class="lm-foot-bottom">
+        <span>© 2026 LOCALMATE · <a href="dieukhoan.html" style="color:inherit">Điều khoản &amp; Riêng tư</a></span>
+        <span>Khám phá thế giới, sống trọn từng khoảnh khắc</span>
+    </div>
+</footer>
+
+<script src="js/lienhe-chung.js?v=1"></script>
+
+
+<script src="js/ngonngu.js?v=7"></script>
+
+<script src="js/auth-token.js?v=1"></script>
+<script src="js/hoso-khach.js?v=1"></script>
+<script src="js/account.js?v=8"></script>
+<script src="js/notify.js?v=2"></script>
+<script src="js/dacsan.js?v=15"></script>
+<script src="js/chatbot.js?v=11"></script>
+<script>lucide.createIcons();</script>
+
+<!-- Ô đặt đặc sản.
+     Trước đây bấm "Đặt món" chỉ mở khung chat với câu "Tôi muốn đặt ..." gõ
+     sẵn, rồi khách phải tự nhắn tiếp. Không có số lượng, không có địa chỉ
+     giao, và không có đơn nào được ghi lại — chủ hàng không thấy gì cả. -->
+<div class="ds-modal" id="ds-dat" hidden onclick="DacSan.dong(event)">
+    <div class="ds-box" onclick="event.stopPropagation()" id="ds-dat-noi"></div>
+</div>
+<div class="ds-modal" id="ds-xem" hidden onclick="DacSan.dongXem(event)">
+    <div class="ds-box ds-box-xem" onclick="event.stopPropagation()" id="ds-xem-noi"></div>
+</div>
+</body>
+</html>

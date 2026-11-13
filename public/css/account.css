@@ -1,0 +1,193 @@
+/* ============================================================
+   Tài khoản khách — nút trên thanh điều hướng + hộp đăng nhập
+   ============================================================ */
+
+.acc { position: relative; }
+
+.acc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font: inherit;
+    font-weight: 600;
+    padding: .5rem .75rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line, #ebddc5);
+    background: var(--surface, #fffdf8);
+    color: var(--body-ink, #27291f);
+    cursor: pointer;
+    transition: border-color .18s ease;
+}
+.acc-btn:hover { border-color: var(--brand, #c67139); }
+.acc-btn i { width: 18px; height: 18px; }
+/* Tên dài thì cắt bớt — thanh điều hướng không có chỗ cho một email đầy đủ */
+.acc-name { max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.acc-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 240px;
+    background: var(--surface, #fffdf8);
+    border: 1px solid var(--line, #ebddc5);
+    border-radius: 16px;
+    box-shadow: 0 18px 44px rgba(46, 43, 37, .18);
+    padding: .5rem;
+    z-index: 1200;
+}
+.acc-menu.hidden { display: none; }
+
+.acc-head {
+    padding: .7rem .8rem .8rem;
+    border-bottom: 1px solid var(--line, #ebddc5);
+    margin-bottom: .4rem;
+}
+.acc-head b { display: block; font-size: .95rem; }
+.acc-head span {
+    display: block;
+    margin-top: .15rem;
+    font-size: .8rem;
+    color: var(--muted, #6f7168);
+    line-height: 1.45;
+}
+
+.acc-menu a,
+.acc-menu button {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    width: 100%;
+    padding: .6rem .8rem;
+    border-radius: 10px;
+    border: none;
+    background: none;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    color: var(--body-ink, #27291f);
+    cursor: pointer;
+}
+.acc-menu a:hover,
+.acc-menu button:hover { background: var(--cream, #fff9ef); }
+.acc-menu i { width: 17px; height: 17px; flex-shrink: 0; color: var(--brand, #c67139); }
+
+/* Vạch ngăn: phần trên là việc của khách, phần dưới là việc của người kinh
+   doanh cùng LOCALMATE. Hai nhóm khác hẳn nhau nên không để dính vào nhau. */
+.acc-sep {
+    height: 1px;
+    margin: 6px 4px;
+    background: var(--line, #e6ddcd);
+}
+/* Viết kèm .acc-menu cho đủ trọng số: .acc-menu a đặt font: inherit, mà
+   shorthand đó cuốn theo cả cỡ chữ — để tên lớp trơ trọi thì cỡ chữ ở đây
+   thua và dòng này vẫn to bằng mấy dòng trên. */
+.acc-menu a.acc-partner { color: var(--muted, #6d6a5f); font-size: .93rem; }
+
+.acc-in { color: var(--brand, #c67139) !important; font-weight: 600; }
+.acc-out { color: #b4532a !important; }
+.acc-out i { color: #b4532a !important; }
+
+/* ── Hộp đăng nhập ── */
+.acc-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(29, 34, 20, .55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 2000;
+}
+.acc-modal.open { display: flex; }
+
+.acc-modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: var(--surface, #fffdf8);
+    border-radius: 22px;
+    padding: 1.9rem 1.6rem 1.6rem;
+    box-shadow: 0 26px 70px rgba(29, 34, 20, .35);
+    /* Màn hình thấp (điện thoại nằm ngang) thì cuộn trong hộp, đừng tràn ra ngoài */
+    max-height: 92vh;
+    overflow-y: auto;
+}
+.acc-close {
+    position: absolute;
+    top: .8rem; right: .9rem;
+    border: none; background: none;
+    font-size: 1.15rem;
+    cursor: pointer;
+    color: var(--muted, #6f7168);
+    line-height: 1;
+}
+.acc-modal-box h2 { margin: 0 0 .35rem; font-size: 1.4rem; }
+.acc-sub { margin: 0 0 1.2rem; color: var(--muted, #6f7168); font-size: .9rem; }
+
+.acc-field { display: block; margin-bottom: .9rem; }
+.acc-field.hidden { display: none; }
+.acc-field span {
+    display: block;
+    margin-bottom: .3rem;
+    font-size: .85rem;
+    font-weight: 600;
+}
+.acc-field input {
+    width: 100%;
+    padding: .7rem .9rem;
+    font: inherit;
+    border: 1.5px solid var(--line, #ebddc5);
+    border-radius: 12px;
+    background: var(--cream, #fff9ef);
+}
+.acc-field input:focus {
+    outline: none;
+    border-color: var(--brand, #c67139);
+}
+
+.acc-error { margin: 0 0 .7rem; color: #b4532a; font-size: .87rem; min-height: 1.1em; }
+.acc-submit { width: 100%; }
+.acc-switch { margin: 1rem 0 0; text-align: center; font-size: .88rem; color: var(--muted, #6f7168); }
+.acc-switch a { color: var(--brand, #c67139); font-weight: 600; }
+
+@media (max-width: 640px) {
+    /* Trên điện thoại thanh điều hướng chật — bỏ tên, giữ mỗi biểu tượng */
+    .acc-name { display: none; }
+    .acc-menu { right: -8px; min-width: 220px; }
+    .acc-modal-box { padding: 1.6rem 1.2rem 1.3rem; border-radius: 18px; }
+}
+
+
+/* ── Nút đăng nhập bằng Google ───────────────────────────────
+   Để TRÊN ô email: đa số khách bấm cái này, thứ hay dùng thì đặt trước.
+   Van giu the boc .acc-mxh: sau co them cach dang nhap khac thi cu bo vao
+   day, khong phai dung lai khung. */
+.acc-mxh { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.acc-soc {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--lm-line, #e3e9f2);
+    border-radius: 12px;
+    background: #fff;
+    font: inherit; font-size: 15px; font-weight: 600;
+    color: var(--lm-ink, #16233a);
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+}
+.acc-soc:hover:not(:disabled) { border-color: var(--lm-blue, #0f6fd0); background: var(--lm-bg-soft, #f6f9fd); }
+.acc-soc:disabled { opacity: .6; cursor: default; }
+.acc-soc svg { width: 20px; height: 20px; flex: none; }
+
+.acc-hoac {
+    position: relative; text-align: center;
+    margin: 18px 0 4px;
+}
+.acc-hoac::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%;
+    border-top: 1px solid var(--lm-line, #e3e9f2);
+}
+.acc-hoac span {
+    position: relative; padding: 0 12px;
+    background: #fff;
+    font-size: 13px; color: var(--lm-muted, #7a879c);
+}

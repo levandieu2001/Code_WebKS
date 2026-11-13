@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tra cứu đơn đặt phòng, tour và xe đưa đón tại LOCALMATE. Xem trạng thái, theo dõi tài xế và huỷ đơn.">
+    <title>Đơn của tôi | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+    <link rel="stylesheet" href="css/chatbot.css?v=6">
+<link rel="stylesheet" href="css/account.css?v=4">
+    <link rel="stylesheet" href="css/enhancements.css?v=4">
+    <script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ══ Chi tiết đơn và đường đi ══
+   Mở ra trong chính cái thẻ đó, không nhảy sang trang khác: khách tra đơn
+   bằng số điện thoại, sang trang khác là mất chỗ vừa tra. */
+.mo-more { border: 0; background: none; cursor: pointer; font: inherit;
+    font-size: 13px; font-weight: 700; color: var(--brand, #c67139);
+    display: inline-flex; align-items: center; gap: 5px; padding: 6px 0; }
+.mo-more i, .mo-more svg { width: 14px; height: 14px; transition: transform .2s; }
+.mo-more.mo { transform: none; }
+.mo-more.mo i, .mo-more.mo svg { transform: rotate(180deg); }
+
+.mo-chitiet { margin-top: 14px; padding-top: 16px;
+    border-top: 1px dashed var(--line-2, rgba(32,30,29,.14)); }
+.mo-chitiet[hidden] { display: none; }
+
+.mo-hang { display: flex; justify-content: space-between; gap: 14px;
+    padding: 8px 0; font-size: 14px; line-height: 1.6; }
+.mo-hang span:first-child { color: var(--muted, #645c50); flex: none; }
+.mo-hang span:last-child { text-align: right; color: var(--ink-2, #2e2b25); font-weight: 600; }
+.mo-hang.tong { border-top: 1px solid var(--line, rgba(32,30,29,.08)); margin-top: 6px;
+    padding-top: 12px; font-size: 16px; }
+.mo-hang.tong span:last-child { color: var(--brand-dark, #8c491a); font-weight: 800; }
+.mo-hang.dia-chi span:last-child { font-weight: 500; max-width: 62%; }
+
+.mo-buoc-tieu-de { font-size: 13px; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--muted, #645c50); margin: 20px 0 12px; }
+.mo-duong { list-style: none; margin: 0; padding: 0; }
+.mo-buoc { position: relative; padding: 0 0 20px 30px; }
+.mo-buoc:last-child { padding-bottom: 0; }
+/* Đường kẻ nối các bước */
+.mo-buoc::before { content: ''; position: absolute; left: 8px; top: 20px; bottom: 0;
+    width: 2px; background: var(--line-2, rgba(32,30,29,.14)); }
+.mo-buoc:last-child::before { display: none; }
+/* Chấm tròn */
+.mo-buoc::after { content: ''; position: absolute; left: 2px; top: 4px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--line-2, rgba(32,30,29,.2)); }
+.mo-buoc.xong::after { background: #2f7a4f; border-color: #2f7a4f; }
+.mo-buoc.xong::before { background: #a8ceb8; }
+.mo-buoc.xau::after { background: #c0392b; border-color: #c0392b; }
+.mo-buoc b { display: block; font-size: 14.5px; color: var(--ink-2, #2e2b25); }
+.mo-buoc.cho b { color: var(--muted, #645c50); }
+.mo-buoc p { margin: 3px 0 0; font-size: 13px; line-height: 1.65;
+    color: var(--muted, #645c50); }
+.mo-buoc time { display: block; margin-top: 4px; font-size: 12px;
+    color: var(--subtle, #82796a); }
+</style>
+</head>
+<body class="lm inner-page">
+
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button class="lang-toggle-btn active" data-lang="vi" onclick="changeLanguage('vi')">VI</button>
+                    <button class="lang-toggle-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+                </div>
+                <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                    <img src="assets/chatbot.png" alt="Bot">
+                </button>
+                <a href="phongnghi.html" class="btn-book-nav"><i data-lucide="calendar-check"></i><span data-i18n="nav_book">Đặt phòng</span></a>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav hidden">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a>
+            <a href="khampha.html" data-i18n="nav_explore">Khám phá</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </div>
+    </nav>
+
+    <main class="inner-main">
+        <section class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Đơn của tôi</span>
+                <h2 class="section-title">Tra cứu đơn đã đặt</h2>
+                <p class="section-desc">Nhập số điện thoại bạn đã dùng khi đặt. Có mã đơn thì nhập thêm cho nhanh.</p>
+            </div>
+
+            <form id="mo-form" class="mo-search card-surface" onsubmit="MyOrders.lookup(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="mo-phone">Số điện thoại *</label>
+                        <input type="tel" id="mo-phone" name="phone" class="form-input"
+                               autocomplete="tel" inputmode="tel" placeholder="Ví dụ: 0909 123 456…" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mo-code">Mã đơn (không bắt buộc)</label>
+                        <input type="text" id="mo-code" name="booking-code" class="form-input"
+                               autocomplete="off" spellcheck="false" placeholder="Ví dụ: JZJRS4KU…">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top:6px">
+                    <i data-lucide="search" style="width:17px;height:17px"></i> Tra cứu
+                </button>
+            </form>
+
+            <p id="mo-status" class="explore-search-info" role="status" aria-live="polite"></p>
+            <div id="mo-list" class="mo-list"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="nav-logo">
+                        <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+                    </a>
+                    <p class="footer-desc" data-i18n="footer_desc">Nền tảng kết nối khách du lịch với homestay, tài xế và đơn vị tour địa phương khắp Đồng bằng sông Cửu Long.</p>
+                </div>
+                <div class="footer-col"><h4 data-i18n="footer_links">Liên kết nhanh</h4><ul>
+                    <li><a href="index.html" data-i18n="nav_home">Trang chủ</a></li>
+                    <li><a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a></li>
+                    <li><a href="khampha.html" data-i18n="nav_explore">Khám phá</a></li>
+                    <li><a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a></li>
+                    <li><a href="donhang.html">Đơn của tôi</a></li>
+                    <li><a href="doitac.html">Trở thành đối tác</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_services">Dịch vụ</h4><ul>
+                    <li><a href="phongnghi.html" data-i18n="footer_service1">Phòng nghỉ Eco</a></li>
+                    <li><a href="khampha.html" data-i18n="footer_service2">Tour tham quan</a></li>
+                    <li></li>
+                    <li><a href="khampha.html#camping" data-i18n="footer_service4">Camping trên núi</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_contact_title">Thông tin liên hệ</h4><ul class="footer-contact">
+                    <li><i data-lucide="map-pin" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="address">Phường Bình Đức, Long Xuyên, An Giang</span></li>
+                    <li><i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="hotline">0833 385 601</span></li>
+                    <li><i data-lucide="mail" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="email">mrdieu37@gmail.com</span></li>
+                </ul></div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 LOCALMATE · <a href="dieukhoan.html" style="color:inherit">Điều khoản &amp; Riêng tư</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal đặt dịch vụ dùng chung: phòng / tour / xe -->
+    <div id="service-modal" class="modal-overlay hidden" onclick="BayNuiBooking.close(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="BayNuiBooking.close()" aria-label="Đóng"><i data-lucide="x"></i></button>
+            <div id="service-modal-body"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><div><i data-lucide="check-circle"></i></div><span id="toast-msg">Success!</span></div>
+
+    <script src="js/lienhe-chung.js?v=1"></script>
+
+    <script src="js/ngonngu.js?v=7"></script>
+
+    <script src="js/reviews.js?v=1"></script>
+    <script src="js/app.js?v=12"></script>
+    <script src="js/auth-token.js?v=2"></script>
+<script src="js/hoso-khach.js?v=1"></script>
+    <script src="js/account.js?v=8"></script>
+    <script src="js/booking.js?v=14"></script>
+    <script src="js/myorders.js?v=4"></script>
+    <script src="js/chatbot.js?v=11"></script>
+    <script src="js/notify.js?v=1"></script>
+</body>
+</html>

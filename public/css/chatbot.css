@@ -1,0 +1,639 @@
+/* ============================================
+   Chatbot Widget Styles
+   Floating chat widget at bottom-right corner
+   ============================================ */
+
+/* --- Floating Button --- */
+.chatbot-toggle {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    /* KÍCH THƯỚC NÚT CHAT — chỉ sửa ở ĐÂY.
+       Ảnh nút đã có sẵn nền tròn trắng, nên bề ngang nút chính là đường kính
+       vòng tròn trắng. Trước đây con số này bị đặt lại ở ba nơi khác nhau
+       trong cùng file (khối cơ bản, khối design system, hai media query), nên
+       sửa một chỗ là không thấy gì đổi. Giờ tất cả đọc chung hai biến này. */
+    --chat-fab: 60px;
+    --chat-fab-close: 50px;
+
+    width: var(--chat-fab);
+    height: var(--chat-fab);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+    padding: 0;
+    background: transparent;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+    animation: chatbot-bounce 3s ease-in-out infinite;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.2));
+}
+
+.chatbot-toggle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.chatbot-toggle .chatbot-close-icon {
+    display: none;
+    width: 28px;
+    height: 28px;
+    color: white;
+}
+
+.chatbot-toggle.active {
+    background: var(--color-primary-light, #c67139);
+    width: var(--chat-fab-close);
+    height: var(--chat-fab-close);
+    animation: none;
+}
+
+.chatbot-toggle.active img {
+    display: none;
+}
+
+.chatbot-toggle.active .chatbot-close-icon {
+    display: block;
+}
+
+/* Notification badge */
+.chatbot-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    animation: chatbot-pulse 2s ease-in-out infinite;
+}
+
+.chatbot-toggle.active .chatbot-badge {
+    display: none;
+}
+
+/* --- Chat Window --- */
+.chatbot-window {
+    position: fixed;
+    bottom: 9rem;
+    right: 1.5rem;
+    width: 400px;
+    max-width: calc(100vw - 2rem);
+    height: 560px;
+    max-height: calc(100vh - 8rem);
+    background: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    z-index: 998;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.chatbot-window.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+/* --- Header --- */
+.chatbot-header {
+    background: linear-gradient(135deg, #8c491a 0%, #402310 100%);
+    color: white;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.chatbot-header-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: contain;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.chatbot-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.chatbot-header-name {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+}
+
+.chatbot-header-status {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.chatbot-header-status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.chatbot-header-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.chatbot-header-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.chatbot-header-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Messages Area --- */
+.chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #f9f4ed;
+}
+
+.chatbot-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chatbot-messages::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+/* Message bubble */
+.chatbot-msg {
+    max-width: 85%;
+    display: flex;
+    flex-direction: column;
+    animation: chatbot-msg-in 0.3s ease-out;
+}
+
+.chatbot-msg.bot {
+    align-self: flex-start;
+}
+
+.chatbot-msg.user {
+    align-self: flex-end;
+}
+
+.chatbot-msg-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    word-break: break-word;
+}
+
+.chatbot-msg.bot .chatbot-msg-bubble {
+    background: white;
+    color: #201e1d;
+    border-bottom-left-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid #ebddc5;
+}
+
+.chatbot-msg.user .chatbot-msg-bubble {
+    background: linear-gradient(135deg, #c67139 0%, #8c491a 100%);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.chatbot-msg-time {
+    font-size: 0.6875rem;
+    color: #82796a;
+    margin-top: 0.25rem;
+    padding: 0 0.25rem;
+}
+
+.chatbot-msg.user .chatbot-msg-time {
+    text-align: right;
+}
+
+/* Quick replies */
+.chatbot-quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+    padding-left: 0;
+}
+
+.chatbot-quick-btn {
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    border: 1.5px solid #c67139;
+    background: white;
+    color: #8c491a;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.chatbot-quick-btn:hover {
+    background: #c67139;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Typing indicator */
+.chatbot-typing {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 1rem;
+    border-bottom-left-radius: 0.25rem;
+    align-self: flex-start;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid #ebddc5;
+}
+
+.chatbot-typing-dot {
+    width: 6px;
+    height: 6px;
+    background: #82796a;
+    border-radius: 50%;
+    animation: chatbot-typing-bounce 1.2s ease-in-out infinite;
+}
+
+.chatbot-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.chatbot-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* --- Input Area --- */
+.chatbot-input-area {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #ebddc5;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    background: white;
+    flex-shrink: 0;
+}
+
+.chatbot-input {
+    flex: 1;
+    border: 1.5px solid #ebddc5;
+    border-radius: 1.25rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    max-height: 100px;
+    min-height: 40px;
+    line-height: 1.4;
+    transition: border-color 0.2s;
+    background: #fafafa;
+}
+
+.chatbot-input:focus {
+    border-color: #c67139;
+    background: white;
+}
+
+.chatbot-input::placeholder {
+    color: #82796a;
+}
+
+.chatbot-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #c67139 0%, #8c491a 100%);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.chatbot-send-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(45, 90, 39, 0.3);
+}
+
+.chatbot-send-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.chatbot-send-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- Welcome bubble (tooltip on load) --- */
+.chatbot-welcome-bubble {
+    position: fixed;
+    bottom: 9rem;
+    right: 1.5rem;
+    background: white;
+    color: #201e1d;
+    padding: 0.75rem 1.125rem;
+    border-radius: 1rem;
+    border-bottom-right-radius: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    max-width: 260px;
+    z-index: 997;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Man hinh hep: nam SAT nut tro ly, khong treo len giua man hinh.
+   Do tren may 375px: bong bong 260px cach day 9rem de len dung o chon ngay
+   va nut Tim kiem cua the tim kiem — thao tac dau tien khach dinh lam. */
+@media (max-width: 640px) {
+    .chatbot-welcome-bubble {
+        bottom: 5.75rem;
+        right: 1rem;
+        left: auto;
+        max-width: min(230px, calc(100vw - 5.5rem));
+        font-size: 0.82rem;
+        padding: 0.65rem 0.95rem;
+    }
+}
+
+.chatbot-welcome-bubble.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.chatbot-welcome-close {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ebddc5;
+    border: none;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #645c50;
+    transition: background 0.2s;
+}
+
+.chatbot-welcome-close:hover {
+    background: #d1d5db;
+}
+
+/* --- Animations --- */
+@keyframes chatbot-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+@keyframes chatbot-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes chatbot-msg-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes chatbot-typing-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+    .chatbot-toggle {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .chatbot-welcome-bubble {
+        bottom: 5.5rem;
+        right: 1rem;
+        max-width: 220px;
+    }
+}
+
+/* ============================================================
+   LOCALMATE — hoà hợp chatbot với design system mới
+   ============================================================ */
+.chatbot-toggle {
+    filter: drop-shadow(0 8px 22px rgba(64, 35, 16, .3));
+}
+.chatbot-toggle img {
+    object-fit: cover;
+    border: 2px solid rgba(255, 253, 248, .9);
+    background: var(--surface, #fffdf8);
+}
+.chatbot-toggle.active {
+    background: var(--brand, #c67139);
+    box-shadow: 0 8px 22px rgba(140, 73, 26, .38);
+}
+.chatbot-badge {
+    background: var(--brand, #c67139);
+    border-color: var(--cream, #fff9ef);
+}
+
+.chatbot-window {
+    background: var(--surface, #fffdf8);
+    border-radius: 26px;
+    bottom: 7.5rem;
+    box-shadow: 0 26px 70px rgba(29, 34, 20, .3), 0 0 0 1px rgba(32, 30, 29, .07);
+    font-family: var(--font-body, 'Be Vietnam Pro', sans-serif);
+}
+
+.chatbot-header {
+    background: linear-gradient(140deg, #3d472b 0%, #1d2214 100%);
+    padding: 14px 18px;
+}
+.chatbot-header-avatar {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border: 2px solid rgba(246, 160, 107, .55);
+    background: rgba(240, 250, 225, .12);
+}
+.chatbot-header-name {
+    font-family: var(--font-display, Lora, Georgia, serif);
+    font-size: 17px;
+    letter-spacing: -.01em;
+}
+.chatbot-header-status { color: rgba(240, 250, 225, .72); }
+
+.chatbot-messages { background: var(--surface-2, #f9f4ed); }
+
+.chatbot-msg.bot .chatbot-msg-bubble {
+    background: var(--surface, #fffdf8);
+    border: 1px solid rgba(32, 30, 29, .08);
+    border-radius: 18px 18px 18px 5px;
+    color: var(--ink-2, #2e2b25);
+}
+.chatbot-msg.user .chatbot-msg-bubble {
+    background: var(--brand, #c67139);
+    border-radius: 18px 18px 5px 18px;
+    color: var(--cream, #fff9ef);
+}
+
+.chatbot-quick-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(198, 113, 57, .3);
+    background: var(--surface, #fffdf8);
+    color: var(--brand-dark, #8c491a);
+    font-weight: 600;
+}
+.chatbot-quick-btn:hover {
+    background: var(--brand, #c67139);
+    border-color: var(--brand, #c67139);
+    color: var(--cream, #fff9ef);
+}
+
+.chatbot-input-area { background: var(--surface, #fffdf8); border-top: 1px solid rgba(32, 30, 29, .08); }
+.chatbot-input {
+    background: var(--surface-2, #f9f4ed);
+    border: 1px solid rgba(32, 30, 29, .12);
+    border-radius: 18px;
+}
+.chatbot-input:focus { border-color: var(--brand, #c67139); box-shadow: 0 0 0 3px rgba(198, 113, 57, .14); }
+.chatbot-send-btn { background: var(--brand, #c67139); border-radius: 999px; }
+.chatbot-send-btn:hover { background: var(--brand-mid, #b2622d); }
+
+.chatbot-welcome-bubble {
+    background: var(--surface, #fffdf8);
+    border: 1px solid rgba(32, 30, 29, .1);
+    border-radius: 18px;
+    color: var(--ink-2, #2e2b25);
+    box-shadow: 0 14px 34px rgba(46, 43, 37, .18);
+}
+.chatbot-lang-btn { border-color: var(--brand, #c67139) !important; background: var(--surface, #fffdf8) !important; }
+.chatbot-lang-btn:hover { background: var(--peach-bg, #ffe1d0) !important; }
+
+@media (max-width: 640px) {
+    /* Trên điện thoại thu thêm chút nữa: màn hẹp, nút to là che mất nội dung
+       và nút đặt phòng ở góc. 54px vẫn trên mức 48px khuyến nghị cho vùng chạm. */
+    .chatbot-toggle { --chat-fab: 54px; --chat-fab-close: 46px; bottom: 1rem; right: 1rem; }
+}
+
+/* Nút mở thẳng chức năng khi bot đoán được ý khách */
+.chatbot-action { margin: 8px 0 2px; }
+.chatbot-action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 16px;
+    border: none; border-radius: 99px;
+    background: linear-gradient(135deg, #c67139, #8c491a);
+    color: #fff;
+    font: inherit; font-size: 13.5px; font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(140, 73, 26, .28);
+    transition: transform .16s ease, box-shadow .16s ease;
+}
+.chatbot-action-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(140, 73, 26, .34); }
+
+
+/* ============================================================
+   CỬA SỔ CHAT TRÊN ĐIỆN THOẠI
+   ============================================================
+   Khối này để CUỐI FILE có chủ đích. Trước đây bố cục cửa sổ chat bị đặt ở
+   hai media query khác nhau: khối 480px cho toàn màn hình, khối 640px lại đặt
+   bottom: 6rem. Điện thoại khớp cả hai, khối viết sau thắng — nên cửa sổ vẫn
+   cao 100vh nhưng bị đẩy lên, tràn mất phần đầu và hở một khoảng dưới đáy cho
+   nội dung trang lòi ra. Giờ chỉ còn một nơi quyết định. */
+
+@media (max-width: 640px) {
+    .chatbot-window {
+        /* Chiếm trọn màn hình. Màn điện thoại hẹp, một cửa sổ nhỏ nổi giữa
+           trang vừa khó đọc vừa che mất nội dung phía sau. */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 100%;
+
+        /* dvh tính theo phần màn hình THẬT SỰ nhìn thấy. Dùng vh thì trình
+           duyệt di động tính cả phần bị thanh địa chỉ che, cửa sổ dài hơn màn
+           hình và ô nhập tin bị đẩy xuống dưới mép. vh để trước làm bản dự
+           phòng cho trình duyệt cũ chưa hiểu dvh. */
+        height: 100vh;
+        height: 100dvh;
+        max-height: none;
+
+        border-radius: 0;
+    }
+
+    /* Chừa chỗ cho thanh điều hướng cử chỉ ở đáy máy Android và phần khuyết
+       của iPhone — không thì ô nhập tin nằm ngay dưới vạch, bấm hay trượt. */
+    .chatbot-input-area {
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .chatbot-header {
+        padding-top: calc(1rem + env(safe-area-inset-top, 0px));
+    }
+
+    /* Đang mở chat thì giấu nút nổi đi: nó nằm đè lên ô nhập tin. Đóng bằng
+       nút X trên đầu cửa sổ. */
+    .chatbot-toggle.active {
+        display: none;
+    }
+}

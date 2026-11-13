@@ -1,0 +1,40 @@
+[Unit]
+Description=Bay Nui Stay - may chu web va API
+Documentation=https://localmate.click
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=baynui
+Group=baynui
+WorkingDirectory=/srv/baynuistay
+
+# Doc bien moi truong tu file rieng, KHONG viet thang vao day.
+# File nay chua khoa Gemini/OpenAI nen chi mo cho user baynui doc (chmod 600).
+EnvironmentFile=/etc/baynuistay.env
+
+ExecStart=/usr/bin/node server.js
+
+# Chet thi tu bat lai. RestartSec de 3 giay cho khoi quay vong lien tuc khi
+# loi cau hinh — quay vong nhanh se lam log day o va che mat nguyen nhan that.
+Restart=always
+RestartSec=3
+
+# Ghi log vao journald, xem bang: journalctl -u baynuistay -f
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=baynuistay
+
+# ── Gioi han quyen ──
+# May chu nay nhan file anh tu Internet va goi API ngoai, nen sieu chat quyen
+# la dang. NoNewPrivileges chan viec leo thang quyen; ProtectSystem=strict cho
+# toan bo o dia thanh chi-doc tru hai thu muc duoi day.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/baynuistay
+
+[Install]
+WantedBy=multi-user.target

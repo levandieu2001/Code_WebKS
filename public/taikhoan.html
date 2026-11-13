@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <style>.tk-address-label { margin:0 0 10px; font-size:16px; overflow-wrap:anywhere; }</style>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt tài khoản | LOCALMATE</title>
+    <meta name="description" content="Thông tin cá nhân và sổ địa chỉ giao hàng của bạn trên LOCALMATE.">
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=11">
+    <link rel="stylesheet" href="css/account.css?v=4">
+    <link rel="stylesheet" href="css/chatbot.css?v=6">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+    <script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ══ Cài đặt tài khoản ══
+   Hai khối: thông tin cá nhân, và sổ địa chỉ. Sổ địa chỉ chứ không phải một
+   dòng địa chỉ duy nhất — người ta hay gửi về nhà mình, mà cũng hay gửi biếu
+   về quê hay gửi tới cơ quan. Ép chọn một là lần sau lại gõ tay. */
+.tk-wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 90px; }
+.tk-head { margin-bottom: 26px; }
+.tk-head h1 { font-size: clamp(24px, 3.4vw, 32px); margin: 0 0 8px; color: var(--lm-ink, #16233a); }
+.tk-head p { margin: 0; color: var(--lm-muted, #7a879c); font-size: 14.5px; line-height: 1.7; }
+
+.tk-khoi { background: #fff; border: 1px solid var(--lm-line, #e3e9f2);
+    border-radius: var(--lm-r-lg, 20px); padding: 22px; margin-bottom: 20px; }
+.tk-khoi h2 { font-size: 18px; margin: 0 0 4px; color: var(--lm-ink, #16233a); }
+.tk-khoi > p { margin: 0 0 18px; font-size: 13.5px; color: var(--lm-muted, #7a879c);
+    line-height: 1.7; }
+
+.tk-luoi { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px,100%),1fr));
+    gap: 14px; }
+.tk-f label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;
+    color: var(--lm-ink, #16233a); }
+.tk-f input, .tk-f textarea { width: 100%; padding: 11px 13px; font: inherit; font-size: 14.5px;
+    border: 1.5px solid var(--lm-line, #e3e9f2); border-radius: 11px; background: #fff;
+    color: var(--lm-ink, #16233a); }
+.tk-f input:focus, .tk-f textarea:focus { outline: none; border-color: var(--lm-blue, #0f6fd0); }
+.tk-f input:disabled { background: var(--lm-bg-soft, #f6f9fd); color: var(--lm-muted, #7a879c); }
+.tk-f small { display: block; margin-top: 5px; font-size: 12px; color: var(--lm-muted, #7a879c);
+    line-height: 1.6; }
+.tk-luu { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+.tk-bao { font-size: 13.5px; }
+.tk-bao.ok { color: #128a3e; }
+.tk-bao.loi { color: #c0392b; }
+
+/* Sổ địa chỉ */
+.tk-dc { border: 1.5px solid var(--lm-line, #e3e9f2); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 12px; }
+.tk-dc.mac-dinh { border-color: var(--lm-blue, #0f6fd0);
+    background: var(--lm-blue-soft, #eaf4fe); }
+.tk-dc-top { display: flex; justify-content: space-between; gap: 12px;
+    align-items: flex-start; flex-wrap: wrap; }
+.tk-dc-nhan { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    background: var(--lm-blue, #0f6fd0); color: #fff; }
+.tk-dc b { font-size: 15px; color: var(--lm-ink, #16233a); }
+.tk-dc .sdt { font-size: 13.5px; color: var(--lm-muted, #7a879c); }
+.tk-dc p { margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--lm-body, #46536b); }
+.tk-dc-nut { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.tk-dc-nut button { border: 1px solid var(--lm-line, #e3e9f2); background: #fff;
+    border-radius: 9px; padding: 7px 13px; cursor: pointer; font: inherit;
+    font-size: 12.8px; font-weight: 600; color: var(--lm-body, #46536b); }
+.tk-dc-nut button:hover { border-color: var(--lm-blue, #0f6fd0); color: var(--lm-blue, #0f6fd0); }
+.tk-dc-nut button.xoa:hover { border-color: #c0392b; color: #c0392b; }
+
+.tk-trong { padding: 28px 20px; text-align: center; border-radius: 14px;
+    background: var(--lm-bg-soft, #f6f9fd); color: var(--lm-muted, #7a879c);
+    line-height: 1.75; font-size: 14px; }
+
+.tk-cong { display: grid; place-items: center; padding: 70px 20px; text-align: center; }
+.tk-cong h2 { font-size: 22px; margin: 0 0 10px; color: var(--lm-ink, #16233a); }
+.tk-cong p { color: var(--lm-muted, #7a879c); line-height: 1.75; margin: 0 0 20px;
+    max-width: 420px; }
+</style>
+</head>
+<body class="lm">
+
+<header class="lm-nav" id="main-nav">
+    <div class="lm-nav-inner">
+        <a href="index.html" class="lm-logo"><img src="/assets/logo-ngang.png" alt="LOCALMATE"></a>
+        <nav class="lm-links" id="main-nav-links">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_stay">Chỗ nghỉ</a>
+            <a href="dacsan.html" data-i18n="nav_food">Đặc sản</a>
+            <a href="khampha.html" data-i18n="nav_dest">Điểm đến</a>
+            <a href="doitac.html" data-i18n="nav_partner">Đối tác</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </nav>
+        <div class="lm-nav-right nav-actions">
+            <button class="lm-menu-btn" onclick="document.getElementById('lm-drawer').classList.toggle('open')" aria-label="Menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                <img src="assets/chatbot.png" alt="Bot">
+            </button>
+            <a href="doitac.html" class="lm-btn lm-btn-cta btn-book-nav">
+                <i data-lucide="store"></i><span data-i18n="nav_partner_cta">Đăng chỗ của bạn</span>
+            </a>
+        </div>
+    </div>
+    <div class="lm-drawer" id="lm-drawer">
+        <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+        <a href="phongnghi.html" data-i18n="nav_stay">Chỗ nghỉ</a>
+        <a href="dacsan.html" data-i18n="nav_food">Đặc sản</a>
+        <a href="khampha.html" data-i18n="nav_dest">Điểm đến</a>
+        <a href="doitac.html" data-i18n="nav_partner">Đối tác</a>
+        <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+    </div>
+</header>
+
+<main class="tk-wrap">
+    <div id="tk-body"><div class="tk-trong">Đang tải…</div></div>
+</main>
+
+<div id="toast" class="toast"><div><i data-lucide="check-circle"></i></div><span id="toast-msg"></span></div>
+
+<script src="js/ngonngu.js?v=7"></script>
+<script src="js/lienhe-chung.js?v=1"></script>
+<script src="js/auth-token.js?v=1"></script>
+<script src="js/hoso-khach.js?v=1"></script>
+<script src="js/account.js?v=8"></script>
+<script src="js/notify.js?v=2"></script>
+<script src="js/taikhoan.js?v=2"></script>
+<script src="js/chatbot.js?v=11"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

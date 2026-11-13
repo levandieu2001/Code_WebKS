@@ -1,0 +1,10 @@
+{
+  "version_code": 13,
+  "version_name": "1.0.2",
+  "apk_path": "tai-app/LOCALMATE-1.0.2.apk",
+  "sha256": "699e6cf48824929cc313919d9126a48699aa67055047df9b154e2ea8c81f82bd",
+  "mandatory": false,
+  "push_body": "Đã có Đặc sản trong app, đặt tour và sổ địa chỉ. Mở LOCALMATE để cập nhật bản 1.0.2 nhé.",
+  "notes": "Bổ sung Đặc sản ngay trên Trang chủ và Đặt dịch vụ: tìm món, xem chi tiết, chọn số lượng, địa chỉ giao hàng và đặt đơn. Thêm danh sách/đặt tour đúng tour, sổ địa chỉ đồng bộ website, chỗ nghỉ đối tác và xem đơn đặc sản. Cập nhật để thấy các mục mới.",
+  "notes_en": "Added native Local Food shopping, product details, checkout and delivery addresses. Added tour booking, synced address book, partner stays and food order details. Update to access these new features."
+}

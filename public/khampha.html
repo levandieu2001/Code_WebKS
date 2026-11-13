@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Điểm đến, trải nghiệm, lễ hội và ẩm thực địa phương — do chính người bản địa giới thiệu.">
+    <title>Khám phá điểm đến | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/styles.css?v=12">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+    <link rel="stylesheet" href="css/chatbot.css?v=6">
+<link rel="stylesheet" href="css/account.css?v=4">
+    <link rel="stylesheet" href="css/enhancements.css?v=4">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="lm inner-page">
+
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link active" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button class="lang-toggle-btn active" data-lang="vi" onclick="changeLanguage('vi')">VI</button>
+                    <button class="lang-toggle-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+                </div>
+                <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                    <img src="assets/chatbot.png" alt="Bot">
+                </button>
+                <a href="phongnghi.html" class="btn-book-nav"><i data-lucide="calendar-check"></i><span data-i18n="nav_book">Đặt phòng</span></a>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav hidden">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a>
+            <a href="khampha.html" data-i18n="nav_explore">Khám phá</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-hero dp-hero">
+            <div class="page-hero-bg"><img src="assets/ho-ta-pa.jpg" alt="Hồ Tà Pạ, Tri Tôn"></div>
+            <div class="page-hero-overlay"></div>
+            <div class="page-hero-content">
+                <span class="hero-badge"><i data-lucide="compass" style="width:15px;height:15px;color:#f6a06b"></i><span data-i18n="explore_page_badge">Điểm đến địa phương</span></span>
+                <h1 data-i18n="explore_page_title">Khám phá điểm đến</h1>
+                <p data-i18n="explore_page_desc">Điểm đến, trải nghiệm, lễ hội và ẩm thực miền Tây do chính người bản địa giới thiệu.</p>
+            </div>
+        </section>
+
+        <!-- ═══ TÌM & TAB: Điểm đến / Trải nghiệm / Lễ hội ═══ -->
+        <!-- Thanh tìm đè lên chân ảnh bìa: khách vừa mở trang là thấy ngay ô
+             tìm, không phải cuộn xuống mò. Tab dính liền mép trên của thanh. -->
+        <section class="section-container dp-over">
+            <div data-tab-scope>
+                <div class="dp-panel">
+                    <div class="dp-tabs" data-tab-group>
+                        <button class="dp-tab active" data-tab-target="dest"><i data-lucide="mountain-snow"></i><span data-i18n="tab_dest">Điểm đến</span></button>
+                        <button class="dp-tab" data-tab-target="exp"><i data-lucide="compass"></i><span data-i18n="tab_exp">Trải nghiệm</span></button>
+                        <button class="dp-tab" data-tab-target="fest"><i data-lucide="party-popper"></i><span data-i18n="tab_fest">Lễ hội</span></button>
+                    </div>
+                    <div class="dp-bar">
+                        <label class="dp-field">
+                            <i data-lucide="map-pin"></i>
+                            <input type="search" id="explore-search" autocomplete="off"
+                                   data-i18n="explore_ph_where"
+                                   placeholder="Bạn muốn đi đâu? (mũi cà mau, tà pạ, chợ nổi…)"
+                                   oninput="searchExplore(this.value)">
+                            <button type="button" id="explore-search-clear" class="dp-clear" style="display:none"
+                                    onclick="clearExploreSearch()" aria-label="Xoá tìm kiếm"><i data-lucide="x"></i></button>
+                        </label>
+                        <span class="dp-sep"></span>
+                        <label class="dp-field dp-field-area">
+                            <i data-lucide="landmark"></i>
+                            <select id="explore-area" onchange="setExploreArea(this.value)"></select>
+                        </label>
+                        <button type="button" class="dp-go" onclick="runExploreSearch()">
+                            <i data-lucide="search"></i><span data-i18n="explore_go">Tìm ngay</span>
+                        </button>
+                    </div>
+                </div>
+                <p id="explore-search-info" class="explore-search-info"></p>
+
+                <div data-tab-panel="dest" style="margin-top:26px">
+                    <div class="dest-grid" id="dest-grid"></div>
+                </div>
+                <div data-tab-panel="exp" class="hidden" style="margin-top:26px">
+                    <div class="exp-grid" id="exp-grid"></div>
+                </div>
+                <div data-tab-panel="fest" class="hidden" style="margin-top:26px">
+                    <div class="fest-list" id="fest-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ CHI TIẾT TỪNG ĐIỂM ĐẾN ═══ -->
+        <section class="section-container">
+            <div class="section-header">
+                <span class="section-tag">In depth</span>
+                <h2 class="section-title" data-i18n="explore_detail_title">Đi sâu vào từng điểm đến</h2>
+                <p class="section-desc" data-i18n="explore_detail_desc">Chọn một điểm trong danh sách để xem giờ nên đi, giá vé và những lưu ý trước khi lên đường.</p>
+            </div>
+
+            <div id="explore-details"></div>
+        </section>
+
+        <!-- ═══ HƯƠNG VỊ BẢY NÚI ═══ -->
+        <section class="section-container" id="am-thuc" style="scroll-margin-top:90px">
+            <div class="section-header">
+                <span class="section-tag">Food experience</span>
+                <h2 class="section-title" data-i18n="food_title">Hương vị miền Tây</h2>
+                <p class="section-desc" data-i18n="food_desc">Mỗi món ăn ở đây gắn với một nền văn hóa và một mùa trong năm.</p>
+            </div>
+            <div class="food-grid" id="food-grid"></div>
+            <div class="strip-cta">
+                <div>
+                    <h3 data-i18n="food_cta_title">Muốn ăn đúng món, đúng giờ, đúng chỗ?</h3>
+                    <p data-i18n="food_cta_desc">Bếp của homestay phục vụ đặc sản tại chỗ, hoặc chỉ bạn quán ngon quanh vùng.</p>
+                </div>
+                <button class="btn-warm" onclick="askBot('Tư vấn ăn gì ở Bảy Núi')"><i data-lucide="sparkles" style="width:18px;height:18px"></i><span data-i18n="food_cta_btn">Hỏi trợ lý</span></button>
+            </div>
+        </section>
+
+        <!-- ═══ TOUR ═══ -->
+        <section class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Curated tours</span>
+                <h2 class="section-title" data-i18n="tour_title">Tour do người bản địa dẫn</h2>
+            </div>
+            <div class="tour-grid" id="tour-grid"></div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-bg"><img src="assets/nui-cam-1.jpg" alt="Núi Cấm" loading="lazy"></div>
+            <div class="cta-overlay"></div>
+            <div class="cta-content">
+                <h2 data-i18n="explore_cta_title">Muốn trải nghiệm tất cả?</h2>
+                <p data-i18n="explore_cta_desc">Đặt phòng và để chúng tôi sắp xếp tour cho bạn.</p>
+                <div class="cta-actions">
+                    <a href="phongnghi.html" class="hero-cta"><i data-lucide="calendar-check" style="width:19px;height:19px"></i><span data-i18n="cta_book">Đặt phòng ngay</span></a>
+                    <a href="lienhe.html" class="cta-phone"><i data-lucide="message-circle" style="width:18px;height:18px"></i> <span data-i18n="explore_cta_contact">Liên hệ tư vấn</span></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="nav-logo">
+                        <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+                    </a>
+                    <p class="footer-desc" data-i18n="footer_desc">Nền tảng kết nối khách du lịch với homestay, tài xế và đơn vị tour địa phương khắp Đồng bằng sông Cửu Long.</p>
+                    <div class="footer-socials">
+                        </div>
+                </div>
+                <div class="footer-col"><h4 data-i18n="footer_links">Liên kết nhanh</h4><ul>
+                    <li><a href="index.html" data-i18n="nav_home">Trang chủ</a></li>
+                    <li><a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a></li>
+                    <li><a href="khampha.html" data-i18n="nav_explore">Khám phá</a></li>
+                    <li><a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a></li>
+                    <li><a href="donhang.html">Đơn của tôi</a></li>
+                    <li><a href="doitac.html">Trở thành đối tác</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_services">Dịch vụ</h4><ul>
+                    <li><a href="phongnghi.html" data-i18n="footer_service1">Phòng nghỉ Eco</a></li>
+                    <li><a href="khampha.html" data-i18n="footer_service2">Tour tham quan</a></li>
+                    <li></li>
+                    <li><a href="khampha.html#camping" data-i18n="footer_service4">Camping trên núi</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_contact_title">Thông tin liên hệ</h4><ul class="footer-contact">
+                    <li><i data-lucide="map-pin" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="address">Phường Bình Đức, Long Xuyên, An Giang</span></li>
+                    <li><i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="hotline">0833 385 601</span></li>
+                    <li><i data-lucide="mail" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="email">mrdieu37@gmail.com</span></li>
+                </ul></div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 LOCALMATE · <a href="dieukhoan.html" style="color:inherit">Điều khoản &amp; Riêng tư</a>. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="dieukhoan.html#riengtu" data-i18n="footer_privacy">Chính sách bảo mật</a>
+                    <a href="dieukhoan.html#dieukhoan" data-i18n="footer_terms">Điều khoản sử dụng</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Modal đặt dịch vụ dùng chung: phòng / tour / xe -->
+    <div id="service-modal" class="modal-overlay hidden" onclick="BayNuiBooking.close(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="BayNuiBooking.close()" aria-label="Đóng"><i data-lucide="x"></i></button>
+            <div id="service-modal-body"></div>
+        </div>
+    </div>
+
+
+    <div id="toast" class="toast"><div><i data-lucide="check-circle"></i></div><span id="toast-msg">Success!</span></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="js/lienhe-chung.js?v=1"></script>
+    <script src="js/ngonngu.js?v=7"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/reviews.js?v=1"></script>
+    <script src="js/app.js?v=13"></script>
+    <script src="js/auth-token.js?v=2"></script>
+<script src="js/hoso-khach.js?v=1"></script>
+    <script src="js/account.js?v=8"></script>
+    <script src="js/booking.js?v=14"></script>
+    <script src="js/site.js?v=7"></script>
+    <script src="js/enhancements.js"></script>
+    <script src="js/chatbot.js?v=11"></script>
+    <script src="js/notify.js?v=1"></script>
+    <script src="js/tourpool.js?v=1"></script>
+</body>
+</html>

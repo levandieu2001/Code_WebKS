@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <link rel="stylesheet" href="css/password-toggle.css?v=1">
+    <script src="js/password-toggle.js?v=1" defer></script>
+    <script src="js/stay-dates.js?v=1"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chi tiết điểm đến miền Tây — thông tin tham quan, tour, quán ăn, phòng nghỉ gần đó và đặt xe đưa đón.">
+    <title>Điểm đến | LOCALMATE</title>
+    <link rel="icon" href="/assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/styles.css?v=12">
+    <link rel="stylesheet" href="css/localmate.css?v=18">
+    <link rel="stylesheet" href="css/chatbot.css?v=6">
+<link rel="stylesheet" href="css/account.css?v=4">
+    <link rel="stylesheet" href="css/enhancements.css?v=4">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="lm inner-page">
+
+    <nav id="main-nav" class="nav-container">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+            </a>
+            <div id="main-nav-links" class="nav-links">
+                <a href="index.html" class="nav-link" data-i18n="nav_home">Trang chủ</a>
+                <a href="phongnghi.html" class="nav-link" data-i18n="nav_rooms">Chỗ nghỉ</a>
+                <a href="dacsan.html" class="nav-link" data-i18n="nav_specialty">Đặc sản</a>
+                <a href="khampha.html" class="nav-link active" data-i18n="nav_explore">Điểm đến</a>
+                <a href="doitac.html" class="nav-link" data-i18n="nav_partner">Đối tác</a>
+                <a href="lienhe.html" class="nav-link" data-i18n="nav_contact">Liên hệ</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button class="lang-toggle-btn active" data-lang="vi" onclick="changeLanguage('vi')">VI</button>
+                    <button class="lang-toggle-btn" data-lang="en" onclick="changeLanguage('en')">EN</button>
+                </div>
+                <button class="nav-icon-btn nav-bot-btn" onclick="chatbotWidget.toggle()" title="Trợ lý ảo LOCALMATE">
+                    <img src="assets/chatbot.png" alt="Bot">
+                </button>
+                <a href="phongnghi.html" class="btn-book-nav"><i data-lucide="calendar-check"></i><span data-i18n="nav_book">Đặt phòng</span></a>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav hidden">
+            <a href="index.html" data-i18n="nav_home">Trang chủ</a>
+            <a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a>
+            <a href="khampha.html" data-i18n="nav_explore">Khám phá</a>
+            <a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a>
+        </div>
+    </nav>
+
+    <main id="place-root">
+        <!-- Nội dung được dựng bởi js/place.js -->
+        <section class="page-hero">
+            <div class="page-hero-overlay"></div>
+            <div class="page-hero-content">
+                <h1>Đang tải điểm đến…</h1>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="nav-logo">
+                        <img src="/assets/logo-ngang.png" alt="LOCALMATE" class="nav-logo-img">
+                    </a>
+                    <p class="footer-desc" data-i18n="footer_desc">Nền tảng kết nối khách du lịch với homestay, tài xế và đơn vị tour địa phương khắp Đồng bằng sông Cửu Long.</p>
+                </div>
+                <div class="footer-col"><h4 data-i18n="footer_links">Liên kết nhanh</h4><ul>
+                    <li><a href="index.html" data-i18n="nav_home">Trang chủ</a></li>
+                    <li><a href="phongnghi.html" data-i18n="nav_rooms">Phòng nghỉ</a></li>
+                    <li><a href="khampha.html" data-i18n="nav_explore">Khám phá</a></li>
+                    <li><a href="lienhe.html" data-i18n="nav_contact">Liên hệ</a></li>
+                    <li><a href="donhang.html">Đơn của tôi</a></li>
+                    <li><a href="doitac.html">Trở thành đối tác</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_services">Dịch vụ</h4><ul>
+                    <li><a href="phongnghi.html" data-i18n="footer_service1">Phòng nghỉ Eco</a></li>
+                    <li><a href="khampha.html" data-i18n="footer_service2">Tour tham quan</a></li>
+                    <li></li>
+                    <li><a href="khampha.html#camping" data-i18n="footer_service4">Camping trên núi</a></li>
+                </ul></div>
+                <div class="footer-col"><h4 data-i18n="footer_contact_title">Thông tin liên hệ</h4><ul class="footer-contact">
+                    <li><i data-lucide="map-pin" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="address">Phường Bình Đức, Long Xuyên, An Giang</span></li>
+                    <li><i data-lucide="phone" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="hotline">0833 385 601</span></li>
+                    <li><i data-lucide="mail" style="width:16px;height:16px;flex-shrink:0"></i> <span data-lienhe="email">mrdieu37@gmail.com</span></li>
+                </ul></div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 LOCALMATE · <a href="dieukhoan.html" style="color:inherit">Điều khoản &amp; Riêng tư</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal đặt dịch vụ dùng chung: phòng / tour / xe -->
+    <div id="service-modal" class="modal-overlay hidden" onclick="BayNuiBooking.close(event)">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="BayNuiBooking.close()" aria-label="Đóng"><i data-lucide="x"></i></button>
+            <div id="service-modal-body"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"><div><i data-lucide="check-circle"></i></div><span id="toast-msg">Success!</span></div>
+
+    <script src="js/lienhe-chung.js?v=1"></script>
+
+    <script src="js/notify.js?v=2"></script>
+
+    <script src="js/ngonngu.js?v=7"></script>
+
+    <script src="js/app.js?v=13"></script>
+    <script src="js/auth-token.js?v=2"></script>
+<script src="js/hoso-khach.js?v=1"></script>
+    <script src="js/account.js?v=8"></script>
+    <script src="js/booking.js?v=14"></script>
+    <script src="js/reviews.js?v=1"></script>
+    <script src="js/place.js?v=7"></script>
+    <script src="js/chatbot.js?v=11"></script>
+</body>
+</html>

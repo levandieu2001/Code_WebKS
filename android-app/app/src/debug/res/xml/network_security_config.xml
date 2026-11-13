@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    CHỈ ÁP DỤNG CHO BẢN DEBUG (thư mục src/debug).
+
+    Bản debug dùng để thử trên điện thoại thật, kết nối tới máy chủ chạy trên
+    máy tính qua wifi nhà — địa chỉ dạng http://192.168.x.x:3000 hoặc
+    http://10.x.x.x:3000. Android 9 trở lên chặn HTTP thường theo mặc định,
+    nên không mở ở đây thì app cài vào máy sẽ trắng trơn không tải được gì.
+
+    IP wifi đổi mỗi khi đổi mạng, nên mở chung cho bản debug thay vì liệt kê
+    từng địa chỉ — đỡ phải sửa file này mỗi lần.
+
+    Bản phát hành (release) KHÔNG dùng file này: nó đọc
+    src/main/res/xml/network_security_config.xml, ở đó cleartext vẫn bị cấm và
+    bắt buộc HTTPS. Đưa app lên cửa hàng thì phải có tên miền HTTPS thật.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

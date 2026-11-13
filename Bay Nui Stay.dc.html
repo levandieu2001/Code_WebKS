@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="description" content="Bay Nui Stay — Nền tảng du lịch văn hóa thông minh vùng Bảy Núi, An Giang. Bay Nui đồng hành từ lúc lên kế hoạch đến từng trải nghiệm trên hành trình." />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" />
+<script src="./image-slot.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#f5ead8;color:#201e1d;font-family:"Be Vietnam Pro",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:Lora,Georgia,serif;font-weight:600;line-height:1.1;letter-spacing:-0.02em;margin:0}
+  p{margin:0}
+  a{color:#8c491a;text-decoration:none}
+  a:hover{color:#c67139}
+  button{font-family:inherit;white-space:nowrap}
+  ::selection{background:#ffc6a5;color:#201e1d}
+  :focus-visible{outline:2px solid #c67139;outline-offset:2px}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#ebddc5}
+  ::-webkit-scrollbar-thumb{background:#c0b6a5;border-radius:99px}
+  @keyframes bnRise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  @keyframes bnFade{from{opacity:0}to{opacity:1}}
+  @keyframes bnPulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+  @keyframes bnDash{to{stroke-dashoffset:-220}}
+  @keyframes bnFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes bnBlink{0%,100%{opacity:.25}50%{opacity:1}}
+  @keyframes bnSpin{to{transform:rotate(360deg)}}
+  @keyframes bnSheen{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
+  @keyframes bnGrow{from{width:0}to{width:var(--bn-w,100%)}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:#f5ead8;overflow-x:hidden">
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:90;transition:background .35s ease,box-shadow .35s ease,backdrop-filter .35s;backdrop-filter:blur(14px);background:{{ navBg }};box-shadow:{{ navShadow }}">
+  <div style="max-width:1360px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:26px">
+    <a href="#" onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;flex-shrink:0">
+      <span style="width:42px;height:42px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a 70%);display:grid;place-items:center;box-shadow:0 3px 10px rgba(140,73,26,.28);flex-shrink:0">
+        <span style="display:inline-flex;font-size:22px;color:#f5ead8;">{{ ic.mountain }}</span>
+      </span>
+      <span style="display:flex;flex-direction:column;line-height:1.05">
+        <span style="font-family:Lora,serif;font-weight:700;font-size:19px;letter-spacing:-.02em;color:{{ navInk }}">Bay Nui Stay</span>
+        <span style="font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;white-space:nowrap;color:{{ navSub }}">Seven Mountains · An Giang</span>
+      </span>
+    </a>
+
+    <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:4px;margin-left:8px">
+        <sc-for list="{{ menu }}" as="m" hint-placeholder-count="7">
+          <a href="#" onClick="{{ m.go }}" style="padding:9px 13px;border-radius:999px;font-size:14.5px;font-weight:500;white-space:nowrap;transition:background .2s,color .2s;color:{{ navInk }}" style-hover="{{ m.hoverStyle }}">{{ m.label }}</a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;background:rgba(32,30,29,.07)">
+          <button onClick="{{ setVi }}" style="border:0;cursor:pointer;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ viBg }};color:{{ viInk }}">VI</button>
+          <button onClick="{{ setEn }}" style="border:0;cursor:pointer;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;background:{{ enBg }};color:{{ enInk }}">EN</button>
+        </div>
+        <button onClick="{{ toggleChat }}" title="Trò chuyện với Bay Nui AI" style="border:0;cursor:pointer;width:40px;height:40px;border-radius:999px;background:rgba(198,113,57,.14);display:grid;place-items:center;color:#8c491a" style-hover="{{ softHover }}">
+          <span style="display:inline-flex;font-size:19px">{{ ic.chat }}</span>
+        </button>
+        <button onClick="{{ goSaved }}" title="Yêu thích" style="position:relative;border:0;cursor:pointer;width:40px;height:40px;border-radius:999px;background:rgba(32,30,29,.07);display:grid;place-items:center" style-hover="{{ softHover }}">
+          <span style="display:inline-flex;font-size:19px;color:{{ navInk }};">{{ ic.heart }}</span>
+          <sc-if value="{{ hasSaved }}">
+            <span style="position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#c67139;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;border:2px solid #f5ead8">{{ savedCount }}</span>
+          </sc-if>
+        </button>
+      </sc-if>
+      <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:8px;padding:11px 19px;border-radius:999px;background:linear-gradient(120deg,#3d472b,#272e1b);color:#f0fae1;font-size:14.5px;font-weight:600;box-shadow:0 4px 14px rgba(39,46,27,.3);overflow:hidden;position:relative" style-hover="{{ aiBtnHover }}">
+        <span style="display:inline-flex;font-size:17px;color:#e1eecc;">{{ ic.sparkles }}</span>
+        Bay Nui
+      </button>
+      <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goProfile }}" style="border:1.5px solid rgba(32,30,29,.16);cursor:pointer;padding:3px 3px 3px 15px;border-radius:999px;background:transparent;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:{{ navInk }}" style-hover="{{ softHover }}">
+          Đăng nhập
+          <span style="width:32px;height:32px;border-radius:999px;background:#8fa073;color:#fff;display:grid;place-items:center;font-size:12.5px;font-weight:700">MT</span>
+        </button>
+      </sc-if>
+    </div>
+  </div>
+</nav>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="01 Trang chủ">
+
+  <section style="position:relative;min-height:min(94vh,900px);display:flex;align-items:flex-end;overflow:hidden">
+    <img src="assets/ho-ta-pa.jpg" alt="Hồ Tà Pạ giữa vùng Bảy Núi, An Giang" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(.96) brightness(.95);transform:scale(1.02)" />
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,30,29,.52) 0%,rgba(32,30,29,.12) 34%,rgba(39,46,27,.55) 72%,rgba(39,46,27,.9) 100%)"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 12% 82%,rgba(64,35,16,.55),transparent 62%)"></div>
+    <div style="position:relative;width:100%;max-width:1360px;margin:0 auto;padding:150px 24px 120px">
+      <div style="max-width:840px;animation:bnRise .9s cubic-bezier(.2,.7,.3,1) both">
+        <span style="display:inline-flex;align-items:center;gap:9px;padding:8px 16px 8px 12px;border-radius:999px;background:rgba(245,234,216,.16);backdrop-filter:blur(8px);border:1px solid rgba(245,234,216,.28);color:#f9f4ed;font-size:13px;font-weight:600;letter-spacing:.01em">
+          <span style="display:inline-flex;font-size:15px;color:#f6a06b;">{{ ic.sparkles }}</span>
+          Nền tảng du lịch văn hóa thông minh · Bảy Núi, An Giang
+        </span>
+        <h1 style="margin:22px 0 0;font-size:clamp(42px,6.6vw,86px);color:#fff9ef;text-shadow:0 3px 30px rgba(32,30,29,.35);text-wrap:balance">Khám phá Bảy Núi<br /><span style="color:#ffc6a5;font-style:italic">theo cách của riêng bạn.</span></h1>
+        <p style="margin:26px 0 0;max-width:620px;font-size:clamp(16px,1.5vw,19.5px);line-height:1.65;color:rgba(249,244,237,.9);text-wrap:pretty">Bay Nui đồng hành cùng bạn từ lúc lên kế hoạch, tìm nơi ở, khám phá văn hóa cho đến từng trải nghiệm trên hành trình.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:13px;margin-top:34px">
+          <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:17px 30px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:16.5px;font-weight:600;box-shadow:0 10px 30px rgba(140,73,26,.42);transition:transform .25s,background .25s" style-hover="{{ ctaHover }}">
+            <span style="display:inline-flex;font-size:19px;">{{ ic.sparkles }}</span>
+            Lập hành trình
+          </button>
+          <button onClick="{{ goDestSection }}" style="cursor:pointer;padding:17px 28px;border-radius:999px;background:rgba(249,244,237,.12);backdrop-filter:blur(8px);border:1.5px solid rgba(249,244,237,.5);color:#f9f4ed;font-size:16.5px;font-weight:600;transition:background .25s" style-hover="{{ ghostHover }}">Khám phá Bảy Núi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:0 24px;position:relative;z-index:20">
+    <div style="margin-top:-58px;background:#fffdf8;border:1px solid rgba(32,30,29,.08);border-radius:28px;padding:22px;box-shadow:0 22px 60px rgba(46,43,37,.18);animation:bnRise 1s .2s cubic-bezier(.2,.7,.3,1) both">
+      <div style="display:flex;align-items:center;gap:9px;padding:0 6px 16px">
+        <span style="display:inline-flex;font-size:16px;color:#b2622d;">{{ ic.wand }}</span>
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8c491a">Smart Trip Search</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;align-items:end">
+        <label style="display:flex;flex-direction:column;gap:6px;padding:12px 18px;border-radius:20px;background:#f9f4ed;border:1px solid rgba(32,30,29,.07)">
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#645c50">Bạn muốn đi đâu?</span>
+          <select value="{{ sPlace }}" onChange="{{ onPlace }}" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;cursor:pointer;outline:none;padding:0">
+            <sc-for list="{{ placeOptions }}" as="o" hint-placeholder-count="4">
+              <option value="{{ o }}">{{ o }}</option>
+            </sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px;padding:12px 18px;border-radius:20px;background:#f9f4ed;border:1px solid rgba(32,30,29,.07)">
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#645c50">Ngày đi</span>
+          <input type="date" value="{{ sDate }}" onChange="{{ onDate }}" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;outline:none;padding:0;width:100%" />
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px;padding:12px 18px;border-radius:20px;background:#f9f4ed;border:1px solid rgba(32,30,29,.07)">
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#645c50">Số người</span>
+          <select value="{{ sPeople }}" onChange="{{ onPeople }}" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;cursor:pointer;outline:none;padding:0">
+            <sc-for list="{{ peopleOptions }}" as="o" hint-placeholder-count="4">
+              <option value="{{ o }}">{{ o }}</option>
+            </sc-for>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px;padding:12px 18px;border-radius:20px;background:#f9f4ed;border:1px solid rgba(32,30,29,.07)">
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#645c50">Sở thích</span>
+          <select value="{{ sTaste }}" onChange="{{ onTaste }}" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;cursor:pointer;outline:none;padding:0">
+            <sc-for list="{{ tasteOptions }}" as="o" hint-placeholder-count="4">
+              <option value="{{ o }}">{{ o }}</option>
+            </sc-for>
+          </select>
+        </label>
+        <button onClick="{{ runSearch }}" style="border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;padding:19px 24px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:16px;font-weight:600;box-shadow:0 8px 22px rgba(140,73,26,.3);transition:transform .22s,background .22s" style-hover="{{ ctaHover }}">
+          <span style="display:inline-flex;font-size:18px;">{{ ic.sparkles }}</span>
+          Tạo chuyến đi
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:96px 24px 0">
+    <div style="border-radius:36px;background:linear-gradient(155deg,#2e3520 0%,#272e1b 45%,#1d2214 100%);padding:clamp(28px,4vw,60px);position:relative;overflow:hidden;box-shadow:0 24px 70px rgba(39,46,27,.3)">
+      <div style="position:absolute;top:-90px;right:-60px;width:340px;height:340px;border-radius:999px;background:radial-gradient(circle,rgba(198,113,57,.34),transparent 68%);animation:bnFloat 9s ease-in-out infinite"></div>
+      <div style="position:absolute;bottom:-120px;left:-70px;width:300px;height:300px;border-radius:999px;background:radial-gradient(circle,rgba(143,160,115,.26),transparent 70%)"></div>
+      <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:clamp(28px,4vw,58px);align-items:center">
+        <div>
+          <span style="display:inline-block;padding:7px 15px;border-radius:999px;background:rgba(240,250,225,.12);border:1px solid rgba(240,250,225,.22);color:#e1eecc;font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Bay Nui AI</span>
+          <h2 style="margin:20px 0 0;font-size:clamp(30px,3.6vw,50px);color:#fff9ef;text-wrap:balance">Chuyến đi hoàn hảo bắt đầu từ một câu hỏi.</h2>
+          <p style="margin:20px 0 0;font-size:17px;line-height:1.7;color:rgba(240,250,225,.76);max-width:460px;text-wrap:pretty">Bay Nui hiểu thời gian, ngân sách và sở thích của bạn — rồi ghép địa điểm, văn hóa, nơi ở, món ăn và xe đưa đón thành một hành trình đi được ngay.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
+            <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:9px;padding:15px 26px;border-radius:999px;background:#f6a06b;color:#402310;font-size:15.5px;font-weight:700;transition:transform .22s,background .22s" style-hover="{{ warmHover }}">
+              <span style="display:inline-flex;font-size:17px;">{{ ic.sparkles }}</span>
+              Thử Bay Nui
+            </button>
+            <button onClick="{{ replayDemo }}" style="cursor:pointer;padding:15px 24px;border-radius:999px;background:transparent;border:1.5px solid rgba(240,250,225,.32);color:#e1eecc;font-size:15.5px;font-weight:600" style-hover="{{ darkGhostHover }}">Xem lại demo</button>
+          </div>
+        </div>
+
+        <div style="background:rgba(249,244,237,.055);border:1px solid rgba(240,250,225,.14);border-radius:28px;padding:20px;backdrop-filter:blur(6px)">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+            <p style="max-width:88%;padding:14px 18px;border-radius:20px 20px 6px 20px;background:#f6a06b;color:#402310;font-size:14.5px;font-weight:500;line-height:1.55">Tôi có 2 ngày 1 đêm, ngân sách 2 triệu và muốn khám phá văn hóa Khmer.</p>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <span style="flex-shrink:0;width:34px;height:34px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);display:grid;place-items:center">
+              <span style="display:inline-flex;font-size:17px;color:#1d2214;">{{ ic.sparkles }}</span>
+            </span>
+            <div style="flex:1">
+              <p style="padding:14px 18px;border-radius:20px 20px 20px 6px;background:rgba(240,250,225,.1);color:#f0fae1;font-size:14.5px;line-height:1.55">Để tôi thiết kế chuyến đi phù hợp cho bạn.</p>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ demoSteps }}" as="s" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:11px;padding:11px 15px;border-radius:16px;transition:background .4s,opacity .4s;background:{{ s.bg }};opacity:{{ s.op }}">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:999px;display:grid;place-items:center;background:{{ s.dotBg }}">
+                      <span style="display:inline-flex;font-size:12px;color:{{ s.dotInk }};animation:{{ s.anim }}">{{ s.icon }}</span>
+                    </span>
+                    <span style="font-size:14px;font-weight:500;color:#f0fae1">{{ s.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top:16px;padding:18px;border-radius:22px;background:linear-gradient(135deg,rgba(246,160,107,.2),rgba(174,191,146,.14));border:1px solid rgba(246,160,107,.32);transition:opacity .6s;opacity:{{ demoDoneOp }}">
+                <p style="font-family:Lora,serif;font-size:20px;font-weight:600;color:#fff9ef">Hành trình đã sẵn sàng</p>
+                <p style="margin-top:7px;font-size:13.5px;color:rgba(240,250,225,.78);line-height:1.5">7 hoạt động · 2 ngày 1 đêm · Chùa Khmer Tri Tôn, hồ Tà Pạ, gà đốt Ô Thum, homestay Núi Cấm</p>
+                <button onClick="{{ goAi }}" style="margin-top:14px;border:0;cursor:pointer;padding:11px 20px;border-radius:999px;background:#fff9ef;color:#402310;font-size:14px;font-weight:700" style-hover="{{ warmHover }}">Mở hành trình</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="max-width:720px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Explore by experience</span>
+      <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px);text-wrap:balance">Bạn muốn trải nghiệm Bảy Núi<br />theo cách nào?</h2>
+    </div>
+    <div style="margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px">
+      <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="6">
+        <a href="#" onClick="{{ x.go }}" style="position:relative;display:block;height:352px;border-radius:26px;overflow:hidden;box-shadow:0 3px 10px rgba(46,43,37,.14);transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s" style-hover="{{ cardHover }}">
+          <img src="{{ x.img }}" alt="{{ x.alt }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78) contrast(.95) brightness(.98);transition:transform .8s cubic-bezier(.2,.7,.3,1)" />
+          <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,30,29,.06) 30%,rgba(32,30,29,.62) 68%,rgba(29,34,20,.9) 100%)"></span>
+          <span style="position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:999px;background:rgba(245,234,216,.9);display:grid;place-items:center;backdrop-filter:blur(4px)">
+            <span style="display:inline-flex;font-size:20px;color:#8c491a">{{ x.icon }}</span>
+          </span>
+          <span style="position:absolute;left:20px;right:20px;bottom:18px;display:block;color:#fff9ef">
+            <span style="display:block;font-family:Lora,serif;font-size:23px;font-weight:600;letter-spacing:-.01em">{{ x.title }}</span>
+            <span style="display:block;margin-top:5px;font-size:13.5px;color:rgba(249,244,237,.82);line-height:1.45">{{ x.desc }}</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;margin-top:13px;padding:8px 15px;border-radius:999px;background:rgba(245,234,216,.94);color:#402310;font-size:13px;font-weight:700">
+              {{ x.cta }}
+              <span style="display:inline-flex;font-size:14px;">{{ ic.arrow }}</span>
+            </span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="border-radius:36px;overflow:hidden;background:#ebddc5;border:1px solid rgba(32,30,29,.08)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr))">
+        <div style="position:relative;min-height:440px">
+          <img src="assets/chua-khmer.jpg" alt="Chùa Khmer với kiến trúc mái vàng đặc trưng vùng Bảy Núi" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.8) contrast(.94)" />
+          <span style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(64,35,16,.3),transparent 55%)"></span>
+          <span style="position:absolute;bottom:20px;left:20px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:rgba(255,253,248,.93);font-size:12.5px;font-weight:700;color:#402310">
+            <span style="display:inline-flex;font-size:14px;color:#b2622d;">{{ ic.verified }}</span>
+            Nội dung xác thực cùng người Khmer bản địa
+          </span>
+        </div>
+        <div style="padding:clamp(28px,4vw,54px)">
+          <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Featured cultural experience</span>
+          <h2 style="margin:16px 0 0;font-size:clamp(27px,3.2vw,42px);text-wrap:balance">Không chỉ tham quan.<br /><span style="font-style:italic;color:#8c491a">Hãy thực sự sống trong văn hóa địa phương.</span></h2>
+          <p style="margin:18px 0 0;font-size:16.5px;line-height:1.65;color:#474238;max-width:520px;text-wrap:pretty">Bảy Núi là nơi văn hóa Khmer, Việt và Chăm sống cạnh nhau. Bay Nui AI gom chùa, món ăn, lễ hội, làng nghề và nơi ở quanh đó thành một hành trình văn hóa liền mạch.</p>
+          <div style="margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:9px">
+            <sc-for list="{{ khmerFacets }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;background:#fffdf8;border:1px solid rgba(32,30,29,.06)">
+                <span style="display:inline-flex;font-size:17px;color:#728157;flex-shrink:0">{{ f.icon }}</span>
+                <span style="font-size:13.5px;font-weight:600;color:#2e2b25">{{ f.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:11px;margin-top:28px">
+            <button onClick="{{ goCulture }}" style="border:0;cursor:pointer;padding:15px 26px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15.5px;font-weight:600;box-shadow:0 6px 18px rgba(140,73,26,.26);transition:transform .22s,background .22s" style-hover="{{ ctaHover }}">Khám phá văn hóa Khmer</button>
+            <button onClick="{{ goAiKhmer }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:15px 24px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.2);color:#2e2b25;font-size:15.5px;font-weight:600;transition:background .22s" style-hover="{{ softHover }}">
+              <span style="display:inline-flex;font-size:16px;color:#b2622d;">{{ ic.sparkles }}</span>
+              Tạo hành trình Khmer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-destinations" style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0;scroll-margin-top:90px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div style="max-width:640px">
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Popular destinations</span>
+        <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Điểm đến nổi bật</h2>
+      </div>
+      <button onClick="{{ goDest }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:13px 22px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.18);color:#2e2b25;font-size:15px;font-weight:600;transition:background .2s" style-hover="{{ softHover }}">
+        {{ more }}
+        <span style="display:inline-flex;font-size:16px">{{ ic.arrow }}</span>
+      </button>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(296px,1fr));gap:20px">
+      <sc-for list="{{ dests }}" as="d" hint-placeholder-count="6">
+        <a href="#" onClick="{{ d.go }}" style="display:flex;flex-direction:column;background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;box-shadow:0 1px 2px rgba(46,43,37,.1);transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s;color:#201e1d" style-hover="{{ cardHover }}">
+          <span style="position:relative;display:block;height:212px;overflow:hidden">
+            <img src="{{ d.img }}" alt="{{ d.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(.8) contrast(.95)" />
+            <span style="position:absolute;top:14px;left:14px;padding:6px 13px;border-radius:999px;font-size:12px;font-weight:700;color:#fff9ef;background:{{ d.bTone }}">{{ d.badge }}</span>
+            <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,253,248,.92);font-size:12.5px;font-weight:700;color:#402310">
+              <span style="display:inline-flex;font-size:14px;color:#b2622d">{{ d.wIcon }}</span>
+              {{ d.deg }}
+            </span>
+          </span>
+          <span style="display:block;padding:20px 22px 22px">
+            <span style="display:block;font-family:Lora,serif;font-size:22px;font-weight:600;letter-spacing:-.01em">{{ d.name }}</span>
+            <span style="display:flex;align-items:center;gap:6px;margin-top:7px;font-size:13.5px;color:#645c50;white-space:nowrap">
+              <span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>
+              {{ d.area }}
+            </span>
+            <span style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:15px;border-top:1px solid rgba(32,30,29,.08);font-size:13.5px;font-weight:600;color:#474238">
+              <span style="display:inline-flex;align-items:center;gap:5px"><span style="display:inline-flex;font-size:14px;color:#c67139">{{ ic.star }}</span>{{ d.r }}</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;color:#645c50;font-weight:500"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.nav }}</span>{{ d.km }}</span>
+              <span style="margin-left:auto;display:inline-flex;font-size:17px;color:#b2622d">{{ ic.chevron }}</span>
+            </span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,110px) 24px 0">
+    <div style="background:#ebddc5;border-radius:36px;padding:clamp(26px,3.6vw,48px);border:1px solid rgba(32,30,29,.07)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:#fffdf8;font-size:12px;font-weight:700;color:#8c491a">
+          <span style="display:inline-flex;font-size:14px">{{ ic.pin }}</span>
+          Gần bạn lúc này
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#645c50">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:#728157;animation:bnBlink 1.8s ease-in-out infinite"></span>
+          GPS đang bật · Tri Tôn, An Giang
+        </span>
+      </div>
+      <h2 style="margin:20px 0 0;font-size:clamp(26px,3.2vw,42px);max-width:760px;text-wrap:balance">Bay Nui đề xuất cho bạn lúc này</h2>
+      <p style="margin:12px 0 0;font-size:16px;color:#474238;max-width:620px">Gợi ý thay đổi theo thời tiết, khoảng cách và giờ trong ngày — không phải một danh sách cố định.</p>
+      <div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+        <sc-for list="{{ nearby }}" as="n" hint-placeholder-count="3">
+          <div style="background:#fffdf8;border-radius:24px;padding:22px;border:1px solid rgba(32,30,29,.06);display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:11px">
+              <span style="width:38px;height:38px;border-radius:999px;display:grid;place-items:center;font-size:19px;color:#fff9ef;background:{{ n.tone }}">{{ n.icon }}</span>
+              <span style="font-size:13.5px;font-weight:600;color:#474238">{{ n.cond }}</span>
+            </div>
+            <div>
+              <p style="font-family:Lora,serif;font-size:21px;font-weight:600">{{ n.place }}</p>
+              <p style="margin-top:5px;font-size:13px;font-weight:600;color:#8c491a">{{ n.km }}</p>
+            </div>
+            <p style="font-size:14.5px;line-height:1.6;color:#474238;text-wrap:pretty">{{ n.why }}</p>
+            <button onClick="{{ n.go }}" style="margin-top:auto;cursor:pointer;align-self:flex-start;display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#f9f4ed;border:1px solid rgba(32,30,29,.1);font-size:14px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+              {{ n.action }}
+              <span style="display:inline-flex;font-size:15px;color:#b2622d">{{ ic.arrow }}</span>
+            </button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-festival" style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0;scroll-margin-top:90px">
+    <div style="max-width:680px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Festival calendar</span>
+      <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Lễ hội sắp diễn ra</h2>
+      <p style="margin:16px 0 0;font-size:16.5px;color:#474238">Bảy Núi có lễ hội gần như quanh năm. Nếu ngày đi của bạn trùng, Bay Nui sẽ đưa lễ hội vào hành trình.</p>
+    </div>
+    <div style="margin-top:40px;display:flex;flex-direction:column;gap:0">
+      <sc-for list="{{ festivals }}" as="f" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:clamp(16px,3vw,34px);flex-wrap:wrap;padding:22px 4px;border-top:1px solid rgba(32,30,29,.12)">
+          <div style="flex-shrink:0;width:82px;text-align:center">
+            <p style="font-family:Lora,serif;font-size:38px;font-weight:600;line-height:1;color:#8c491a">{{ f.d }}</p>
+            <p style="font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#82796a">{{ f.m }} {{ f.y }}</p>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <p style="font-family:Lora,serif;font-size:clamp(20px,2.2vw,26px);font-weight:600">{{ f.name }}</p>
+              <sc-if value="{{ f.match }}">
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:#ffe1d0;color:#8c491a;font-size:12px;font-weight:700">
+                  <span style="display:inline-flex;font-size:13px">{{ ic.sparkles }}</span>
+                  {{ f.matchLabel }}
+                </span>
+              </sc-if>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:8px;font-size:13.5px;color:#645c50;flex-wrap:wrap">
+              <span style="display:inline-flex;align-items:center;gap:6px;font-weight:600;color:#56633f">{{ f.cul }}</span>
+              <span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>{{ f.at }}</span>
+              <span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.nav }}</span>{{ f.km }}</span>
+            </div>
+          </div>
+          <button onClick="{{ f.go }}" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.16);font-size:14.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+            {{ f.cta }}
+            <span style="display:inline-flex;font-size:15px;color:#b2622d">{{ ic.chevron }}</span>
+          </button>
+        </div>
+      </sc-for>
+      <div style="border-top:1px solid rgba(32,30,29,.12)"></div>
+    </div>
+  </section>
+
+  <section id="sec-food" style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0;scroll-margin-top:90px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div style="max-width:600px">
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Food experience</span>
+        <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Hương vị Bảy Núi</h2>
+        <p style="margin:16px 0 0;font-size:16.5px;color:#474238">Mỗi món ăn ở đây gắn với một nền văn hóa và một mùa trong năm.</p>
+      </div>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:18px">
+      <sc-for list="{{ foods }}" as="fd" hint-placeholder-count="4">
+        <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s" style-hover="{{ cardHover }}">
+          <div style="height:186px;background:#ebddc5">
+            <image-slot id="{{ fd.slot }}" shape="rect" fit="cover" placeholder="{{ fd.ph }}"></image-slot>
+          </div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:9px;flex:1">
+            <span style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#56633f">{{ fd.cul }}</span>
+            <p style="font-family:Lora,serif;font-size:21px;font-weight:600;line-height:1.2">{{ fd.name }}</p>
+            <p style="font-size:14px;color:#645c50;line-height:1.5">{{ fd.where }}</p>
+            <div style="margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(32,30,29,.08)">
+              <span style="font-size:15.5px;font-weight:700;color:#8c491a">{{ fd.price }}</span>
+              <button onClick="{{ fd.go }}" style="cursor:pointer;border:0;padding:9px 16px;border-radius:999px;background:#f9f4ed;font-size:13.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">{{ fd.cta }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div style="max-width:640px">
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Stay near your destination</span>
+        <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Ngủ lại gần nơi bạn muốn đến</h2>
+      </div>
+      <button onClick="{{ goStay }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:13px 22px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.18);color:#2e2b25;font-size:15px;font-weight:600;transition:background .2s" style-hover="{{ softHover }}">
+        {{ more }}
+        <span style="display:inline-flex;font-size:16px">{{ ic.arrow }}</span>
+      </button>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+      <sc-for list="{{ stays }}" as="s" hint-placeholder-count="3">
+        <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s" style-hover="{{ cardHover }}">
+          <div style="position:relative;height:220px;overflow:hidden">
+            <img src="{{ s.img }}" alt="{{ s.name }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(.95)" />
+            <span style="position:absolute;bottom:14px;left:14px;display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:rgba(255,253,248,.94);font-size:12.5px;font-weight:700;color:#402310">
+              <span style="display:inline-flex;font-size:13px;color:#b2622d">{{ ic.nav }}</span>
+              {{ s.near }}
+            </span>
+          </div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:8px;flex:1">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <p style="font-family:Lora,serif;font-size:22px;font-weight:600;line-height:1.2">{{ s.name }}</p>
+              <span style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;background:#f0fae1;font-size:13px;font-weight:700;color:#3d472b">
+                <span style="display:inline-flex;font-size:13px;color:#728157">{{ ic.star }}</span>{{ s.r }}
+              </span>
+            </div>
+            <p style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:#645c50">
+              <span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>{{ s.at }}
+            </p>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:6px">
+              <sc-for list="{{ s.am }}" as="a" hint-placeholder-count="3">
+                <span style="padding:5px 11px;border-radius:999px;background:#f9f4ed;border:1px solid rgba(32,30,29,.07);font-size:12.5px;font-weight:500;color:#474238">{{ a.label }}</span>
+              </sc-for>
+            </div>
+            <div style="margin-top:auto;padding-top:18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+              <span>
+                <span style="display:block;font-size:12px;color:#82796a">{{ s.from }}</span>
+                <span style="font-family:Lora,serif;font-size:24px;font-weight:600;color:#8c491a">{{ s.price }}</span>
+                <span style="font-size:12.5px;color:#82796a">{{ s.night }}</span>
+              </span>
+              <button onClick="{{ s.book }}" style="border:0;cursor:pointer;padding:13px 22px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:14.5px;font-weight:600;box-shadow:0 5px 16px rgba(140,73,26,.24);transition:background .2s,transform .2s" style-hover="{{ ctaHover }}">{{ s.cta }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="max-width:640px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Curated tours</span>
+      <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Tour do người bản địa dẫn</h2>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+      <sc-for list="{{ tours }}" as="t" hint-placeholder-count="3">
+        <div style="position:relative;border-radius:26px;overflow:hidden;min-height:400px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .35s,box-shadow .35s" style-hover="{{ cardHover }}">
+          <img src="{{ t.img }}" alt="{{ t.name }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78) contrast(.95)" />
+          <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,30,29,.05) 25%,rgba(29,34,20,.82) 72%,rgba(29,34,20,.96) 100%)"></span>
+          <div style="position:relative;padding:24px;color:#fff9ef">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(249,244,237,.16);backdrop-filter:blur(6px);font-size:12.5px;font-weight:600"><span style="display:inline-flex;font-size:13px">{{ ic.clock }}</span>{{ t.dur }}</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(249,244,237,.16);backdrop-filter:blur(6px);font-size:12.5px;font-weight:600"><span style="display:inline-flex;font-size:13px">{{ ic.users }}</span>{{ t.pax }}</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(246,160,107,.9);color:#402310;font-size:12.5px;font-weight:700"><span style="display:inline-flex;font-size:13px">{{ ic.star }}</span>{{ t.r }}</span>
+            </div>
+            <p style="font-family:Lora,serif;font-size:25px;font-weight:600;line-height:1.15">{{ t.name }}</p>
+            <p style="margin-top:9px;font-size:13.5px;line-height:1.55;color:rgba(249,244,237,.8)">{{ t.stops }}</p>
+            <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <span style="font-family:Lora,serif;font-size:23px;font-weight:600;color:#ffc6a5">{{ t.price }}</span>
+              <button onClick="{{ t.book }}" style="border:0;cursor:pointer;padding:12px 20px;border-radius:999px;background:#fff9ef;color:#402310;font-size:14px;font-weight:700;transition:background .2s,transform .2s" style-hover="{{ warmHover }}">{{ t.cta }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="sec-services" style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,110px) 24px 0;scroll-margin-top:90px">
+    <div style="max-width:640px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Local services</span>
+      <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Mọi thứ bạn cần cho chuyến đi</h2>
+    </div>
+    <div style="margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+      <sc-for list="{{ services }}" as="sv" hint-placeholder-count="6">
+        <button onClick="{{ sv.go }}" style="cursor:pointer;text-align:left;background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:12px;transition:transform .3s,box-shadow .3s,background .3s" style-hover="{{ cardHover }}">
+          <span style="width:44px;height:44px;border-radius:999px;background:#f0fae1;display:grid;place-items:center;font-size:21px;color:#56633f">{{ sv.icon }}</span>
+          <span style="font-family:Lora,serif;font-size:19px;font-weight:600;color:#201e1d">{{ sv.label }}</span>
+          <span style="font-size:13.5px;color:#645c50">{{ sv.price }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="border-radius:36px;background:linear-gradient(160deg,#2e3520,#1d2214);padding:clamp(28px,4vw,58px);overflow:hidden">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:clamp(30px,4vw,56px);align-items:center">
+        <div>
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;background:rgba(240,250,225,.1);border:1px solid rgba(240,250,225,.2);color:#e1eecc;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">
+            <span style="display:inline-flex;font-size:14px">{{ ic.network }}</span>
+            Smart Culture Graph
+          </span>
+          <h2 style="margin:20px 0 0;font-size:clamp(28px,3.4vw,46px);color:#fff9ef;text-wrap:balance">Bay Nui kết nối từng trải nghiệm thành một hành trình hoàn chỉnh.</h2>
+          <p style="margin:18px 0 0;font-size:16.5px;line-height:1.7;color:rgba(240,250,225,.74);max-width:470px;text-wrap:pretty">Mỗi địa điểm, món ăn, lễ hội và dịch vụ trong hệ thống đều được gắn với lớp văn hóa mà nó thuộc về. Nhờ vậy AI không gợi ý rời rạc — nó hiểu vì sao chùa Tà Pạ, cốm dẹp và lễ Ok Om Bok nên nằm cùng một chuyến đi.</p>
+          <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:26px">
+            <div><p style="font-family:Lora,serif;font-size:34px;font-weight:600;color:#f6a06b">3</p><p style="font-size:13px;color:rgba(240,250,225,.62)">lớp văn hóa: Khmer · Việt · Chăm</p></div>
+            <div><p style="font-family:Lora,serif;font-size:34px;font-weight:600;color:#f6a06b">182</p><p style="font-size:13px;color:rgba(240,250,225,.62)">thực thể đã gắn liên kết</p></div>
+          </div>
+        </div>
+        <div style="position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1">
+          <svg viewBox="0 0 400 400" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%">
+            <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(240,250,225,.14)" stroke-dasharray="2 9"></circle>
+            <circle cx="200" cy="200" r="96" fill="none" stroke="rgba(240,250,225,.1)" stroke-dasharray="2 9"></circle>
+            <g stroke="rgba(246,160,107,.5)" stroke-width="1.4" stroke-dasharray="7 9" style="animation:bnDash 7s linear infinite">
+              <line x1="200" y1="200" x2="200" y2="50"></line>
+              <line x1="200" y1="200" x2="306" y2="94"></line>
+              <line x1="200" y1="200" x2="350" y2="200"></line>
+              <line x1="200" y1="200" x2="306" y2="306"></line>
+              <line x1="200" y1="200" x2="200" y2="350"></line>
+              <line x1="200" y1="200" x2="94" y2="306"></line>
+              <line x1="200" y1="200" x2="50" y2="200"></line>
+              <line x1="200" y1="200" x2="94" y2="94"></line>
+            </g>
+          </svg>
+          <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a);display:grid;place-items:center;text-align:center;box-shadow:0 0 0 12px rgba(198,113,57,.14),0 0 44px rgba(246,160,107,.34)">
+            <span>
+              <span style="display:block;font-size:10.5px;font-weight:700;letter-spacing:.18em;color:rgba(255,249,239,.72)">CULTURE</span>
+              <span style="display:block;font-family:Lora,serif;font-size:21px;font-weight:600;color:#fff9ef;line-height:1.15;margin-top:4px">Văn hóa<br />Khmer</span>
+            </span>
+          </div>
+          <sc-for list="{{ graph }}" as="g" hint-placeholder-count="8">
+            <div style="position:absolute;transform:translate(-50%,-50%);left:{{ g.left }};top:{{ g.top }};display:flex;align-items:center;gap:8px;padding:8px 13px 8px 9px;border-radius:999px;background:rgba(240,250,225,.1);border:1px solid rgba(240,250,225,.22);backdrop-filter:blur(6px);white-space:nowrap;animation:bnFloat 6s ease-in-out infinite">
+              <span style="width:26px;height:26px;border-radius:999px;background:rgba(174,191,146,.9);display:grid;place-items:center;font-size:14px;color:#1d2214">{{ g.icon }}</span>
+              <span style="font-size:12.5px;font-weight:600;color:#f0fae1">{{ g.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="max-width:680px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Verified local stories</span>
+      <h2 style="margin:14px 0 0;font-size:clamp(30px,4vw,52px)">Câu chuyện từ chính người Bảy Núi</h2>
+      <p style="margin:16px 0 0;font-size:16.5px;color:#474238">Nội dung do người dân địa phương kể, được cộng đồng và ban quản lý điểm đến xác thực.</p>
+    </div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px">
+      <sc-for list="{{ stories }}" as="s" hint-placeholder-count="3">
+        <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;padding:24px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:center;gap:13px">
+            <span style="width:52px;height:52px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);color:#fff9ef;display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0">{{ s.ini }}</span>
+            <span>
+              <span style="display:block;font-size:16px;font-weight:700;color:#201e1d">{{ s.name }}</span>
+              <span style="display:block;font-size:12.5px;color:#645c50">{{ s.role }}</span>
+            </span>
+          </div>
+          <span style="display:inline-flex;align-items:center;gap:7px;align-self:flex-start;padding:5px 12px;border-radius:999px;background:#f0fae1;font-size:11.5px;font-weight:700;color:#3d472b">
+            <span style="display:inline-flex;font-size:13px;color:#728157">{{ ic.verified }}</span>
+            {{ s.badge }}
+          </span>
+          <div style="display:flex;gap:11px">
+            <span style="display:inline-flex;font-size:20px;color:#ffc6a5;flex-shrink:0">{{ ic.quote }}</span>
+            <p style="font-family:Lora,serif;font-size:18px;line-height:1.5;color:#2e2b25;text-wrap:pretty">{{ s.quote }}</p>
+          </div>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(32,30,29,.08);display:flex;align-items:center;gap:13px">
+            <button onClick="{{ s.toggle }}" title="{{ s.listen }}" style="border:0;cursor:pointer;flex-shrink:0;width:44px;height:44px;border-radius:999px;background:#c67139;color:#fff9ef;display:grid;place-items:center;font-size:17px;transition:background .2s" style-hover="{{ ctaHover }}">{{ s.icon }}</button>
+            <div style="flex:1;display:flex;align-items:flex-end;gap:2.5px;height:28px">
+              <sc-for list="{{ s.bars }}" as="b" hint-placeholder-count="34">
+                <span style="flex:1;border-radius:99px;height:{{ b.h }}px;background:{{ b.bg }}"></span>
+              </sc-for>
+            </div>
+            <span style="font-size:12.5px;font-weight:600;color:#645c50;flex-shrink:0">{{ s.len }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,50px);align-items:center">
+      <div>
+        <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Bay Nui Passport</span>
+        <h2 style="margin:14px 0 0;font-size:clamp(28px,3.6vw,46px);text-wrap:balance">Hộ chiếu văn hóa của riêng bạn</h2>
+        <p style="margin:18px 0 0;font-size:16.5px;line-height:1.7;color:#474238;max-width:470px;text-wrap:pretty">Mỗi địa điểm đã đến, mỗi món đã thử, mỗi lễ hội đã dự đều được đóng dấu. Passport là lý do khách quay lại Bảy Núi lần thứ hai — và là dữ liệu giúp AI hiểu bạn hơn.</p>
+        <button onClick="{{ goPassport }}" style="margin-top:26px;border:0;cursor:pointer;display:flex;align-items:center;gap:9px;padding:15px 26px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15.5px;font-weight:600;box-shadow:0 6px 18px rgba(140,73,26,.26);transition:background .2s,transform .2s" style-hover="{{ ctaHover }}">
+          Mở passport của tôi
+          <span style="display:inline-flex;font-size:17px">{{ ic.arrow }}</span>
+        </button>
+      </div>
+      <div style="background:linear-gradient(150deg,#2e3520,#1d2214);border-radius:30px;padding:9px;box-shadow:0 20px 50px rgba(29,34,20,.3)">
+        <div style="background:#f9f4ed;border-radius:24px;padding:clamp(20px,3vw,30px);position:relative;overflow:hidden">
+          <div style="position:absolute;top:-40px;right:-40px;width:170px;height:170px;border-radius:999px;background:rgba(198,113,57,.07)"></div>
+          <div style="position:relative;display:flex;align-items:center;gap:15px">
+            <span style="width:60px;height:60px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a);color:#fff9ef;display:grid;place-items:center;font-size:19px;font-weight:700">MT</span>
+            <span style="flex:1">
+              <span style="display:block;font-family:Lora,serif;font-size:22px;font-weight:600">Minh Trâm</span>
+              <span style="display:block;font-size:12px;letter-spacing:.1em;color:#82796a">PASSPORT NO. BN·2026·0417</span>
+            </span>
+            <span style="display:inline-flex;font-size:26px;color:#c0b6a5">{{ ic.stamp }}</span>
+          </div>
+          <div style="position:relative;margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="padding:14px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:26px;font-weight:600;color:#8c491a">12</p>
+              <p style="font-size:11.5px;color:#645c50;line-height:1.3">địa điểm đã khám phá</p>
+            </div>
+            <div style="padding:14px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:26px;font-weight:600;color:#8c491a">8</p>
+              <p style="font-size:11.5px;color:#645c50;line-height:1.3">món đặc sản đã thử</p>
+            </div>
+            <div style="padding:14px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:26px;font-weight:600;color:#8c491a">3</p>
+              <p style="font-size:11.5px;color:#645c50;line-height:1.3">lễ hội đã tham dự</p>
+            </div>
+          </div>
+          <div style="position:relative;margin-top:20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:600;color:#474238">
+              <span>Cultural Level 3 · Người kể chuyện Bảy Núi</span>
+              <span style="color:#8c491a">68%</span>
+            </div>
+            <div style="margin-top:8px;height:9px;border-radius:99px;background:#dcd3c4;overflow:hidden">
+              <div style="height:100%;width:68%;border-radius:99px;background:linear-gradient(90deg,#c67139,#f6a06b)"></div>
+            </div>
+          </div>
+          <div style="position:relative;margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:12px">
+            <sc-for list="{{ stamps }}" as="sp" hint-placeholder-count="4">
+              <div style="text-align:center;padding:14px 8px;border-radius:20px;transform:{{ sp.rot }};border:{{ sp.border }};background:{{ sp.bg }}">
+                <span style="display:inline-flex;font-size:26px;color:{{ sp.color }}">{{ sp.icon }}</span>
+                <p style="margin-top:7px;font-size:11.5px;font-weight:700;letter-spacing:.04em;color:{{ sp.color }}">{{ sp.label }}</p>
+                <p style="font-size:10.5px;color:#82796a">{{ sp.at }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(70px,9vw,120px) 24px 0">
+    <div style="background:#ebddc5;border:1px solid rgba(32,30,29,.07);border-radius:36px;padding:clamp(26px,3.6vw,52px)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,50px)">
+        <div>
+          <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Partner ecosystem</span>
+          <h2 style="margin:14px 0 0;font-size:clamp(27px,3.4vw,44px);text-wrap:balance">Du lịch phát triển khi cộng đồng cùng phát triển.</h2>
+          <p style="margin:18px 0 0;font-size:16.5px;line-height:1.7;color:#474238;max-width:460px;text-wrap:pretty">Bay Nui Stay kết nối du khách với dịch vụ địa phương, giúp dòng tiền du lịch quay trở lại cộng đồng thay vì chảy ra ngoài vùng.</p>
+          <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:14px">
+            <div style="padding:18px 22px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:30px;font-weight:600;color:#8c491a">82%</p>
+              <p style="font-size:12.5px;color:#645c50;max-width:150px;line-height:1.35">giá trị mỗi đơn về trực tiếp đối tác địa phương</p>
+            </div>
+            <div style="padding:18px 22px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:30px;font-weight:600;color:#8c491a">182</p>
+              <p style="font-size:12.5px;color:#645c50;max-width:150px;line-height:1.35">đối tác tại Tri Tôn, Tịnh Biên, Châu Đốc</p>
+            </div>
+            <div style="padding:18px 22px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <p style="font-family:Lora,serif;font-size:30px;font-weight:600;color:#8c491a">3</p>
+              <p style="font-size:12.5px;color:#645c50;max-width:150px;line-height:1.35">nguồn thu: hoa hồng, gói đối tác, tour thương hiệu</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+            <span style="width:42px;height:42px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a);color:#fff9ef;display:grid;place-items:center;font-size:20px">{{ ic.handshake }}</span>
+            <span>
+              <span style="display:block;font-size:15.5px;font-weight:700">Bay Nui Stay</span>
+              <span style="display:block;font-size:12.5px;color:#645c50">một điểm kết nối cho toàn bộ dịch vụ trong vùng</span>
+            </span>
+          </div>
+          <div style="display:flex;justify-content:center;padding:10px 0">
+            <span style="display:inline-flex;font-size:22px;color:#c0b6a5;transform:rotate(90deg)">{{ ic.arrow }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+            <sc-for list="{{ partners }}" as="p" hint-placeholder-count="7">
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 16px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.06)">
+                <span style="width:34px;height:34px;border-radius:999px;background:#f0fae1;color:#56633f;display:grid;place-items:center;font-size:17px;flex-shrink:0">{{ p.icon }}</span>
+                <span style="flex:1;font-size:13.5px;font-weight:600;color:#2e2b25;line-height:1.3">{{ p.label }}</span>
+                <span style="font-size:13px;font-weight:700;color:#8c491a">{{ p.n }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:clamp(70px,9vw,120px);position:relative;overflow:hidden">
+    <img src="assets/nui-cam-1.jpg" alt="Khung cảnh Núi Cấm, An Giang" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.72) contrast(.94) brightness(.8)" />
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(29,34,20,.72),rgba(64,35,16,.78))"></div>
+    <div style="position:relative;max-width:900px;margin:0 auto;padding:clamp(72px,10vw,130px) 24px;text-align:center">
+      <h2 style="font-size:clamp(34px,5.4vw,68px);color:#fff9ef;text-wrap:balance">Bảy Núi đang chờ bạn.</h2>
+      <p style="margin:20px auto 0;max-width:560px;font-size:clamp(16px,1.6vw,19px);line-height:1.65;color:rgba(249,244,237,.86);text-wrap:pretty">Hãy để Bay Nui biến sở thích của bạn thành một chuyến đi đáng nhớ.</p>
+      <div style="margin-top:34px;display:flex;flex-wrap:wrap;gap:13px;justify-content:center">
+        <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:18px 32px;border-radius:999px;background:#f6a06b;color:#402310;font-size:17px;font-weight:700;box-shadow:0 12px 34px rgba(64,35,16,.4);transition:background .22s,transform .22s" style-hover="{{ warmHover }}">
+          <span style="display:inline-flex;font-size:19px">{{ ic.sparkles }}</span>
+          Tạo chuyến đi của tôi
+        </button>
+        <button onClick="{{ goDestSection }}" style="cursor:pointer;padding:18px 30px;border-radius:999px;background:rgba(249,244,237,.12);backdrop-filter:blur(8px);border:1.5px solid rgba(249,244,237,.46);color:#f9f4ed;font-size:17px;font-weight:600;transition:background .22s" style-hover="{{ ghostHover }}">Khám phá Bảy Núi</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ isExplore }}">
+<div data-screen-label="02b Khám phá &amp; Trải nghiệm" style="padding-top:78px">
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Explore Bay Nui</span>
+    <h1 style="margin:14px 0 0;font-size:clamp(30px,4.4vw,54px)">Khám phá Bảy Núi</h1>
+    <p style="margin:14px 0 0;font-size:16.5px;color:#474238;max-width:580px">Điểm đến, trải nghiệm và lễ hội của vùng Bảy Núi — tất cả trong một nơi.</p>
+    <div style="margin-top:26px;display:flex;gap:9px;flex-wrap:wrap">
+      <sc-for list="{{ exploreTabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.pick }}" style="cursor:pointer;padding:12px 22px;border-radius:999px;border:1px solid rgba(32,30,29,.1);font-size:15px;font-weight:600;transition:background .2s,color .2s;background:{{ t.bg }};color:{{ t.ink }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ showExploreDest }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(296px,1fr));gap:20px">
+        <sc-for list="{{ dests }}" as="d" hint-placeholder-count="6">
+          <a href="#" onClick="{{ d.go }}" style="display:flex;flex-direction:column;background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;box-shadow:0 1px 2px rgba(46,43,37,.1);transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s;color:#201e1d" style-hover="{{ cardHover }}">
+            <span style="position:relative;display:block;height:212px;overflow:hidden">
+              <img src="{{ d.img }}" alt="{{ d.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(.8) contrast(.95)" />
+              <span style="position:absolute;top:14px;left:14px;padding:6px 13px;border-radius:999px;font-size:12px;font-weight:700;color:#fff9ef;background:{{ d.bTone }}">{{ d.badge }}</span>
+              <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,253,248,.92);font-size:12.5px;font-weight:700;color:#402310">
+                <span style="display:inline-flex;font-size:14px;color:#b2622d">{{ d.wIcon }}</span>{{ d.deg }}
+              </span>
+            </span>
+            <span style="display:block;padding:20px 22px 22px">
+              <span style="display:block;font-family:Lora,serif;font-size:22px;font-weight:600;letter-spacing:-.01em">{{ d.name }}</span>
+              <span style="display:flex;align-items:center;gap:6px;margin-top:7px;font-size:13.5px;color:#645c50;white-space:nowrap">
+                <span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>{{ d.area }}
+              </span>
+              <span style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:15px;border-top:1px solid rgba(32,30,29,.08);font-size:13.5px;font-weight:600;color:#474238">
+                <span style="display:inline-flex;align-items:center;gap:5px"><span style="display:inline-flex;font-size:14px;color:#c67139">{{ ic.star }}</span>{{ d.r }}</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;color:#645c50;font-weight:500"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.nav }}</span>{{ d.km }}</span>
+                <span style="margin-left:auto;display:inline-flex;font-size:17px;color:#b2622d">{{ ic.chevron }}</span>
+              </span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showExploreExp }}">
+      <div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px">
+        <sc-for list="{{ experiences }}" as="x" hint-placeholder-count="6">
+          <a href="#" onClick="{{ x.go }}" style="position:relative;display:block;height:352px;border-radius:26px;overflow:hidden;box-shadow:0 3px 10px rgba(46,43,37,.14);transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s" style-hover="{{ cardHover }}">
+            <img src="{{ x.img }}" alt="{{ x.alt }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78) contrast(.95) brightness(.98)" />
+            <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,30,29,.06) 30%,rgba(32,30,29,.62) 68%,rgba(29,34,20,.9) 100%)"></span>
+            <span style="position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:999px;background:rgba(245,234,216,.9);display:grid;place-items:center">
+              <span style="display:inline-flex;font-size:20px;color:#8c491a">{{ x.icon }}</span>
+            </span>
+            <span style="position:absolute;left:20px;right:20px;bottom:18px;display:block;color:#fff9ef">
+              <span style="display:block;font-family:Lora,serif;font-size:23px;font-weight:600;letter-spacing:-.01em">{{ x.title }}</span>
+              <span style="display:block;margin-top:5px;font-size:13.5px;color:rgba(249,244,237,.82);line-height:1.45">{{ x.desc }}</span>
+              <span style="display:inline-flex;align-items:center;gap:7px;margin-top:13px;padding:8px 15px;border-radius:999px;background:rgba(245,234,216,.94);color:#402310;font-size:13px;font-weight:700">
+                {{ x.cta }}<span style="display:inline-flex;font-size:14px">{{ ic.arrow }}</span>
+              </span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showExploreFest }}">
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:0">
+        <sc-for list="{{ festivals }}" as="f" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:clamp(16px,3vw,34px);flex-wrap:wrap;padding:22px 4px;border-top:1px solid rgba(32,30,29,.12)">
+            <div style="flex-shrink:0;width:82px;text-align:center">
+              <p style="font-family:Lora,serif;font-size:38px;font-weight:600;line-height:1;color:#8c491a">{{ f.d }}</p>
+              <p style="font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#82796a">{{ f.m }} {{ f.y }}</p>
+            </div>
+            <div style="flex:1;min-width:220px">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <p style="font-family:Lora,serif;font-size:clamp(20px,2.2vw,26px);font-weight:600">{{ f.name }}</p>
+                <sc-if value="{{ f.match }}">
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:#ffe1d0;color:#8c491a;font-size:12px;font-weight:700">
+                    <span style="display:inline-flex;font-size:13px">{{ ic.sparkles }}</span>{{ f.matchLabel }}
+                  </span>
+                </sc-if>
+              </div>
+              <div style="display:flex;align-items:center;gap:16px;margin-top:8px;font-size:13.5px;color:#645c50;flex-wrap:wrap">
+                <span style="display:inline-flex;align-items:center;gap:6px;font-weight:600;color:#56633f">{{ f.cul }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>{{ f.at }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.nav }}</span>{{ f.km }}</span>
+              </div>
+            </div>
+            <button onClick="{{ f.go }}" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.16);font-size:14.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+              {{ f.cta }}<span style="display:inline-flex;font-size:15px;color:#b2622d">{{ ic.chevron }}</span>
+            </button>
+          </div>
+        </sc-for>
+        <div style="border-top:1px solid rgba(32,30,29,.12)"></div>
+      </div>
+    </sc-if>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFood }}">
+<div data-screen-label="02c Ẩm thực Bảy Núi" style="padding-top:78px">
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Food experience</span>
+    <h1 style="margin:14px 0 0;font-size:clamp(30px,4.4vw,54px)">Hương vị Bảy Núi</h1>
+    <p style="margin:14px 0 0;font-size:16.5px;color:#474238;max-width:580px">Mỗi món ăn ở đây gắn với một nền văn hóa và một mùa trong năm — Khmer, Việt và Chăm cùng góp mặt trên một mâm cơm.</p>
+    <div style="margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:18px">
+      <sc-for list="{{ foods }}" as="fd" hint-placeholder-count="4">
+        <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .35s,box-shadow .35s" style-hover="{{ cardHover }}">
+          <div style="height:186px;background:#ebddc5">
+            <image-slot id="{{ fd.slot }}-page" shape="rect" fit="cover" placeholder="{{ fd.ph }}"></image-slot>
+          </div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;gap:9px;flex:1">
+            <span style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#56633f">{{ fd.cul }}</span>
+            <p style="font-family:Lora,serif;font-size:21px;font-weight:600;line-height:1.2">{{ fd.name }}</p>
+            <p style="font-size:14px;color:#645c50;line-height:1.5">{{ fd.where }}</p>
+            <div style="margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(32,30,29,.08)">
+              <span style="font-size:15.5px;font-weight:700;color:#8c491a">{{ fd.price }}</span>
+              <button onClick="{{ fd.go }}" style="cursor:pointer;border:0;padding:9px 16px;border-radius:999px;background:#f9f4ed;font-size:13.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">{{ fd.cta }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:16px;padding:clamp(24px,3.4vw,40px);border-radius:30px;background:linear-gradient(150deg,#2e3520,#1d2214);display:flex;flex-wrap:wrap;align-items:center;gap:20px;justify-content:space-between">
+      <div>
+        <h3 style="font-size:clamp(22px,2.6vw,32px);color:#fff9ef">Muốn ăn đúng món, đúng giờ, đúng chỗ?</h3>
+        <p style="margin-top:8px;font-size:15.5px;color:rgba(240,250,225,.72);max-width:460px">Bay Nui xếp lịch ăn uống theo hành trình của bạn.</p>
+      </div>
+      <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;background:#f6a06b;color:#402310;font-size:16px;font-weight:700;transition:background .2s,transform .2s" style-hover="{{ warmHover }}">
+        <span style="display:inline-flex;font-size:18px">{{ ic.sparkles }}</span>Tạo hành trình
+      </button>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAi }}">
+<div data-screen-label="02 Lập hành trình" style="padding-top:78px">
+  <section style="background:linear-gradient(160deg,#2e3520,#1d2214);padding:clamp(34px,5vw,64px) 24px">
+    <div style="max-width:1360px;margin:0 auto">
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;background:rgba(240,250,225,.1);border:1px solid rgba(240,250,225,.2);color:#e1eecc;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">
+        <span style="display:inline-flex;font-size:14px">{{ ic.brain }}</span>
+        Lập hành trình
+      </span>
+      <h1 style="margin:18px 0 0;font-size:clamp(30px,4.4vw,54px);color:#fff9ef;max-width:760px;text-wrap:balance">Kể cho Bay Nui về chuyến đi bạn muốn.</h1>
+      <p style="margin:14px 0 0;font-size:16.5px;color:rgba(240,250,225,.74);max-width:560px">Càng cụ thể về thời gian, ngân sách và sở thích, hành trình càng vừa với bạn.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(26px,4vw,48px) 24px 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;align-items:start">
+      <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.08);border-radius:28px;padding:24px;position:sticky;top:96px">
+        <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8c491a">Yêu cầu của bạn</p>
+        <textarea value="{{ planInput }}" onChange="{{ onPlanInput }}" rows="5" style="margin-top:12px;width:100%;padding:16px 18px;border-radius:20px;border:1px solid rgba(32,30,29,.14);background:#f9f4ed;font-family:inherit;font-size:15.5px;line-height:1.6;color:#201e1d;resize:vertical;outline:none"></textarea>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ planChips }}" as="c" hint-placeholder-count="3">
+            <button onClick="{{ c.pick }}" style="cursor:pointer;text-align:left;white-space:normal;padding:11px 15px;border-radius:16px;background:#f9f4ed;border:1px solid rgba(32,30,29,.08);font-size:13.5px;line-height:1.45;color:#474238;transition:background .2s" style-hover="{{ softHover }}">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ submitPlan }}" style="margin-top:16px;width:100%;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;padding:17px 24px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:16px;font-weight:600;box-shadow:0 8px 22px rgba(140,73,26,.28);transition:background .2s,transform .2s" style-hover="{{ ctaHover }}">
+          <span style="display:inline-flex;font-size:18px">{{ ic.sparkles }}</span>
+          Tạo hành trình
+        </button>
+        <sc-if value="{{ planBusy }}">
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ planSteps }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:#474238;opacity:{{ s.op }}">
+                <span style="display:inline-flex;font-size:16px;color:{{ s.tone }};animation:{{ s.anim }}">{{ s.icon }}</span>
+                {{ s.label }}
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="grid-column:span 2;min-width:300px">
+        <sc-if value="{{ planBusy }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="height:120px;border-radius:24px;background:linear-gradient(100deg,#ebddc5,#f2e7d3,#ebddc5);position:relative;overflow:hidden"><span style="position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,253,248,.7),transparent);animation:bnSheen 1.4s linear infinite"></span></div>
+            <div style="height:230px;border-radius:24px;background:#ebddc5;position:relative;overflow:hidden"><span style="position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,253,248,.7),transparent);animation:bnSheen 1.4s .2s linear infinite"></span></div>
+            <div style="height:230px;border-radius:24px;background:#ebddc5;position:relative;overflow:hidden"><span style="position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,253,248,.7),transparent);animation:bnSheen 1.4s .4s linear infinite"></span></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ planReady }}">
+          <div>
+            <div style="background:#ebddc5;border:1px solid rgba(32,30,29,.08);border-radius:28px;padding:26px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap">
+                <div style="max-width:540px">
+                  <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;background:#fffdf8;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8c491a">
+                    <span style="display:inline-flex;font-size:13px">{{ ic.sparkles }}</span>
+                    Hành trình đã sẵn sàng
+                  </span>
+                  <h2 style="margin:14px 0 0;font-size:clamp(24px,2.8vw,36px);text-wrap:balance">{{ planTitle }}</h2>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <div style="padding:14px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+                    <p style="font-size:11.5px;color:#82796a">Ngân sách dự kiến</p>
+                    <p style="font-family:Lora,serif;font-size:22px;font-weight:600;color:#8c491a">{{ planBudget }}</p>
+                  </div>
+                  <div style="padding:14px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+                    <p style="font-size:11.5px;color:#82796a">Số khách</p>
+                    <p style="font-family:Lora,serif;font-size:22px;font-weight:600;color:#8c491a">{{ planPax }}</p>
+                  </div>
+                </div>
+              </div>
+              <sc-if value="{{ planFallback }}">
+                <p style="margin-top:16px;padding:12px 16px;border-radius:16px;background:#fff2eb;border:1px solid #ffc6a5;font-size:13.5px;color:#8c491a">Kết nối đang gián đoạn — đây là hành trình mẫu do Bay Nui AI tạo trước đó cho cùng yêu cầu.</p>
+              </sc-if>
+            </div>
+
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:16px">
+              <sc-for list="{{ planDays }}" as="d" hint-placeholder-count="2">
+                <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.08);border-radius:28px;padding:24px">
+                  <p style="font-family:Lora,serif;font-size:23px;font-weight:600">{{ d.label }}</p>
+                  <div style="margin-top:16px;display:flex;flex-direction:column">
+                    <sc-for list="{{ d.items }}" as="it" hint-placeholder-count="5">
+                      <div style="display:flex;align-items:center;gap:16px;padding:14px 0;border-top:1px solid rgba(32,30,29,.08)">
+                        <span style="flex-shrink:0;width:56px;font-size:14.5px;font-weight:700;color:#8c491a">{{ it.t }}</span>
+                        <span style="flex-shrink:0;width:40px;height:40px;border-radius:999px;background:#f0fae1;color:#56633f;display:grid;place-items:center;font-size:19px">{{ it.icon }}</span>
+                        <span style="flex:1;min-width:140px">
+                          <span style="display:block;font-size:16px;font-weight:600;color:#201e1d;line-height:1.35">{{ it.title }}</span>
+                          <span style="display:block;font-size:12.5px;color:#82796a">{{ it.type }}</span>
+                        </span>
+                        <span style="font-size:14.5px;font-weight:600;color:#474238;white-space:nowrap">{{ it.p }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="margin-top:16px;padding:24px;border-radius:28px;background:linear-gradient(150deg,#2e3520,#1d2214);display:flex;gap:15px;align-items:flex-start">
+              <span style="flex-shrink:0;width:40px;height:40px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);color:#1d2214;display:grid;place-items:center;font-size:19px">{{ ic.sparkles }}</span>
+              <div>
+                <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aebf92">Vì sao Bay Nui xếp như vậy</p>
+                <p style="margin-top:8px;font-size:15.5px;line-height:1.65;color:#f0fae1;text-wrap:pretty">{{ planNote }}</p>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:11px">
+              <button onClick="{{ bookAll }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:9px;padding:16px 26px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15.5px;font-weight:600;box-shadow:0 6px 18px rgba(140,73,26,.26);transition:background .2s,transform .2s" style-hover="{{ ctaHover }}">
+                <span style="display:inline-flex;font-size:17px">{{ ic.ticket }}</span>
+                Đặt toàn bộ dịch vụ
+              </button>
+              <button onClick="{{ goTrip }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:16px 24px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.18);font-size:15.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+                <span style="display:inline-flex;font-size:17px;color:#b2622d">{{ ic.route }}</span>
+                Bắt đầu chế độ Live Trip
+              </button>
+              <button onClick="{{ goPassport }}" style="cursor:pointer;display:flex;align-items:center;gap:9px;padding:16px 24px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.18);font-size:15.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+                <span style="display:inline-flex;font-size:17px;color:#b2622d">{{ ic.bookmark }}</span>
+                Lưu vào Passport
+              </button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+  <div style="height:clamp(60px,8vw,110px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDest }}">
+<div data-screen-label="03 Chi tiết địa điểm">
+  <section style="position:relative;min-height:min(72vh,640px);display:flex;align-items:flex-end;overflow:hidden">
+    <img src="{{ destImg }}" alt="{{ destName }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(.96)" />
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,30,29,.42) 0%,rgba(32,30,29,.1) 40%,rgba(29,34,20,.88) 100%)"></div>
+    <div style="position:relative;width:100%;max-width:1360px;margin:0 auto;padding:140px 24px 40px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+        <div>
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:rgba(245,234,216,.18);border:1px solid rgba(245,234,216,.3);backdrop-filter:blur(8px);color:#f9f4ed;font-size:12.5px;font-weight:600">
+            <span style="display:inline-flex;font-size:14px">{{ ic.pin }}</span>
+            {{ destArea }}
+          </span>
+          <h1 style="margin:16px 0 0;font-size:clamp(32px,5.2vw,64px);color:#fff9ef;text-wrap:balance">{{ destName }}</h1>
+          <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:10px">
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:999px;background:rgba(255,253,248,.94);font-size:13.5px;font-weight:700;color:#402310"><span style="display:inline-flex;font-size:15px;color:#c67139">{{ ic.star }}</span>4.9 · 214 đánh giá</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:999px;background:rgba(249,244,237,.16);border:1px solid rgba(249,244,237,.3);backdrop-filter:blur(8px);font-size:13.5px;font-weight:600;color:#f9f4ed"><span style="display:inline-flex;font-size:15px">{{ ic.cloudSun }}</span>27° · mây rải rác</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:14px 20px;border-radius:999px;background:rgba(249,244,237,.14);border:1.5px solid rgba(249,244,237,.4);backdrop-filter:blur(8px);color:#f9f4ed;font-size:14.5px;font-weight:600" style-hover="{{ ghostHover }}"><span style="display:inline-flex;font-size:16px">{{ ic.heart }}</span>Lưu</button>
+          <button style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:14px 20px;border-radius:999px;background:rgba(249,244,237,.14);border:1.5px solid rgba(249,244,237,.4);backdrop-filter:blur(8px);color:#f9f4ed;font-size:14.5px;font-weight:600" style-hover="{{ ghostHover }}"><span style="display:inline-flex;font-size:16px">{{ ic.share }}</span>Chia sẻ</button>
+          <button style="border:0;cursor:pointer;display:flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:14.5px;font-weight:600;box-shadow:0 6px 18px rgba(64,35,16,.3);transition:background .2s" style-hover="{{ ctaHover }}"><span style="display:inline-flex;font-size:16px">{{ ic.nav }}</span>Chỉ đường</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(40px,5vw,70px) 24px 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(28px,4vw,54px);align-items:start">
+      <div style="grid-column:span 2;min-width:300px">
+        <h2 style="font-size:clamp(24px,2.8vw,34px)">Tổng quan</h2>
+        <p style="margin-top:14px;font-size:17px;line-height:1.75;color:#474238;text-wrap:pretty">Núi Cấm — người địa phương gọi là Thiên Cấm Sơn — là ngọn cao nhất trong bảy ngọn của vùng Thất Sơn, khoảng 705 m. Khí hậu trên đỉnh mát quanh năm, sáng sớm thường có biển mây phủ kín thung lũng. Đường lên có cáp treo và cả đường bộ cho người muốn đi chậm.</p>
+
+        <h3 style="margin-top:36px;font-size:clamp(21px,2.2vw,27px)">Điểm nổi bật</h3>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ highlights }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex;gap:14px;padding:18px 20px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+              <span style="flex-shrink:0;width:40px;height:40px;border-radius:999px;background:#fff2eb;color:#b2622d;display:grid;place-items:center;font-size:19px">{{ h.icon }}</span>
+              <div>
+                <p style="font-size:16.5px;font-weight:600">{{ h.label }}</p>
+                <p style="margin-top:4px;font-size:14.5px;line-height:1.55;color:#645c50">{{ h.desc }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h3 style="margin-top:36px;font-size:clamp(21px,2.2vw,27px)">Văn hóa &amp; câu chuyện</h3>
+        <p style="margin-top:14px;font-size:17px;line-height:1.75;color:#474238;text-wrap:pretty">Vùng Thất Sơn từ lâu gắn với tín ngưỡng dân gian và các đạo giáo bản địa của miền Tây. Người Khmer, người Việt cùng lập chùa và miếu trên các sườn núi — vì vậy chỉ trong bán kính 15 km bạn có thể gặp cả chùa Khmer mái vàng, miếu thờ của người Việt và các làng nghề thốt nốt.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:96px">
+        <div style="padding:22px;border-radius:24px;background:#fffdf8;border:1px solid rgba(32,30,29,.07)">
+          <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8c491a">Thời tiết 4 ngày</p>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:4px">
+            <sc-for list="{{ forecast }}" as="w" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid rgba(32,30,29,.07)">
+                <span style="flex:1;font-size:14.5px;font-weight:600;color:#474238">{{ w.d }}</span>
+                <span style="display:inline-flex;font-size:19px;color:#b2622d">{{ w.ic }}</span>
+                <span style="font-size:14.5px;font-weight:700;color:#201e1d">{{ w.t }}</span>
+                <span style="font-size:13.5px;color:#82796a">{{ w.n }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border-radius:24px;overflow:hidden;border:1px solid rgba(32,30,29,.07);background:#ebddc5">
+          <div style="height:190px;position:relative;display:grid;place-items:center;background:repeating-linear-gradient(135deg,#e3d5bd 0 12px,#ebddc5 12px 24px)">
+            <span style="display:flex;flex-direction:column;align-items:center;gap:8px;color:#82796a">
+              <span style="display:inline-flex;font-size:26px">{{ ic.pin }}</span>
+              <span style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.04em">bản đồ tương tác</span>
+            </span>
+          </div>
+          <div style="padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fffdf8">
+            <span style="font-size:13.5px;color:#645c50">10.5116° N, 105.0033° E</span>
+            <span style="display:inline-flex;font-size:16px;color:#b2622d">{{ ic.chevron }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(50px,7vw,90px) 24px 0">
+    <h2 style="font-size:clamp(26px,3.4vw,44px)">Hoàn thiện chuyến đi của bạn</h2>
+    <div style="margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:14px">
+      <sc-for list="{{ completeCards }}" as="c" hint-placeholder-count="6">
+        <button onClick="{{ c.go }}" style="cursor:pointer;text-align:left;background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:11px;transition:transform .3s,box-shadow .3s" style-hover="{{ cardHover }}">
+          <span style="width:44px;height:44px;border-radius:999px;background:#fff2eb;color:#b2622d;display:grid;place-items:center;font-size:21px">{{ c.icon }}</span>
+          <span style="font-family:Lora,serif;font-size:19px;font-weight:600;color:#201e1d;white-space:normal">{{ c.label }}</span>
+          <span style="font-size:13.5px;color:#645c50">{{ c.n }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:26px;padding:clamp(24px,3.4vw,40px);border-radius:30px;background:linear-gradient(150deg,#2e3520,#1d2214);display:flex;flex-wrap:wrap;align-items:center;gap:20px;justify-content:space-between">
+      <div>
+        <h3 style="font-size:clamp(22px,2.6vw,32px);color:#fff9ef">Để Bay Nui lên kế hoạch cho bạn</h3>
+        <p style="margin-top:8px;font-size:15.5px;color:rgba(240,250,225,.72);max-width:460px">Ghép địa điểm này với nơi ở, món ăn và xe đưa đón trong một hành trình.</p>
+      </div>
+      <button onClick="{{ goAi }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;background:#f6a06b;color:#402310;font-size:16px;font-weight:700;transition:background .2s,transform .2s" style-hover="{{ warmHover }}">
+        <span style="display:inline-flex;font-size:18px">{{ ic.sparkles }}</span>
+        Tạo hành trình
+      </button>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCulture }}">
+<div data-screen-label="04 Văn hóa Khmer">
+  <section style="position:relative;min-height:min(66vh,560px);display:flex;align-items:flex-end;overflow:hidden">
+    <img src="assets/chua-khmer.jpg" alt="Chùa Khmer vùng Bảy Núi" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.84) contrast(.95)" />
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(64,35,16,.4),rgba(29,34,20,.9))"></div>
+    <div style="position:relative;width:100%;max-width:1360px;margin:0 auto;padding:150px 24px 44px">
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#ffc6a5">Cultural layer</span>
+      <h1 style="margin:14px 0 0;font-size:clamp(34px,5.4vw,68px);color:#fff9ef">Văn hóa Khmer</h1>
+      <p style="margin:16px 0 0;max-width:560px;font-size:clamp(15.5px,1.5vw,18.5px);line-height:1.65;color:rgba(249,244,237,.86);text-wrap:pretty">Khám phá một trong những lớp văn hóa đặc sắc nhất của vùng Bảy Núi.</p>
+      <button onClick="{{ goAiKhmer }}" style="margin-top:26px;border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;background:#f6a06b;color:#402310;font-size:16px;font-weight:700;transition:background .2s,transform .2s" style-hover="{{ warmHover }}">
+        <span style="display:inline-flex;font-size:18px">{{ ic.sparkles }}</span>
+        Tạo hành trình văn hóa
+      </button>
+    </div>
+  </section>
+
+  <section style="max-width:1360px;margin:0 auto;padding:26px 24px 0">
+    <div style="display:flex;gap:9px;flex-wrap:wrap">
+      <sc-for list="{{ cultureTabs }}" as="t" hint-placeholder-count="7">
+        <button onClick="{{ t.pick }}" style="cursor:pointer;padding:11px 20px;border-radius:999px;font-size:14.5px;font-weight:600;transition:background .2s,color .2s;background:{{ t.bg }};color:{{ t.ink }};border:{{ t.bd }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+    <div style="margin-top:34px;max-width:660px">
+      <h2 style="font-size:clamp(26px,3.4vw,42px);text-wrap:balance">{{ cultureBlock.h }}</h2>
+      <p style="margin-top:16px;font-size:16.5px;line-height:1.7;color:#474238;text-wrap:pretty">{{ cultureBlock.d }}</p>
+    </div>
+    <div style="margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px">
+      <sc-for list="{{ cultureBlock.items }}" as="it" hint-placeholder-count="3">
+        <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;transition:transform .35s,box-shadow .35s" style-hover="{{ cardHover }}">
+          <img src="{{ it.img }}" alt="{{ it.n }}" loading="lazy" style="width:100%;height:206px;object-fit:cover;filter:saturate(.8) contrast(.95)" />
+          <div style="padding:20px 22px 22px">
+            <p style="font-family:Lora,serif;font-size:21px;font-weight:600;line-height:1.25">{{ it.n }}</p>
+            <p style="margin-top:7px;font-size:13.5px;color:#645c50">{{ it.m }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isStay }}">
+<div data-screen-label="05 Lưu trú &amp; Tour" style="padding-top:78px">
+  <section style="max-width:1360px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Marketplace</span>
+    <h1 style="margin:14px 0 0;font-size:clamp(30px,4.4vw,54px)">Mọi dịch vụ cho chuyến đi của bạn</h1>
+    <p style="margin:14px 0 0;font-size:16.5px;color:#474238;max-width:560px">Tất cả đối tác trong danh sách đều là hộ kinh doanh, tài xế và hướng dẫn viên tại Tri Tôn, Tịnh Biên và Châu Đốc.</p>
+    <div style="margin-top:26px;display:flex;gap:9px;flex-wrap:wrap">
+      <sc-for list="{{ stayTabs }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.pick }}" style="cursor:pointer;padding:12px 22px;border-radius:999px;border:1px solid rgba(32,30,29,.1);font-size:15px;font-weight:600;transition:background .2s,color .2s;background:{{ t.bg }};color:{{ t.ink }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ showStayList }}">
+      <div style="margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+        <sc-for list="{{ stays }}" as="s" hint-placeholder-count="3">
+          <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;display:flex;flex-direction:column">
+            <img src="{{ s.img }}" alt="{{ s.name }}" loading="lazy" style="width:100%;height:210px;object-fit:cover;filter:saturate(.82) contrast(.95)" />
+            <div style="padding:22px;display:flex;flex-direction:column;gap:8px;flex:1">
+              <p style="font-family:Lora,serif;font-size:22px;font-weight:600">{{ s.name }}</p>
+              <p style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:#645c50"><span style="display:inline-flex;font-size:14px;color:#82796a">{{ ic.pin }}</span>{{ s.at }}</p>
+              <p style="font-size:13px;font-weight:600;color:#56633f">{{ s.near }} · {{ s.r }}★ ({{ s.n }})</p>
+              <div style="margin-top:auto;padding-top:16px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <span><span style="display:block;font-size:12px;color:#82796a">{{ s.from }}</span><span style="font-family:Lora,serif;font-size:23px;font-weight:600;color:#8c491a">{{ s.price }}</span></span>
+                <button onClick="{{ s.book }}" style="border:0;cursor:pointer;padding:13px 22px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:14.5px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">Đặt ngay</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showTourList }}">
+      <div style="margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+        <sc-for list="{{ tours }}" as="t" hint-placeholder-count="3">
+          <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:26px;overflow:hidden;display:flex;flex-direction:column">
+            <img src="{{ t.img }}" alt="{{ t.name }}" loading="lazy" style="width:100%;height:210px;object-fit:cover;filter:saturate(.82) contrast(.95)" />
+            <div style="padding:22px;display:flex;flex-direction:column;gap:9px;flex:1">
+              <p style="font-family:Lora,serif;font-size:22px;font-weight:600;line-height:1.2">{{ t.name }}</p>
+              <p style="font-size:13.5px;color:#645c50;line-height:1.5">{{ t.stops }}</p>
+              <p style="font-size:13px;font-weight:600;color:#56633f">{{ t.dur }} · {{ t.pax }} · {{ t.r }}★</p>
+              <div style="margin-top:auto;padding-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <span style="font-family:Lora,serif;font-size:23px;font-weight:600;color:#8c491a">{{ t.price }}</span>
+                <button onClick="{{ t.book }}" style="border:0;cursor:pointer;padding:13px 22px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:14.5px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">Đặt tour</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showFoodList }}">
+      <div style="margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:18px">
+        <sc-for list="{{ foods }}" as="fd" hint-placeholder-count="4">
+          <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:9px">
+            <span style="width:44px;height:44px;border-radius:999px;background:#fff2eb;color:#b2622d;display:grid;place-items:center;font-size:21px">{{ ic.soup }}</span>
+            <p style="font-family:Lora,serif;font-size:20px;font-weight:600;line-height:1.25">{{ fd.name }}</p>
+            <p style="font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#56633f">{{ fd.cul }}</p>
+            <p style="font-size:14px;color:#645c50;line-height:1.5">{{ fd.where }}</p>
+            <p style="margin-top:auto;padding-top:12px;font-size:15.5px;font-weight:700;color:#8c491a">{{ fd.price }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showServiceList }}">
+      <div style="margin-top:30px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px">
+        <sc-for list="{{ services }}" as="sv" hint-placeholder-count="6">
+          <div style="background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:12px">
+            <span style="width:46px;height:46px;border-radius:999px;background:#f0fae1;color:#56633f;display:grid;place-items:center;font-size:22px">{{ sv.icon }}</span>
+            <p style="font-family:Lora,serif;font-size:20px;font-weight:600">{{ sv.label }}</p>
+            <p style="font-size:14px;color:#645c50">{{ sv.price }}</p>
+            <button onClick="{{ sv.go }}" style="margin-top:6px;align-self:flex-start;cursor:pointer;border:1.5px solid rgba(32,30,29,.16);background:transparent;padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">Đặt dịch vụ</button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTrip }}">
+<div data-screen-label="06 Live Trip Mode" style="padding-top:78px">
+  <section style="max-width:1000px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap">
+      <div>
+        <span style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8c491a">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:99px;background:#c67139;animation:bnBlink 1.6s infinite"></span>
+          Live trip mode
+        </span>
+        <h1 style="margin:12px 0 0;font-size:clamp(28px,4vw,48px)">Chuyến đi hôm nay</h1>
+        <p style="margin:10px 0 0;font-size:16px;color:#474238">Hành trình văn hóa Khmer · Ngày 1 · Tri Tôn, An Giang</p>
+      </div>
+      <div style="min-width:220px">
+        <div style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;color:#474238">
+          <span>Hoạt động hoàn thành</span><span style="color:#8c491a">{{ tripProgress }}</span>
+        </div>
+        <div style="margin-top:8px;height:10px;border-radius:99px;background:#dcd3c4;overflow:hidden">
+          <div style="height:100%;border-radius:99px;background:linear-gradient(90deg,#728157,#aebf92);width:{{ tripPct }};transition:width .5s"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;padding:24px;border-radius:28px;background:linear-gradient(150deg,#2e3520,#1d2214)">
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <span style="flex-shrink:0;width:40px;height:40px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);color:#1d2214;display:grid;place-items:center;font-size:19px">{{ ic.sparkles }}</span>
+        <div style="flex:1">
+          <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#aebf92">Bay Nui</p>
+          <p style="margin-top:8px;font-size:16px;line-height:1.65;color:#f0fae1;text-wrap:pretty">Thời tiết lúc 14:00 có khả năng mưa rào ở Tri Tôn. Tôi đề xuất đổi điểm check-in đồi Tức Dụp sang 16:30 — ánh sáng cuối ngày cũng đẹp hơn.</p>
+          <sc-if value="{{ tripApplied }}">
+            <p style="margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(174,191,146,.2);border:1px solid rgba(174,191,146,.4);font-size:14px;font-weight:600;color:#e1eecc">
+              <span style="display:inline-flex;font-size:15px">{{ ic.check }}</span>
+              Đã áp dụng — lịch trình được cập nhật
+            </p>
+          </sc-if>
+          <div style="margin-top:16px;display:flex;gap:11px;flex-wrap:wrap">
+            <button onClick="{{ applySuggestion }}" style="border:0;cursor:pointer;padding:13px 24px;border-radius:999px;background:#f6a06b;color:#402310;font-size:15px;font-weight:700;transition:background .2s" style-hover="{{ warmHover }}">Áp dụng</button>
+            <button onClick="{{ keepSchedule }}" style="cursor:pointer;padding:13px 22px;border-radius:999px;background:transparent;border:1.5px solid rgba(240,250,225,.3);color:#e1eecc;font-size:15px;font-weight:600" style-hover="{{ darkGhostHover }}">Giữ lịch cũ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ tripItems }}" as="i" hint-placeholder-count="7">
+        <div style="display:flex;align-items:center;gap:15px;padding:15px 18px;border-radius:20px;background:{{ i.bg }};border:{{ i.bd }}">
+          <span style="flex-shrink:0;width:56px;font-size:14.5px;font-weight:700;color:#474238">{{ i.t }}</span>
+          <span style="display:inline-flex;flex-shrink:0;font-size:22px;color:{{ i.tone }};animation:{{ i.anim }}">{{ i.icon }}</span>
+          <span style="flex:1;min-width:120px;font-size:16.5px;font-weight:600;color:{{ i.ink }}">{{ i.label }}</span>
+          <span style="font-size:12.5px;font-weight:600;color:#82796a;white-space:nowrap">{{ i.status }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPassport }}">
+<div data-screen-label="07 Bay Nui Passport" style="padding-top:78px">
+  <section style="max-width:1000px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <span style="font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8c491a">Bay Nui Passport</span>
+    <h1 style="margin:14px 0 0;font-size:clamp(30px,4.4vw,52px)">Hộ chiếu văn hóa của Minh Trâm</h1>
+    <div style="margin-top:28px;background:linear-gradient(150deg,#2e3520,#1d2214);border-radius:30px;padding:9px;box-shadow:0 20px 50px rgba(29,34,20,.28)">
+      <div style="background:#f9f4ed;border-radius:24px;padding:clamp(22px,3.4vw,36px)">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <span style="width:72px;height:72px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a);color:#fff9ef;display:grid;place-items:center;font-size:23px;font-weight:700">MT</span>
+          <div style="flex:1;min-width:180px">
+            <p style="font-family:Lora,serif;font-size:26px;font-weight:600">Minh Trâm</p>
+            <p style="font-size:12.5px;letter-spacing:.1em;color:#82796a">PASSPORT NO. BN·2026·0417 · TP. HỒ CHÍ MINH</p>
+          </div>
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#fff2eb;font-size:13px;font-weight:700;color:#8c491a">
+            <span style="display:inline-flex;font-size:15px">{{ ic.award }}</span>
+            Cultural Level 3
+          </span>
+        </div>
+        <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px">
+          <sc-for list="{{ stamps }}" as="sp" hint-placeholder-count="4">
+            <div style="text-align:center;padding:20px 10px;border-radius:999px;aspect-ratio:1;display:flex;flex-direction:column;justify-content:center;transform:{{ sp.rot }};border:{{ sp.border }};background:{{ sp.bg }}">
+              <span style="display:inline-flex;justify-content:center;font-size:30px;color:{{ sp.color }}">{{ sp.icon }}</span>
+              <p style="margin-top:8px;font-size:11.5px;font-weight:700;letter-spacing:.04em;color:{{ sp.color }}">{{ sp.label }}</p>
+              <p style="font-size:10.5px;color:#82796a">{{ sp.at }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:44px;font-size:clamp(23px,2.8vw,34px)">Bộ sưu tập địa điểm</h2>
+    <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+      <sc-for list="{{ collection }}" as="c" hint-placeholder-count="8">
+        <div style="padding:16px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07);display:flex;align-items:center;gap:11px">
+          <span style="display:inline-flex;font-size:17px;color:#728157">{{ ic.checkCircle }}</span>
+          <span>
+            <span style="display:block;font-size:14.5px;font-weight:600">{{ c.n }}</span>
+            <span style="display:block;font-size:11.5px;color:#82796a">{{ c.at }}</span>
+          </span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProfile }}">
+<div data-screen-label="08 Trang cá nhân" style="padding-top:78px">
+  <section style="max-width:1100px;margin:0 auto;padding:clamp(28px,4vw,54px) 24px 0">
+    <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <span style="width:76px;height:76px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);color:#fff9ef;display:grid;place-items:center;font-size:24px;font-weight:700">MT</span>
+      <div>
+        <h1 style="font-size:clamp(26px,3.4vw,40px)">Chào Minh Trâm</h1>
+        <p style="margin-top:6px;font-size:15.5px;color:#645c50">Đã đi 12 địa điểm ở Bảy Núi · Thành viên từ 04·2026</p>
+      </div>
+    </div>
+
+    <div style="margin-top:30px;padding:24px;border-radius:28px;background:#ebddc5;border:1px solid rgba(32,30,29,.07);display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+      <div>
+        <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8c491a">Chuyến đi sắp tới</p>
+        <p style="margin-top:10px;font-family:Lora,serif;font-size:clamp(21px,2.4vw,28px);font-weight:600">Hành trình văn hóa Khmer · 2N1Đ</p>
+        <p style="margin-top:6px;font-size:14.5px;color:#645c50">15–16 · 08 · 2026 · 2 người · Tà Pạ Valley Villa</p>
+      </div>
+      <button onClick="{{ goTrip }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:9px;padding:15px 24px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">
+        <span style="display:inline-flex;font-size:17px">{{ ic.route }}</span>
+        Mở Live Trip
+      </button>
+    </div>
+
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px">
+      <sc-for list="{{ profileTiles }}" as="p" hint-placeholder-count="6">
+        <button onClick="{{ p.go }}" style="cursor:pointer;text-align:left;background:#fffdf8;border:1px solid rgba(32,30,29,.07);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:transform .3s,box-shadow .3s" style-hover="{{ cardHover }}">
+          <span style="width:42px;height:42px;border-radius:999px;background:#fff2eb;color:#b2622d;display:grid;place-items:center;font-size:20px">{{ p.icon }}</span>
+          <span style="font-size:15.5px;font-weight:600;color:#201e1d">{{ p.label }}</span>
+          <span style="font-size:13.5px;color:#645c50">{{ p.n }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <h2 style="margin-top:44px;font-size:clamp(21px,2.6vw,30px)">Đánh giá của bạn</h2>
+    <div style="margin-top:16px;padding:clamp(28px,4vw,48px);border-radius:28px;background:#fffdf8;border:1px dashed rgba(32,30,29,.18);text-align:center">
+      <span style="display:inline-flex;justify-content:center;width:64px;height:64px;border-radius:999px;background:#f0fae1;color:#728157;align-items:center;font-size:28px;margin:0 auto">{{ ic.quote }}</span>
+      <p style="margin-top:16px;font-family:Lora,serif;font-size:21px;font-weight:600">Bạn chưa viết đánh giá nào.</p>
+      <p style="margin-top:8px;font-size:15px;color:#645c50">Một dòng của bạn giúp chủ homestay và người dẫn đường địa phương được nhiều khách tìm thấy hơn.</p>
+      <button onClick="{{ goStay }}" style="margin-top:20px;border:0;cursor:pointer;padding:14px 24px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">Viết đánh giá đầu tiên</button>
+    </div>
+  </section>
+  <div style="height:clamp(50px,7vw,90px)"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ bookOpen }}">
+  <div style="position:fixed;inset:0;z-index:120;background:rgba(32,30,29,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:bnFade .2s both">
+    <div style="width:min(96vw,520px);max-height:92vh;overflow-y:auto;background:#f9f4ed;border-radius:30px;padding:clamp(22px,3.4vw,32px);box-shadow:0 30px 70px rgba(29,34,20,.4);animation:bnRise .3s cubic-bezier(.2,.7,.3,1) both">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
+        <p style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8c491a">Đặt dịch vụ</p>
+        <button onClick="{{ closeBook }}" aria-label="Đóng" style="border:0;cursor:pointer;width:34px;height:34px;border-radius:999px;background:#ebddc5;color:#474238;display:grid;place-items:center;font-size:17px">{{ ic.x }}</button>
+      </div>
+      <div style="margin-top:18px;display:flex;align-items:center;gap:6px">
+        <sc-for list="{{ bookStepsUi }}" as="s" hint-placeholder-count="3">
+          <span style="display:flex;align-items:center;gap:6px;flex:1">
+            <span style="width:26px;height:26px;flex-shrink:0;border-radius:999px;display:grid;place-items:center;font-size:12.5px;font-weight:700;background:{{ s.bg }};color:{{ s.ink }}">{{ s.n }}</span>
+            <span style="font-size:12.5px;font-weight:600;color:#474238;white-space:nowrap">{{ s.label }}</span>
+            <span style="flex:1;height:2px;border-radius:99px;background:{{ s.line }}"></span>
+          </span>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isBook0 }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:22px">
+          <p style="font-family:Lora,serif;font-size:23px;font-weight:600">{{ bookName }}</p>
+          <p style="margin-top:8px;font-size:15px;color:#645c50">Giá dự kiến · {{ bookPrice }}</p>
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
+            <label style="display:flex;flex-direction:column;gap:5px;padding:13px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.1)">
+              <span style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#645c50">Ngày sử dụng</span>
+              <input type="date" value="2026-08-15" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;outline:none;padding:0" />
+            </label>
+            <label style="display:flex;flex-direction:column;gap:5px;padding:13px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.1)">
+              <span style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#645c50">Số khách</span>
+              <select style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;outline:none;padding:0;cursor:pointer">
+                <option>2 người</option><option>4 người</option><option>6 người</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isBook1 }}">
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
+          <label style="display:flex;flex-direction:column;gap:5px;padding:13px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.1)">
+            <span style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#645c50">Họ và tên</span>
+            <input value="{{ fName }}" onChange="{{ onFName }}" placeholder="Nguyễn Minh Trâm" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;outline:none;padding:0" />
+          </label>
+          <label style="display:flex;flex-direction:column;gap:5px;padding:13px 18px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.1)">
+            <span style="font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#645c50">Số điện thoại</span>
+            <input value="{{ fPhone }}" onChange="{{ onFPhone }}" placeholder="0909 123 456" style="border:0;background:transparent;font-family:inherit;font-size:15.5px;font-weight:600;color:#201e1d;outline:none;padding:0" />
+          </label>
+          <p style="font-size:13px;color:#82796a;line-height:1.5">Chúng tôi chỉ dùng số này để đối tác địa phương xác nhận với bạn.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isBook2 }}">
+        <div style="margin-top:22px;padding:20px;border-radius:22px;background:#fffdf8;border:1px solid rgba(32,30,29,.08)">
+          <p style="font-family:Lora,serif;font-size:20px;font-weight:600">{{ bookName }}</p>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;font-size:14.5px;color:#474238">
+            <span style="display:flex;justify-content:space-between;gap:10px"><span style="color:#82796a">Ngày</span><span style="font-weight:600">15 · 08 · 2026</span></span>
+            <span style="display:flex;justify-content:space-between;gap:10px"><span style="color:#82796a">Khách</span><span style="font-weight:600">2 người</span></span>
+            <span style="display:flex;justify-content:space-between;gap:10px;padding-top:10px;border-top:1px solid rgba(32,30,29,.1)"><span style="color:#82796a">Tổng cộng</span><span style="font-family:Lora,serif;font-size:20px;font-weight:600;color:#8c491a">{{ bookPrice }}</span></span>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isBook3 }}">
+        <div style="margin-top:24px;text-align:center;padding:12px 0 4px">
+          <span style="display:inline-flex;width:74px;height:74px;border-radius:999px;background:#f0fae1;color:#728157;align-items:center;justify-content:center;font-size:34px">{{ ic.checkCircle }}</span>
+          <p style="margin-top:16px;font-family:Lora,serif;font-size:25px;font-weight:600">Đặt thành công</p>
+          <p style="margin-top:8px;font-size:15px;color:#645c50;line-height:1.55">Đối tác sẽ gọi xác nhận trong 15 phút. Mã đơn <strong style="color:#8c491a">BNS·26·0815</strong> đã lưu vào trang cá nhân của bạn.</p>
+        </div>
+      </sc-if>
+
+      <div style="margin-top:22px;display:flex;gap:10px">
+        <sc-if value="{{ isBook3 }}">
+          <button onClick="{{ closeBook }}" style="flex:1;border:0;cursor:pointer;padding:15px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15.5px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">Hoàn tất</button>
+        </sc-if>
+        <sc-if value="{{ bookOpen }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ bookBack }}" style="cursor:pointer;padding:15px 22px;border-radius:999px;background:transparent;border:1.5px solid rgba(32,30,29,.16);font-size:15px;font-weight:600;color:#474238">Quay lại</button>
+          <button onClick="{{ bookNext }}" style="flex:1;border:0;cursor:pointer;padding:15px;border-radius:999px;background:#c67139;color:#fff9ef;font-size:15.5px;font-weight:600;transition:background .2s" style-hover="{{ ctaHover }}">Tiếp tục</button>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<footer style="background:#1d2214;color:rgba(240,250,225,.72);padding:clamp(50px,7vw,84px) 24px 0">
+  <div style="max-width:1360px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:40px">
+    <div style="grid-column:span 2;min-width:260px">
+      <div style="display:flex;align-items:center;gap:11px">
+        <span style="width:42px;height:42px;border-radius:999px;background:linear-gradient(150deg,#c67139,#8c491a);display:grid;place-items:center;font-size:21px;color:#f5ead8">{{ ic.mountain }}</span>
+        <span style="font-family:Lora,serif;font-weight:700;font-size:20px;color:#fff9ef">Bay Nui Stay</span>
+      </div>
+      <p style="margin-top:16px;font-family:Lora,serif;font-size:21px;font-weight:500;color:#e1eecc;max-width:330px;line-height:1.35">Khám phá Bảy Núi theo cách của riêng bạn.</p>
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <a href="#" aria-label="Facebook" style="width:40px;height:40px;border-radius:999px;background:rgba(240,250,225,.08);display:grid;place-items:center;font-size:18px;color:#e1eecc" style-hover="{{ darkGhostHover }}">{{ ic.facebook }}</a>
+        <a href="#" aria-label="Instagram" style="width:40px;height:40px;border-radius:999px;background:rgba(240,250,225,.08);display:grid;place-items:center;font-size:18px;color:#e1eecc" style-hover="{{ darkGhostHover }}">{{ ic.instagram }}</a>
+        <a href="#" aria-label="YouTube" style="width:40px;height:40px;border-radius:999px;background:rgba(240,250,225,.08);display:grid;place-items:center;font-size:18px;color:#e1eecc" style-hover="{{ darkGhostHover }}">{{ ic.youtube }}</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8fa073">Khám phá</p>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;font-size:14.5px">
+        <a href="#" onClick="{{ goDest }}" style="color:rgba(240,250,225,.78)">Điểm đến nổi bật</a>
+        <a href="#" onClick="{{ goCulture }}" style="color:rgba(240,250,225,.78)">Văn hóa Khmer</a>
+        <a href="#" onClick="{{ goFestival }}" style="color:rgba(240,250,225,.78)">Lễ hội Bảy Núi</a>
+        <a href="#" onClick="{{ goFood }}" style="color:rgba(240,250,225,.78)">Ẩm thực địa phương</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8fa073">Dịch vụ</p>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;font-size:14.5px">
+        <a href="#" onClick="{{ goStay }}" style="color:rgba(240,250,225,.78)">Lưu trú &amp; homestay</a>
+        <a href="#" onClick="{{ goTour }}" style="color:rgba(240,250,225,.78)">Tour bản địa</a>
+        <a href="#" onClick="{{ goService }}" style="color:rgba(240,250,225,.78)">Xe đưa đón &amp; thuê xe</a>
+        <a href="#" onClick="{{ goAi }}" style="color:rgba(240,250,225,.78)">Bay Nui AI</a>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8fa073">Liên hệ</p>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px;font-size:14.5px">
+        <span style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;font-size:15px;color:#8fa073">{{ ic.pin }}</span>Núi Cấm, Tịnh Biên, An Giang</span>
+        <span style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;font-size:15px;color:#8fa073">{{ ic.phone }}</span>0909 123 456</span>
+        <span style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;font-size:15px;color:#8fa073">{{ ic.mail }}</span>hello@baynuistay.vn</span>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1360px;margin:clamp(40px,5vw,60px) auto 0;padding:22px 0 30px;border-top:1px solid rgba(240,250,225,.12);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-size:13px">
+    <span>© 2026 Bay Nui Stay · Made for the Seven Mountains</span>
+    <span style="display:flex;gap:20px">
+      <a href="#" style="color:rgba(240,250,225,.6)">Chính sách bảo mật</a>
+      <a href="#" style="color:rgba(240,250,225,.6)">Điều khoản sử dụng</a>
+    </span>
+  </div>
+</footer>
+
+<sc-if value="{{ showBottomNav }}">
+  <div style="position:fixed;bottom:0;left:0;right:0;z-index:88;background:rgba(249,244,237,.96);backdrop-filter:blur(14px);border-top:1px solid rgba(32,30,29,.1);display:flex;padding:8px 6px 12px">
+    <sc-for list="{{ bottomNav }}" as="b" hint-placeholder-count="5">
+      <button onClick="{{ b.go }}" style="flex:1;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;min-height:52px;font-size:11px;font-weight:600;color:{{ b.tone }}">
+        <span style="display:inline-flex;font-size:21px">{{ b.icon }}</span>
+        {{ b.label }}
+      </button>
+    </sc-for>
+  </div>
+</sc-if>
+
+<div style="position:fixed;right:20px;bottom:{{ chatBottom }};z-index:95;display:flex;flex-direction:column;align-items:flex-end;gap:14px">
+  <sc-if value="{{ chatOpen }}">
+    <div style="width:min(94vw,392px);max-height:min(74vh,560px);display:flex;flex-direction:column;border-radius:28px;overflow:hidden;background:rgba(249,244,237,.86);backdrop-filter:blur(20px);border:1px solid rgba(32,30,29,.1);box-shadow:0 24px 60px rgba(46,43,37,.26);animation:bnRise .3s cubic-bezier(.2,.7,.3,1) both">
+      <div style="padding:18px 20px;background:linear-gradient(140deg,#2e3520,#1d2214);display:flex;align-items:center;gap:12px">
+        <span style="width:38px;height:38px;border-radius:999px;background:linear-gradient(150deg,#aebf92,#728157);color:#1d2214;display:grid;place-items:center;font-size:19px">{{ ic.sparkles }}</span>
+        <span style="flex:1">
+          <span style="display:block;font-family:Lora,serif;font-size:17px;font-weight:600;color:#fff9ef">Bay Nui AI</span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(240,250,225,.66)">
+            <span style="width:7px;height:7px;border-radius:99px;background:#aebf92;display:inline-block"></span>
+            Trợ lý du lịch Bảy Núi
+          </span>
+        </span>
+        <button onClick="{{ closeChat }}" aria-label="Đóng" style="border:0;cursor:pointer;width:32px;height:32px;border-radius:999px;background:rgba(240,250,225,.12);color:#e1eecc;display:grid;place-items:center;font-size:16px">{{ ic.x }}</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="flex-shrink:0;width:30px;height:30px;border-radius:999px;background:#e1eecc;color:#56633f;display:grid;place-items:center;font-size:16px">{{ ic.sparkles }}</span>
+          <p style="padding:12px 15px;border-radius:18px 18px 18px 5px;background:#fffdf8;border:1px solid rgba(32,30,29,.07);font-size:14px;line-height:1.55;color:#2e2b25">Xin chào 👋 Hôm nay bạn muốn khám phá Bảy Núi như thế nào?</p>
+        </div>
+        <sc-if value="{{ hasChat }}">
+          <sc-for list="{{ chatMsgs }}" as="m" hint-placeholder-count="0">
+            <div style="{{ m.wrap }}"><p style="{{ m.bub }}">{{ m.c }}</p></div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{ chatBusy }}">
+          <div style="display:flex;gap:6px;padding:12px 15px;border-radius:18px;background:#fffdf8;border:1px solid rgba(32,30,29,.07);align-self:flex-start">
+            <span style="width:7px;height:7px;border-radius:99px;background:#c67139;animation:bnBlink 1s infinite"></span>
+            <span style="width:7px;height:7px;border-radius:99px;background:#c67139;animation:bnBlink 1s .2s infinite"></span>
+            <span style="width:7px;height:7px;border-radius:99px;background:#c67139;animation:bnBlink 1s .4s infinite"></span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="padding:0 18px 8px;display:flex;flex-wrap:wrap;gap:7px">
+        <sc-for list="{{ quicks }}" as="q" hint-placeholder-count="4">
+          <button onClick="{{ q.ask }}" style="cursor:pointer;display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;background:#fffdf8;border:1px solid rgba(32,30,29,.1);font-size:12.5px;font-weight:600;color:#2e2b25;transition:background .2s" style-hover="{{ softHover }}">
+            <span style="display:inline-flex;font-size:14px;color:#b2622d">{{ q.icon }}</span>
+            {{ q.label }}
+          </button>
+        </sc-for>
+      </div>
+      <div style="padding:14px 18px 18px;display:flex;gap:9px;align-items:center;border-top:1px solid rgba(32,30,29,.08)">
+        <input value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="{{ chatPh }}" style="flex:1;min-width:0;padding:13px 18px;border-radius:999px;border:1px solid rgba(32,30,29,.14);background:#fffdf8;font-family:inherit;font-size:14.5px;color:#201e1d;outline:none" />
+        <button onClick="{{ sendChatNow }}" aria-label="Gửi" style="border:0;cursor:pointer;flex-shrink:0;width:46px;height:46px;border-radius:999px;background:#c67139;color:#fff9ef;display:grid;place-items:center;font-size:19px;transition:background .2s" style-hover="{{ ctaHover }}">{{ ic.send }}</button>
+      </div>
+    </div>
+  </sc-if>
+  <button onClick="{{ toggleChat }}" style="border:0;cursor:pointer;display:flex;align-items:center;gap:10px;padding:15px 22px;border-radius:999px;background:linear-gradient(140deg,#c67139,#8c491a);color:#fff9ef;font-size:15px;font-weight:700;box-shadow:0 12px 30px rgba(140,73,26,.4);transition:transform .25s" style-hover="{{ ctaHover }}">
+    <span style="display:inline-flex;font-size:19px">{{ ic.sparkles }}</span>
+    Bay Nui
+  </button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const ICONS = {
+  mountain: '<path d="m8 3 4 8 5-5 5 15H2L8 3z"/>',
+  sparkles: '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+  heart: '<path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/>',
+  wand: '<path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  loader: '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+  circle: '<circle cx="12" cy="12" r="10"/>',
+  landmark: '<path d="M10 18v-7"/><path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M3 22h18"/><path d="M6 18v-7"/>',
+  trees: '<path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/><path d="M7 16v6"/><path d="M13 19v3"/><path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"/>',
+  camera: '<path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/>',
+  church: '<path d="M10 9h4"/><path d="M12 7v5"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="m18 9 3.52 2.147a1 1 0 0 1 .48.854V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6.999a1 1 0 0 1 .48-.854L6 9"/><path d="M6 21V7a1 1 0 0 1 .376-.782l5-3.999a1 1 0 0 1 1.249.001l5 4A1 1 0 0 1 18 7v14"/>',
+  party: '<path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/>',
+  route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  soup: '<path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M7 21h10"/><path d="M19.5 12 22 6"/><path d="M16.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.73 1.62"/><path d="M11.25 3c.27.1.8.53.74 1.36-.05.83-.93 1.2-.98 2.02-.06.78.33 1.24.72 1.62"/><path d="M6.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.74 1.62"/>',
+  hands: '<path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"/><path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95"/><path d="m2 15 6 6"/><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91"/>',
+  bed: '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>',
+  car: '<path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8"/><path d="M7 14h.01"/><path d="M17 14h.01"/><rect width="18" height="8" x="3" y="10" rx="2"/><path d="M5 18v2"/><path d="M19 18v2"/>',
+  verified: '<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/>',
+  pin: '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+  star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+  cloudSun: '<path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>',
+  rain: '<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/>',
+  nav: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+  calendar: '<path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  ticket: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
+  gift: '<path d="M12 7v14"/><path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5"/><rect x="3" y="7" width="18" height="4" rx="1"/>',
+  store: '<path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5"/><path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244"/><path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05"/>',
+  bike: '<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+  play: '<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/>',
+  pause: '<rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/>',
+  volume: '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>',
+  stamp: '<path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13"/><path d="M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z"/><path d="M5 22h14"/>',
+  award: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>',
+  share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
+  bookmark: '<path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
+  send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+  compass: '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>',
+  menu: '<path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/>',
+  chat: '<path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/>',
+  house: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  trend: '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
+  handshake: '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  book: '<path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  quote: '<path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>',
+  card: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  mail: '<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/>',
+  facebook: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
+  instagram: '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
+  youtube: '<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>',
+  zap: '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
+  brain: '<path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/>',
+  network: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  search: '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
+  flame: '<path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/>',
+  footprints: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
+  tractor: '<path d="m10 11 11 .9a1 1 0 0 1 .8 1.1l-.665 4.158a1 1 0 0 1-.988.842H20"/><path d="M16 18h-5"/><path d="M18 5a1 1 0 0 0-1 1v5.573"/><path d="M3 4h8.129a1 1 0 0 1 .99.863L13 11.246"/><path d="M4 11V4"/><path d="M7 15h.01"/><path d="M8 10.1V4"/><circle cx="18" cy="18" r="2"/><circle cx="7" cy="15" r="5"/>',
+  sunrise: '<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+  waves: '<path d="M2 12q2.5 2 5 0t5 0 5 0 5 0"/><path d="M2 19q2.5 2 5 0t5 0 5 0 5 0"/><path d="M2 5q2.5 2 5 0t5 0 5 0 5 0"/>',
+};
+
+let _icCache = null;
+const ICO = (name, sw) => React.createElement('svg', {
+  viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: sw || 2.4,
+  strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': 'true',
+  style: { width: '1em', height: '1em', display: 'block', flexShrink: 0 },
+  dangerouslySetInnerHTML: { __html: ICONS[name] || '' },
+});
+const ICSET = () => {
+  if (_icCache) return _icCache;
+  _icCache = {};
+  Object.keys(ICONS).forEach(k => { _icCache[k] = ICO(k); });
+  return _icCache;
+};
+
+const MENU = [
+  { id: 'explore', vi: 'Khám phá', en: 'Explore', screen: 'explore', tab: 'dest' },
+  { id: 'exp', vi: 'Trải nghiệm', en: 'Experiences', screen: 'explore', tab: 'exp' },
+  { id: 'culture', vi: 'Văn hóa', en: 'Culture', screen: 'culture' },
+  { id: 'food', vi: 'Ẩm thực', en: 'Food', screen: 'food' },
+  { id: 'tour', vi: 'Tour', en: 'Tours', screen: 'stay', tab: 'tour' },
+  { id: 'stay', vi: 'Lưu trú', en: 'Stays', screen: 'stay', tab: 'stay' },
+  { id: 'svc', vi: 'Dịch vụ', en: 'Services', screen: 'stay', tab: 'service' },
+];
+
+const EXPERIENCES = [
+  { icon: 'landmark', vi: 'Văn hóa Khmer', en: 'Khmer Culture', dvi: 'Chùa vàng, nhạc ngũ âm, chữ Khmer cổ', den: 'Golden pagodas, Pinpeat music', img: 'assets/chua-khmer.jpg', screen: 'culture' },
+  { icon: 'trees', vi: 'Thiên nhiên', en: 'Nature', dvi: 'Rừng tràm, thốt nốt, đồng lúa Tri Tôn', den: 'Cajuput forest, palm fields', img: 'assets/tra-su.jpg', screen: 'dest' },
+  { icon: 'camera', vi: 'Check-in', en: 'Check-in', dvi: 'Hồ Tà Pạ, đồi Tức Dụp, cánh đồng thốt nốt', den: 'Ta Pa lake, Tuc Dup hill', img: 'assets/ho-ta-pa.jpg', screen: 'dest' },
+  { icon: 'church', vi: 'Tâm linh', en: 'Spiritual', dvi: 'Thiên Cấm Sơn, tượng Phật Di Lặc, miếu Bà', den: 'Cam Mountain, Maitreya statue', img: 'assets/nui-cam-3.jpg', screen: 'dest' },
+  { icon: 'party', vi: 'Lễ hội', en: 'Festivals', dvi: 'Đua bò Bảy Núi, Sene Đôn Ta, Ok Om Bok', den: 'Ox racing, Sene Don Ta', img: 'assets/chua-ta-pa.jpg', sec: 'festival' },
+  { icon: 'route', vi: 'Tour & Đưa đón', en: 'Tours & Transfer', dvi: 'Tour 1–2 ngày, xe đưa đón tận homestay', den: 'Day tours, door-to-door transfer', img: 'assets/cap-treo-nui-sam.png', screen: 'stay', tab: 'tour' },
+];
+
+const KHMER_FACETS = [
+  { icon: 'landmark', vi: 'Điểm tham quan', en: 'Sights' },
+  { icon: 'utensils', vi: 'Ẩm thực Khmer', en: 'Khmer food' },
+  { icon: 'party', vi: 'Lễ hội', en: 'Festivals' },
+  { icon: 'hands', vi: 'Làng nghề', en: 'Craft villages' },
+  { icon: 'bed', vi: 'Nơi ở gần đó', en: 'Nearby stays' },
+  { icon: 'car', vi: 'Xe đưa đón', en: 'Transfer' },
+];
+
+const DEMO_STEPS = [
+  { vi: 'Phân tích thời tiết', en: 'Analysing weather' },
+  { vi: 'Tìm địa điểm phù hợp', en: 'Matching places' },
+  { vi: 'Kiểm tra khoảng cách', en: 'Checking distances' },
+  { vi: 'Tìm nơi lưu trú', en: 'Finding stays' },
+  { vi: 'Tìm món ăn địa phương', en: 'Finding local food' },
+];
+
+const DESTS = [
+  { vi: 'Núi Cấm — Thiên Cấm Sơn', en: 'Cam Mountain', area: 'Tịnh Biên, An Giang', r: '4.9', km: '12 km', bvi: 'Nổi bật', ben: 'Featured', bTone: '#c67139', w: 'cloudSun', deg: '27°', img: 'assets/nui-cam-1.jpg' },
+  { vi: 'Hồ Tà Pạ', en: 'Ta Pa Lake', area: 'Tri Tôn, An Giang', r: '4.8', km: '8.4 km', bvi: 'Gần bạn', ben: 'Near you', bTone: '#728157', w: 'sun', deg: '31°', img: 'assets/ho-ta-pa.jpg' },
+  { vi: 'Rừng tràm Trà Sư', en: 'Tra Su Forest', area: 'Tịnh Biên, An Giang', r: '4.7', km: '18 km', bvi: 'Thiên nhiên', ben: 'Nature', bTone: '#728157', w: 'cloudSun', deg: '29°', img: 'assets/tra-su.jpg' },
+  { vi: 'Chùa Tà Pạ', en: 'Ta Pa Pagoda', area: 'Tri Tôn, An Giang', r: '4.8', km: '9.1 km', bvi: 'Văn hóa Khmer', ben: 'Khmer culture', bTone: '#b2622d', w: 'sun', deg: '30°', img: 'assets/chua-ta-pa.jpg' },
+  { vi: 'Cáp treo Núi Sam', en: 'Sam Mountain Cable Car', area: 'Châu Đốc, An Giang', r: '4.6', km: '24 km', bvi: 'Tâm linh', ben: 'Spiritual', bTone: '#8c491a', w: 'cloudSun', deg: '28°', img: 'assets/cap-treo-nui-sam.png' },
+  { vi: 'Camping Núi Cấm', en: 'Cam Mountain Camping', area: 'Tịnh Biên, An Giang', r: '4.7', km: '13 km', bvi: 'Trải nghiệm', ben: 'Experience', bTone: '#728157', w: 'rain', deg: '25°', img: 'assets/camping-nui-cam.jpg' },
+];
+
+const NEARBY = [
+  { icon: 'sun', cvi: 'Trời quang, 31°', cen: 'Clear, 31°', tone: '#f6a06b', place: 'Hồ Tà Pạ', km: '1.2 km', wvi: 'Ánh sáng đẹp nhất trong 2 giờ tới — thích hợp check-in trước khi nắng gắt.', wen: 'Best light for the next 2 hours — go before the midday sun.', avi: 'Chỉ đường', aen: 'Directions' },
+  { icon: 'rain', cvi: 'Mưa rào sau 14:00', cen: 'Showers after 2 PM', tone: '#8fa073', place: 'Gà đốt Ô Thum', km: '500 m', wvi: 'Ghé ăn trưa trong lúc mưa, 45 phút sau trời tạnh là đi tiếp được.', wen: 'Have lunch through the rain; it clears in about 45 minutes.', avi: 'Xem quán', aen: 'View spot' },
+  { icon: 'church', cvi: 'Trong chùa mát', cen: 'Cool inside', tone: '#b2622d', place: 'Chùa Tà Pạ', km: '2.4 km', wvi: 'Lễ tụng kinh chiều bắt đầu 16:30 — nên đến trước 20 phút.', wen: 'Afternoon chanting starts 4:30 PM — arrive 20 minutes early.', avi: 'Xem chi tiết', aen: 'Details' },
+];
+
+const FESTIVALS = [
+  { d: '28', mvi: 'Th9', men: 'Sep', y: '2026', vi: 'Hội đua bò Bảy Núi', en: 'Seven Mountains Ox Race', cul: 'Khmer', at: 'Tri Tôn', km: '9 km', match: true },
+  { d: '30', mvi: 'Th9', men: 'Sep', y: '2026', vi: 'Lễ Sene Đôn Ta', en: 'Sene Don Ta', cul: 'Khmer', at: 'Tịnh Biên', km: '6 km', match: false },
+  { d: '14', mvi: 'Th11', men: 'Nov', y: '2026', vi: 'Lễ Ok Om Bok — cúng trăng', en: 'Ok Om Bok Moon Festival', cul: 'Khmer', at: 'Tri Tôn', km: '11 km', match: false },
+  { d: '14', mvi: 'Th4', men: 'Apr', y: '2027', vi: 'Chôl Chnăm Thmây', en: 'Chol Chnam Thmay', cul: 'Khmer', at: 'Toàn vùng Bảy Núi', km: '—', match: false },
+];
+
+const FOODS = [
+  { slot: 'food-banhxeo', vi: 'Bánh xèo rau rừng', en: 'Forest-herb Banh Xeo', cul: 'Việt · Núi Cấm', price: '35.000₫', wvi: '6 quán trên đường lên Núi Cấm', wen: '6 spots on the Cam Mountain road' },
+  { slot: 'food-gadot', vi: 'Gà đốt lá chúc Ô Thum', en: 'O Thum Grilled Chicken', cul: 'Khmer · Tri Tôn', price: '260.000₫', wvi: '4 quán ven hồ Ô Thum', wen: '4 spots by O Thum lake' },
+  { slot: 'food-banhbo', vi: 'Bánh bò thốt nốt', en: 'Palm Sugar Cake', cul: 'Khmer · Tịnh Biên', price: '10.000₫', wvi: 'Chợ Tịnh Biên & làng nghề thốt nốt', wen: 'Tinh Bien market & palm villages' },
+  { slot: 'food-comdep', vi: 'Cốm dẹp (Ambok)', en: 'Ambok Flattened Rice', cul: 'Khmer · Lễ Ok Om Bok', price: '25.000₫', wvi: 'Làng Khmer quanh chùa Tà Pạ', wen: 'Khmer villages around Ta Pa pagoda' },
+];
+
+const STAYS = [
+  { vi: 'Bảy Núi Eco-Homestay', en: 'Bay Nui Eco-Homestay', at: 'Sườn Núi Cấm, Tịnh Biên', r: '4.9', n: '128', price: '480.000₫', near: 'Cách Núi Cấm 1.2 km', am: ['Ban công hướng núi', 'Ăn sáng', 'Wifi'], img: 'assets/homestay.jpg' },
+  { vi: 'Tà Pạ Valley Villa', en: 'Ta Pa Valley Villa', at: 'Tri Tôn, An Giang', r: '4.8', n: '86', price: '1.250.000₫', near: 'Cách hồ Tà Pạ 2.0 km', am: ['Hồ bơi', 'Bếp riêng', 'Đưa đón'], img: 'assets/stay-villa.jpg' },
+  { vi: 'Thốt Nốt Bungalow', en: 'Thot Not Bungalow', at: 'Tịnh Biên, An Giang', r: '4.7', n: '64', price: '650.000₫', near: 'Cách chợ Tịnh Biên 3.4 km', am: ['Bungalow riêng', 'Sân vườn', 'Thuê xe máy'], img: 'assets/stay-bungalow.jpg' },
+];
+
+const TOURS = [
+  { vi: 'Một ngày trong văn hóa Khmer', en: 'A Day Inside Khmer Culture', dur: '1 ngày', pax: '2–8 khách', r: '4.9', price: '590.000₫', stops: 'Chùa Tà Pạ · Hồ Tà Pạ · Làng thốt nốt · Gà đốt Ô Thum', img: 'assets/chua-khmer.jpg' },
+  { vi: 'Thiên Cấm Sơn 2 ngày 1 đêm', en: 'Cam Mountain 2D1N', dur: '2 ngày 1 đêm', pax: '2–6 khách', r: '4.8', price: '1.480.000₫', stops: 'Cáp treo · Tượng Di Lặc · Camping đêm · Bánh xèo rau rừng', img: 'assets/nui-cam-1.jpg' },
+  { vi: 'Bình minh Trà Sư & chợ nổi', en: 'Tra Su Sunrise & Market', dur: 'Nửa ngày', pax: '2–10 khách', r: '4.7', price: '390.000₫', stops: 'Rừng tràm Trà Sư · Chợ biên giới Tịnh Biên', img: 'assets/tra-su.jpg' },
+];
+
+const GRAPH = [
+  { icon: 'pin', vi: 'Địa điểm', en: 'Places', x: '50%', y: '12.5%' },
+  { icon: 'soup', vi: 'Ẩm thực', en: 'Food', x: '76.5%', y: '23.5%' },
+  { icon: 'party', vi: 'Lễ hội', en: 'Festivals', x: '87.5%', y: '50%' },
+  { icon: 'bed', vi: 'Khách sạn', en: 'Stays', x: '76.5%', y: '76.5%' },
+  { icon: 'route', vi: 'Tour', en: 'Tours', x: '50%', y: '87.5%' },
+  { icon: 'hands', vi: 'Làng nghề', en: 'Craft villages', x: '23.5%', y: '76.5%' },
+  { icon: 'gift', vi: 'Đặc sản', en: 'Specialties', x: '12.5%', y: '50%' },
+  { icon: 'users', vi: 'Người địa phương', en: 'Local hosts', x: '23.5%', y: '23.5%' },
+];
+
+const STORIES = [
+  { name: 'Chau Sóc Kim', ini: 'CK', role: 'Nghệ nhân nhạc ngũ âm · Tri Tôn', qvi: 'Dàn nhạc ngũ âm của chùa tôi có tuổi hơn ông nội tôi. Mỗi dịp Đôn Ta, tiếng trống gọi cả làng về.', qen: 'My pagoda\u2019s Pinpeat ensemble is older than my grandfather. At Don Ta, the drums call the whole village home.', len: '4:12' },
+  { name: 'Neáng Thị Sà Vy', ini: 'SV', role: 'Làng nghề thốt nốt · Tịnh Biên', qvi: 'Một cây thốt nốt cho mật suốt 40 năm. Người Khmer coi nó như một thành viên trong nhà.', qen: 'A palm tree gives sugar for 40 years. To Khmer families it is a household member.', len: '3:28' },
+  { name: 'Nguyễn Văn Bảy', ini: 'VB', role: 'Người dẫn đường Núi Cấm', qvi: 'Tôi lên xuống Núi Cấm 30 năm. Đường nào có suối, giờ nào có mây, tôi nhớ hết trong đầu.', qen: 'Thirty years up and down Cam Mountain. Which path has a stream, when the clouds come — it is all in my head.', len: '5:03' },
+];
+
+const STAMPS = [
+  { icon: 'landmark', vi: 'Khmer Culture', at: '04 · 2026', got: true },
+  { icon: 'mountain', vi: 'Seven Mountains', at: '05 · 2026', got: true },
+  { icon: 'soup', vi: 'Local Food', at: '06 · 2026', got: true },
+  { icon: 'party', vi: 'Festival', at: 'Chưa đạt', got: false },
+];
+
+const PARTNERS = [
+  { icon: 'bed', vi: 'Khách sạn & Homestay', en: 'Stays', n: '38' },
+  { icon: 'soup', vi: 'Nhà hàng, quán ăn', en: 'Restaurants', n: '52' },
+  { icon: 'car', vi: 'Tài xế đưa đón', en: 'Drivers', n: '24' },
+  { icon: 'route', vi: 'Đơn vị tour', en: 'Tour operators', n: '11' },
+  { icon: 'hands', vi: 'Làng nghề', en: 'Craft villages', n: '9' },
+  { icon: 'store', vi: 'Cửa hàng đặc sản', en: 'Specialty shops', n: '17' },
+  { icon: 'users', vi: 'Người kể chuyện bản địa', en: 'Local storytellers', n: '31' },
+];
+
+const SERVICES = [
+  { icon: 'car', vi: 'Xe đưa đón', en: 'Transfer', pvi: 'Từ 180.000₫/chuyến', pen: 'From 180,000₫' },
+  { icon: 'bike', vi: 'Thuê xe máy', en: 'Bike rental', pvi: 'Từ 120.000₫/ngày', pen: 'From 120,000₫/day' },
+  { icon: 'bed', vi: 'Lưu trú', en: 'Stays', pvi: '38 nơi ở đã xác thực', pen: '38 verified stays' },
+  { icon: 'soup', vi: 'Ăn uống', en: 'Dining', pvi: '52 quán địa phương', pen: '52 local eateries' },
+  { icon: 'ticket', vi: 'Tour & vé', en: 'Tours & tickets', pvi: '11 tour theo chủ đề', pen: '11 themed tours' },
+  { icon: 'gift', vi: 'Đặc sản', en: 'Specialties', pvi: 'Giao về tận nhà', pen: 'Shipped home' },
+];
+
+const CHAT_QUICK = [
+  { icon: 'compass', vi: 'Đi đâu hôm nay?', en: 'Where should I go today?' },
+  { icon: 'soup', vi: 'Ăn gì gần tôi?', en: 'What can I eat nearby?' },
+  { icon: 'landmark', vi: 'Khám phá văn hóa Khmer', en: 'Explore Khmer culture' },
+  { icon: 'sparkles', vi: 'Tạo chuyến đi 2 ngày', en: 'Plan a 2-day trip' },
+];
+
+const SYS_PROMPT = `Bạn là "Bay Nui AI" — trợ lý du lịch của nền tảng Bay Nui Stay, chuyên vùng Bảy Núi (Thất Sơn), An Giang, Việt Nam: Núi Cấm, Núi Sam, đồi Tức Dụp, hồ Tà Pạ, chùa Tà Pạ, rừng tràm Trà Sư, Tri Tôn, Tịnh Biên, Châu Đốc.
+Bạn hiểu sâu văn hóa Khmer Nam Bộ (chùa Khmer, nhạc ngũ âm, Chôl Chnăm Thmây, Sene Đôn Ta, Ok Om Bok, đua bò Bảy Núi), ẩm thực địa phương (bánh xèo rau rừng, gà đốt lá chúc Ô Thum, bánh bò thốt nốt, cốm dẹp, mắm Châu Đốc) và các dịch vụ trên nền tảng (homestay, tour, xe đưa đón, thuê xe máy, đặc sản).
+Quy tắc: trả lời bằng CHÍNH NGÔN NGỮ người dùng dùng; ngắn gọn 2–5 câu hoặc gạch đầu dòng; luôn gợi ý bước tiếp theo cụ thể (đặt phòng, xem tour, tạo hành trình); nêu khoảng cách/thời gian ước lượng khi hữu ích; không bịa giá chính xác, nói "khoảng"; giọng thân thiện, hiểu biết bản địa, không sáo rỗng.`;
+
+const FALLBACK_PLAN = {
+  tvi: 'Hành trình văn hóa Khmer 2 ngày 1 đêm', ten: 'Khmer Culture · 2 days 1 night',
+  budget: '1.870.000₫', pax: '2 người',
+  days: [
+    { label: 'Ngày 1 · Tri Tôn', items: [
+      { t: '07:30', vi: 'Xe đưa đón từ Long Xuyên', type: 'Di chuyển', icon: 'car', p: '360.000₫' },
+      { t: '09:30', vi: 'Chùa Tà Pạ — nghe kể chuyện nhạc ngũ âm', type: 'Văn hóa', icon: 'landmark', p: 'Miễn phí' },
+      { t: '11:30', vi: 'Gà đốt lá chúc Ô Thum', type: 'Ẩm thực', icon: 'soup', p: '260.000₫' },
+      { t: '14:00', vi: 'Hồ Tà Pạ — check-in giờ vàng', type: 'Check-in', icon: 'camera', p: 'Miễn phí' },
+      { t: '17:00', vi: 'Nhận phòng Tà Pạ Valley Villa', type: 'Lưu trú', icon: 'bed', p: '1.250.000₫' },
+    ] },
+    { label: 'Ngày 2 · Tịnh Biên', items: [
+      { t: '06:30', vi: 'Bình minh cánh đồng thốt nốt', type: 'Check-in', icon: 'sunrise', p: 'Miễn phí' },
+      { t: '08:30', vi: 'Làng nghề nấu đường thốt nốt', type: 'Làng nghề', icon: 'hands', p: '80.000₫' },
+      { t: '11:00', vi: 'Bánh xèo rau rừng Núi Cấm', type: 'Ẩm thực', icon: 'soup', p: '70.000₫' },
+      { t: '13:30', vi: 'Chợ Tịnh Biên — mua đặc sản', type: 'Đặc sản', icon: 'gift', p: 'Tùy chọn' },
+    ] },
+  ],
+  notevi: 'Ngày 1 có mưa rào sau 14:00 — Bay Nui AI đã đặt hồ Tà Pạ vào 14:00 vì mưa thường tan trong 40 phút và ánh sáng sau mưa rất đẹp.',
+  noteen: 'Showers are likely after 2 PM on day 1 — Bay Nui AI kept Ta Pa lake at 2 PM because the rain clears in ~40 minutes and the light after it is excellent.',
+};
+
+// Static Vietnamese copy → English, applied over text nodes when lang === 'en'.
+const EN_DICT = {
+  'Nền tảng du lịch văn hóa thông minh · Bảy Núi, An Giang': 'Smart cultural tourism platform · Seven Mountains, An Giang',
+  'Khám phá Bảy Núi': 'Discover Seven Mountains',
+  'theo cách của riêng bạn.': 'your own way.',
+  'Bay Nui đồng hành cùng bạn từ lúc lên kế hoạch, tìm nơi ở, khám phá văn hóa cho đến từng trải nghiệm trên hành trình.': 'AI walks with you from planning and booking a stay to every cultural experience on the road.',
+  'Lập hành trình': 'Plan my trip',
+  'Khám phá Bảy Núi theo cách của riêng bạn.': 'Discover Seven Mountains your own way.',
+  'Bạn muốn đi đâu?': 'Where to?',
+  'Ngày đi': 'Travel date',
+  'Số người': 'Travellers',
+  'Sở thích': 'Interest',
+  'Tạo chuyến đi': 'Build my trip',
+  'Chuyến đi hoàn hảo bắt đầu từ một câu hỏi.': 'The perfect trip starts with one question.',
+  'Bay Nui hiểu thời gian, ngân sách và sở thích của bạn — rồi ghép địa điểm, văn hóa, nơi ở, món ăn và xe đưa đón thành một hành trình đi được ngay.': 'Bay Nui AI reads your time, budget and taste, then stitches places, culture, stays, food and transfer into a trip you can actually take.',
+  'Thử Bay Nui': 'Try Bay Nui',
+  'Xem lại demo': 'Replay demo',
+  'Tôi có 2 ngày 1 đêm, ngân sách 2 triệu và muốn khám phá văn hóa Khmer.': 'I have 2 days and 1 night, a 2 million VND budget, and I want to explore Khmer culture.',
+  'Để tôi thiết kế chuyến đi phù hợp cho bạn.': 'Let me design a trip that fits you.',
+  'Hành trình đã sẵn sàng': 'Your itinerary is ready',
+  '7 hoạt động · 2 ngày 1 đêm · Chùa Khmer Tri Tôn, hồ Tà Pạ, gà đốt Ô Thum, homestay Núi Cấm': '7 activities · 2 days 1 night · Tri Ton Khmer pagoda, Ta Pa lake, O Thum grilled chicken, Cam Mountain homestay',
+  'Mở hành trình': 'Open itinerary',
+  'Bạn muốn trải nghiệm Bảy Núi': 'How do you want to experience',
+  'theo cách nào?': 'Seven Mountains?',
+  'Không chỉ tham quan.': 'More than sightseeing.',
+  'Hãy thực sự sống trong văn hóa địa phương.': 'Live inside the local culture.',
+  'Bảy Núi là nơi văn hóa Khmer, Việt và Chăm sống cạnh nhau. Bay Nui AI gom chùa, món ăn, lễ hội, làng nghề và nơi ở quanh đó thành một hành trình văn hóa liền mạch.': 'In Seven Mountains, Khmer, Vietnamese and Cham cultures live side by side. Bay Nui AI gathers pagodas, food, festivals, craft villages and nearby stays into one seamless cultural journey.',
+  'Nội dung xác thực cùng người Khmer bản địa': 'Verified with local Khmer residents',
+  'Khám phá văn hóa Khmer': 'Explore Khmer culture',
+  'Tạo hành trình Khmer': 'Build a Khmer journey with AI',
+  'Đăng nhập': 'Sign in',
+  'Yêu thích': 'Saved',
+};
+
+class Component extends DCLogic {
+  state = {
+    screen: 'home', lang: 'vi', scrolled: false, w: 1280,
+    sPlace: 'Núi Cấm', sDate: '2026-08-15', sPeople: '2 người', sTaste: 'Văn hóa Khmer',
+    step: -1, saved: 2, stayTab: 'stay', aiSeed: null,
+    chatOpen: false, chatMsgs: [], chatInput: '', chatBusy: false,
+    planBusy: false, planStep: -1, plan: null, planFallback: false, planInput: '',
+    bookOpen: false, bookStep: 0, bookItem: null, bookName: '', bookPhone: '',
+    tripDone: 3, tripApplied: false, cultureTab: 'overview', playing: -1, exploreTab: 'dest',
+  };
+
+  rootRef = React.createRef();
+
+  componentDidMount() {
+    this.onScroll = () => {
+      const s = window.scrollY > 40;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+    };
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+    this.startDemo();
+    this.applyLang();
+  }
+
+  componentDidUpdate() { this.applyLang(); }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onResize);
+    this.timers && this.timers.forEach(clearTimeout);
+  }
+
+  startDemo() {
+    this.timers && this.timers.forEach(clearTimeout);
+    this.timers = [];
+    this.setState({ step: -1 });
+    for (let i = 0; i <= DEMO_STEPS.length; i++) {
+      this.timers.push(setTimeout(() => this.setState({ step: i }), 700 + i * 900));
+    }
+  }
+
+  applyLang() {
+    const el = this.rootRef.current;
+    if (!el) return;
+    const en = this.state.lang === 'en';
+    if (!this._orig) this._orig = new WeakMap();
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = walker.nextNode())) {
+      const raw = this._orig.has(n) ? this._orig.get(n) : n.nodeValue;
+      const key = raw.trim();
+      if (!key) continue;
+      if (!this._orig.has(n)) this._orig.set(n, raw);
+      const tr = en && EN_DICT[key];
+      const next = tr ? raw.replace(key, tr) : raw;
+      if (n.nodeValue !== next) n.nodeValue = next;
+    }
+  }
+
+  L(o, key) { return this.state.lang === 'en' ? (o[key + 'En'] || o[key + 'en'] || o.en || o[key]) : (o[key + 'Vi'] || o[key + 'vi'] || o.vi || o[key]); }
+
+  go = (screen, extra) => (e) => {
+    e && e.preventDefault && e.preventDefault();
+    const patch = { screen, ...(extra || {}) };
+    if (extra && extra.tab && screen === 'explore') patch.exploreTab = extra.tab;
+    this.setState(patch);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  section = (id) => (e) => {
+    e && e.preventDefault && e.preventDefault();
+    const jump = () => {
+      const t = document.getElementById('sec-' + id);
+      if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+    };
+    if (this.state.screen !== 'home') { this.setState({ screen: 'home' }); setTimeout(jump, 90); } else jump();
+  };
+
+  async sendChat(text) {
+    const t = (text || '').trim();
+    if (!t || this.state.chatBusy) return;
+    const msgs = [...this.state.chatMsgs, { r: 'user', c: t }];
+    this.setState({ chatMsgs: msgs, chatInput: '', chatBusy: true });
+    let reply = '';
+    try {
+      reply = await window.claude.complete({
+        system: SYS_PROMPT, max_tokens: 700,
+        messages: msgs.slice(-8).map(m => ({ role: m.r === 'user' ? 'user' : 'assistant', content: m.c })),
+      });
+    } catch (e) {
+      reply = this.state.lang === 'en'
+        ? 'I am offline for a moment. Meanwhile: Ta Pa lake (1.2 km) has the best light before 9 AM, and O Thum grilled chicken is a 10-minute ride away.'
+        : 'Kết nối AI đang tạm gián đoạn. Trong lúc đó: hồ Tà Pạ (1.2 km) đẹp nhất trước 9h sáng, và gà đốt Ô Thum chỉ cách đó 10 phút xe.';
+    }
+    this.setState({ chatMsgs: [...msgs, { r: 'ai', c: reply }], chatBusy: false });
+  }
+
+  async runPlan(promptText) {
+    if (this.state.planBusy) return;
+    this.setState({ planBusy: true, planStep: 0, plan: null, planFallback: false });
+    const tick = setInterval(() => this.setState(s => ({ planStep: Math.min(s.planStep + 1, DEMO_STEPS.length - 1) })), 950);
+    let plan = null;
+    try {
+      const raw = await window.claude.complete({
+        max_tokens: 2600,
+        system: SYS_PROMPT + `\n\nNHIỆM VỤ: thiết kế hành trình và CHỈ trả về JSON hợp lệ, không văn bản khác, theo schema:
+{"title":"...","budget":"1.870.000₫","pax":"2 người","days":[{"label":"Ngày 1 · Tri Tôn","items":[{"t":"07:30","label":"...","type":"Văn hóa|Ẩm thực|Check-in|Lưu trú|Di chuyển|Làng nghề|Đặc sản|Lễ hội","icon":"landmark|soup|camera|bed|car|hands|gift|party|sunrise|route|mountain","p":"260.000₫"}]}],"note":"1-2 câu giải thích một quyết định thông minh của AI (thời tiết, khoảng cách, giờ lễ...)"}
+Mỗi ngày 4–6 hoạt động, giá hợp lý với vùng Bảy Núi, tên địa điểm và món ăn có thật.`,
+        messages: [{ role: 'user', content: promptText }],
+      });
+      const m = raw.match(/\{[\s\S]*\}/);
+      plan = JSON.parse(m[0]);
+      if (!plan.days || !plan.days.length) plan = null;
+    } catch (e) { plan = null; }
+    clearInterval(tick);
+    this.setState({ planBusy: false, planStep: DEMO_STEPS.length, plan: plan || FALLBACK_PLAN, planFallback: !plan });
+  }
+
+  seedPrompt() {
+    const st = this.state;
+    if (st.aiSeed === 'khmer') return 'Tôi muốn một hành trình 2 ngày 1 đêm tập trung vào văn hóa Khmer ở Tri Tôn và Tịnh Biên, ngân sách khoảng 2 triệu cho 2 người.';
+    if (st.aiSeed === 'search') return `Tôi muốn đi ${st.sPlace} ngày ${st.sDate}, ${st.sPeople}, sở thích ${st.sTaste}. Hãy thiết kế hành trình phù hợp.`;
+    return '';
+  }
+
+  renderVals() {
+    const st = this.state;
+    const dark = st.scrolled || st.screen !== 'home';
+    const navInk = dark ? '#2e2b25' : '#fff9ef';
+
+    return {
+      ic: ICSET(),
+      rootRef: this.rootRef,
+      isHome: st.screen === 'home',
+      showDesktopNav: st.w >= 900,
+
+      navBg: dark ? 'rgba(249,244,237,.9)' : 'transparent',
+      navShadow: dark ? '0 1px 0 rgba(32,30,29,.09), 0 8px 26px rgba(46,43,37,.07)' : 'none',
+      navInk,
+      navSub: dark ? '#82796a' : 'rgba(249,244,237,.72)',
+      viBg: st.lang === 'vi' ? '#c67139' : 'transparent',
+      viInk: st.lang === 'vi' ? '#fff9ef' : navInk,
+      enBg: st.lang === 'en' ? '#c67139' : 'transparent',
+      enInk: st.lang === 'en' ? '#fff9ef' : navInk,
+
+      softHover: { background: 'rgba(198,113,57,.14)' },
+      ctaHover: { background: '#b2622d', transform: 'translateY(-2px)' },
+      warmHover: { background: '#ffc6a5', transform: 'translateY(-2px)' },
+      ghostHover: { background: 'rgba(249,244,237,.24)' },
+      darkGhostHover: { background: 'rgba(240,250,225,.1)' },
+      aiBtnHover: { background: 'linear-gradient(120deg,#56633f,#3d472b)' },
+      cardHover: { transform: 'translateY(-6px)', boxShadow: '0 18px 44px rgba(46,43,37,.24)' },
+
+      menu: (st.w >= 1320 ? MENU : MENU.slice(0, 5)).map(m => ({
+        label: this.L(m), hoverStyle: { background: 'rgba(198,113,57,.16)' },
+        go: m.screen ? this.go(m.screen, m.tab ? { stayTab: m.tab } : null) : this.section(m.sec),
+      })),
+
+      goHome: this.go('home'), goAi: this.go('ai'), goCulture: this.go('culture'),
+      goProfile: this.go('profile'), goSaved: this.go('profile'),
+      goDestSection: this.section('destinations'),
+      goDest: this.go('explore', { exploreTab: 'dest' }),
+      goExpTab: this.go('explore', { exploreTab: 'exp' }),
+      goStay: this.go('stay', { stayTab: 'stay' }),
+      goTour: this.go('stay', { stayTab: 'tour' }),
+      goService: this.go('stay', { stayTab: 'service' }),
+      goPassport: this.go('passport'),
+      goTrip: this.go('trip'),
+      goFestival: this.go('explore', { exploreTab: 'fest' }),
+      goFood: this.go('food'),
+      chatBottom: st.w < 900 ? '84px' : '24px',
+      goAiKhmer: (e) => { e.preventDefault(); this.setState({ screen: 'ai', aiSeed: 'khmer' }); window.scrollTo({ top: 0 }); setTimeout(() => this.runPlan(this.seedPrompt()), 60); },
+
+      savedCount: st.saved, hasSaved: st.saved > 0,
+      setVi: () => this.setState({ lang: 'vi' }),
+      setEn: () => this.setState({ lang: 'en' }),
+
+      placeOptions: ['Núi Cấm', 'Hồ Tà Pạ', 'Rừng tràm Trà Sư', 'Chùa Tà Pạ', 'Đồi Tức Dụp', 'Núi Sam — Châu Đốc'],
+      peopleOptions: ['1 người', '2 người', '4 người', '6 người', 'Nhóm 10+'],
+      tasteOptions: ['Văn hóa Khmer', 'Thiên nhiên', 'Ẩm thực', 'Check-in', 'Tâm linh', 'Lễ hội'],
+      sPlace: st.sPlace, sDate: st.sDate, sPeople: st.sPeople, sTaste: st.sTaste,
+      onPlace: e => this.setState({ sPlace: e.target.value }),
+      onDate: e => this.setState({ sDate: e.target.value }),
+      onPeople: e => this.setState({ sPeople: e.target.value }),
+      onTaste: e => this.setState({ sTaste: e.target.value }),
+      runSearch: () => { this.setState({ screen: 'ai', aiSeed: 'search' }); window.scrollTo({ top: 0 }); setTimeout(() => this.runPlan(this.seedPrompt()), 60); },
+
+      replayDemo: () => this.startDemo(),
+      demoDoneOp: st.step >= DEMO_STEPS.length ? 1 : 0.12,
+      demoSteps: DEMO_STEPS.map((s, i) => {
+        const done = st.step > i, active = st.step === i;
+        return {
+          label: this.L(s),
+          bg: done || active ? 'rgba(174,191,146,.16)' : 'transparent',
+          op: done || active ? 1 : 0.34,
+          dotBg: done ? '#aebf92' : active ? '#f6a06b' : 'rgba(240,250,225,.16)',
+          dotInk: done || active ? '#1d2214' : 'rgba(240,250,225,.6)',
+          icon: ICO(done ? 'check' : active ? 'loader' : 'circle', 3),
+          anim: active ? 'bnSpin 1.1s linear infinite' : 'none',
+        };
+      }),
+
+      experiences: EXPERIENCES.map(x => ({
+        title: this.L(x), desc: this.L(x, 'd'), alt: this.L(x) + ' — Bảy Núi, An Giang',
+        img: x.img, icon: ICO(x.icon), cta: st.lang === 'en' ? 'Explore' : 'Khám phá',
+        go: x.screen ? this.go(x.screen, x.tab ? { stayTab: x.tab } : null) : this.section(x.sec),
+      })),
+
+      khmerFacets: KHMER_FACETS.map(f => ({ label: this.L(f), icon: ICO(f.icon) })),
+
+      isEn: st.lang === 'en',
+      showBottomNav: st.w < 900,
+      more: st.lang === 'en' ? 'View all' : 'Xem tất cả',
+
+      dests: DESTS.map(d => ({
+        name: this.L(d), area: d.area, r: d.r, km: d.km, deg: d.deg, img: d.img,
+        badge: this.L(d, 'b'), bTone: d.bTone, wIcon: ICO(d.w), alt: this.L(d) + ' — ' + d.area,
+        go: this.go('dest', { destName: this.L(d), destImg: d.img, destArea: d.area }),
+      })),
+
+      nearby: NEARBY.map(n => ({
+        cond: this.L(n, 'c'), tone: n.tone, icon: ICO(n.icon), place: n.place, km: n.km,
+        why: this.L(n, 'w'), action: this.L(n, 'a'),
+        go: this.go('dest', { destName: n.place, destImg: 'assets/ho-ta-pa.jpg', destArea: 'Tri Tôn, An Giang' }),
+      })),
+
+      festivals: FESTIVALS.map(f => ({
+        d: f.d, m: this.L(f, 'm'), y: f.y, name: this.L(f), cul: f.cul, at: f.at, km: f.km,
+        match: f.match, matchLabel: st.lang === 'en' ? 'Fits your trip' : 'Phù hợp chuyến đi của bạn',
+        cta: st.lang === 'en' ? 'Details' : 'Xem chi tiết',
+        go: this.go('culture'),
+      })),
+
+      foods: FOODS.map(f => ({
+        slot: f.slot, name: this.L(f), cul: f.cul, price: f.price, where: this.L(f, 'w'),
+        ph: st.lang === 'en' ? 'Drop a photo of ' + this.L(f) : 'Kéo ảnh ' + this.L(f) + ' vào đây',
+        cta: st.lang === 'en' ? 'Find a place' : 'Tìm nơi ăn',
+        go: this.go('stay', { stayTab: 'food' }),
+      })),
+
+      stays: STAYS.map(s => ({
+        name: this.L(s), at: s.at, r: s.r, n: s.n, price: s.price, near: s.near, img: s.img,
+        am: s.am.map(a => ({ label: a })),
+        from: st.lang === 'en' ? 'from' : 'Giá từ', night: st.lang === 'en' ? '/night' : '/đêm',
+        cta: st.lang === 'en' ? 'View rooms' : 'Xem phòng',
+        book: () => this.setState({ bookOpen: true, bookStep: 0, bookItem: { kind: 'stay', name: this.L(s), price: s.price } }),
+        go: this.go('stay', { stayTab: 'stay' }),
+      })),
+
+      tours: TOURS.map(t => ({
+        name: this.L(t), dur: t.dur, pax: t.pax, r: t.r, price: t.price, stops: t.stops, img: t.img,
+        cta: st.lang === 'en' ? 'View tour' : 'Xem tour',
+        book: () => this.setState({ bookOpen: true, bookStep: 0, bookItem: { kind: 'tour', name: this.L(t), price: t.price } }),
+      })),
+
+      graph: GRAPH.map(g => ({ label: this.L(g), icon: ICO(g.icon), left: g.x, top: g.y })),
+
+      stories: STORIES.map((s, i) => ({
+        name: s.name, ini: s.ini, role: s.role, quote: this.L(s, 'q'), len: s.len,
+        playing: st.playing === i, icon: ICO(st.playing === i ? 'pause' : 'play'),
+        badge: st.lang === 'en' ? 'Verified Local Story' : 'Câu chuyện bản địa đã xác thực',
+        listen: st.lang === 'en' ? (st.playing === i ? 'Playing' : 'Listen') : (st.playing === i ? 'Đang phát' : 'Nghe câu chuyện'),
+        toggle: () => this.setState({ playing: st.playing === i ? -1 : i }),
+        bars: Array.from({ length: 34 }, (_, k) => ({
+          h: 6 + Math.abs(Math.sin((k + i * 3) * 1.1)) * 22,
+          bg: st.playing === i && k < 14 ? '#c67139' : 'rgba(32,30,29,.16)',
+        })),
+      })),
+
+      stamps: STAMPS.map(s => ({
+        label: s.vi, at: s.got ? s.at : (st.lang === 'en' ? 'Not yet' : 'Chưa đạt'), icon: ICO(s.icon),
+        border: s.got ? '2px dashed #b2622d' : '2px dashed rgba(32,30,29,.2)',
+        color: s.got ? '#8c491a' : 'rgba(32,30,29,.32)',
+        bg: s.got ? 'rgba(255,226,208,.6)' : 'transparent',
+        rot: s.got ? 'rotate(-4deg)' : 'rotate(2deg)',
+      })),
+
+      partners: PARTNERS.map(p => ({ label: this.L(p), n: p.n, icon: ICO(p.icon) })),
+      services: SERVICES.map(s => ({ label: this.L(s), price: this.L(s, 'p'), icon: ICO(s.icon), go: this.go('stay', { stayTab: 'service' }) })),
+      quicks: CHAT_QUICK.map(q => ({ label: this.L(q), icon: ICO(q.icon), ask: () => this.sendChat(this.L(q)) })),
+
+      chatOpen: st.chatOpen,
+      chatMsgs: st.chatMsgs.map(m => ({
+        c: m.c, isUser: m.r === 'user',
+        wrap: { display: 'flex', justifyContent: m.r === 'user' ? 'flex-end' : 'flex-start' },
+        bub: {
+          maxWidth: '86%', padding: '11px 15px', fontSize: '14px', lineHeight: 1.55, whiteSpace: 'pre-wrap',
+          borderRadius: m.r === 'user' ? '18px 18px 5px 18px' : '18px 18px 18px 5px',
+          background: m.r === 'user' ? '#c67139' : '#f9f4ed',
+          color: m.r === 'user' ? '#fff9ef' : '#2e2b25',
+          border: m.r === 'user' ? '0' : '1px solid rgba(32,30,29,.08)',
+        },
+      })),
+      hasChat: st.chatMsgs.length > 0,
+      chatBusy: st.chatBusy,
+      chatInput: st.chatInput,
+      onChatInput: e => this.setState({ chatInput: e.target.value }),
+      onChatKey: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendChat(this.state.chatInput); } },
+      sendChatNow: () => this.sendChat(this.state.chatInput),
+      toggleChat: () => this.setState({ chatOpen: !st.chatOpen }),
+      closeChat: () => this.setState({ chatOpen: false }),
+      chatPh: st.lang === 'en' ? 'Ask about Seven Mountains…' : 'Hỏi Bay Nui AI về Bảy Núi…',
+
+      bottomNav: [
+        { label: st.lang === 'en' ? 'Home' : 'Trang chủ', k: 'house', s: 'home' },
+        { label: st.lang === 'en' ? 'Explore' : 'Khám phá', k: 'compass', s: 'explore' },
+        { label: 'AI', k: 'sparkles', s: 'ai' },
+        { label: st.lang === 'en' ? 'Trip' : 'Hành trình', k: 'route', s: 'trip' },
+        { label: st.lang === 'en' ? 'Profile' : 'Cá nhân', k: 'user', s: 'profile' },
+      ].map(b => ({
+        label: b.label, icon: ICO(b.k), go: this.go(b.s),
+        tone: st.screen === b.s ? '#8c491a' : '#82796a',
+      })),
+
+      // ── AI Trip Planner
+      isAi: st.screen === 'ai',
+      planInput: st.planInput || this.seedPrompt(),
+      onPlanInput: e => this.setState({ planInput: e.target.value }),
+      submitPlan: () => this.runPlan(this.state.planInput || this.seedPrompt() || 'Hành trình 2 ngày 1 đêm khám phá văn hóa Khmer ở Bảy Núi cho 2 người, ngân sách 2 triệu.'),
+      planBusy: st.planBusy,
+      planReady: !!st.plan && !st.planBusy,
+      planFallback: st.planFallback,
+      planTitle: st.plan ? (st.plan.title || this.L(st.plan, 't')) : '',
+      planBudget: st.plan ? (st.plan.budget || '—') : '',
+      planPax: st.plan ? (st.plan.pax || st.sPeople) : '',
+      planNote: st.plan ? (st.plan.note || this.L(st.plan, 'note')) : '',
+      planDays: st.plan ? (st.plan.days || []).map(d => ({
+        label: d.label,
+        items: (d.items || []).map(it => ({
+          t: it.t, title: it.label || it.vi || '', type: it.type || '', p: it.p || '',
+          icon: ICO(ICONS[it.icon] ? it.icon : 'pin'),
+        })),
+      })) : [],
+      planSteps: DEMO_STEPS.map((s, i) => {
+        const done = st.planStep > i, active = st.planStep === i;
+        return {
+          label: this.L(s), icon: ICO(done ? 'check' : active ? 'loader' : 'circle', 3),
+          tone: done ? '#728157' : active ? '#c67139' : 'rgba(32,30,29,.25)',
+          op: done || active ? 1 : 0.4,
+          anim: active ? 'bnSpin 1.1s linear infinite' : 'none',
+        };
+      }),
+      planChips: [
+        'Tôi có 2 ngày 1 đêm, ngân sách 2 triệu và muốn khám phá văn hóa Khmer.',
+        'Đi trong ngày cùng bố mẹ lớn tuổi, ít leo núi, nhiều chỗ mát.',
+        'Nhóm 6 bạn thích chụp ảnh và ăn đặc sản, 1 ngày rưỡi.',
+      ].map(c => ({ label: c, pick: () => { this.setState({ planInput: c }); this.runPlan(c); } })),
+      bookAll: () => this.setState({ bookOpen: true, bookStep: 0, bookItem: { kind: 'plan', name: (st.plan && (st.plan.title || st.plan.tvi)) || 'Hành trình Bay Nui AI', price: (st.plan && st.plan.budget) || '1.870.000₫' } }),
+
+      // ── Destination detail
+      isDest: st.screen === 'dest',
+      destName: st.destName || 'Núi Cấm — Thiên Cấm Sơn',
+      destImg: st.destImg || 'assets/nui-cam-1.jpg',
+      destArea: st.destArea || 'Tịnh Biên, An Giang',
+      forecast: [
+        { d: st.lang === 'en' ? 'Today' : 'Hôm nay', ic: ICO('cloudSun'), t: '27°', n: '23°' },
+        { d: 'T3', ic: ICO('sun'), t: '31°', n: '24°' },
+        { d: 'T4', ic: ICO('rain'), t: '26°', n: '23°' },
+        { d: 'T5', ic: ICO('cloudSun'), t: '29°', n: '24°' },
+      ],
+      highlights: [
+        { icon: ICO('sunrise'), vi: 'Biển mây lúc 5:30 sáng', d: 'Từ tháng 9 đến tháng 12, mây phủ kín thung lũng dưới chân núi.' },
+        { icon: ICO('church'), vi: 'Tượng Phật Di Lặc trên đỉnh', d: 'Cao 33,6 m, từng là tượng Phật trên núi lớn nhất châu Á.' },
+        { icon: ICO('soup'), vi: 'Bánh xèo rau rừng', d: 'Hơn 20 loại rau rừng hái quanh sườn núi, chỉ có ở đây.' },
+      ].map(h => ({ icon: h.icon, label: h.vi, desc: h.d })),
+      completeCards: [
+        { icon: ICO('bed'), vi: 'Ở đâu gần đây?', n: '12 nơi ở', go: this.go('stay', { stayTab: 'stay' }) },
+        { icon: ICO('soup'), vi: 'Ăn gì gần đây?', n: '18 quán', go: this.go('stay', { stayTab: 'food' }) },
+        { icon: ICO('car'), vi: 'Đặt xe đến đây', n: 'từ 180.000₫', go: this.go('stay', { stayTab: 'service' }) },
+        { icon: ICO('ticket'), vi: 'Tour liên quan', n: '4 tour', go: this.go('stay', { stayTab: 'tour' }) },
+        { icon: ICO('gift'), vi: 'Đặc sản mang về', n: '9 cửa hàng', go: this.go('stay', { stayTab: 'service' }) },
+        { icon: ICO('camera'), vi: 'Điểm check-in', n: '6 vị trí', go: this.go('dest') },
+      ].map(c => ({ icon: c.icon, label: c.vi, n: c.n, go: c.go })),
+
+      // ── Culture detail
+      isCulture: st.screen === 'culture',
+      cultureTabs: [
+        { k: 'overview', vi: 'Tổng quan', en: 'Overview' },
+        { k: 'places', vi: 'Điểm đến', en: 'Places' },
+        { k: 'food', vi: 'Ẩm thực', en: 'Food' },
+        { k: 'fest', vi: 'Lễ hội', en: 'Festivals' },
+        { k: 'exp', vi: 'Trải nghiệm', en: 'Experiences' },
+        { k: 'craft', vi: 'Làng nghề', en: 'Crafts' },
+        { k: 'story', vi: 'Câu chuyện', en: 'Stories' },
+      ].map(t => ({
+        label: this.L(t), on: st.cultureTab === t.k,
+        bg: st.cultureTab === t.k ? '#c67139' : 'transparent',
+        ink: st.cultureTab === t.k ? '#fff9ef' : '#474238',
+        bd: st.cultureTab === t.k ? '1.5px solid #c67139' : '1.5px solid rgba(32,30,29,.14)',
+        pick: () => this.setState({ cultureTab: t.k }),
+      })),
+      cultureBlock: (() => {
+        const T = st.cultureTab;
+        const B = {
+          overview: { h: 'Ba lớp văn hóa trên cùng một vùng đất', d: 'Người Khmer, người Việt và người Chăm cùng sinh sống quanh bảy ngọn núi. Chùa Khmer, thánh đường Chăm và miếu Việt nằm cách nhau vài cây số — điều gần như không thấy ở nơi nào khác của đồng bằng.', items: [
+            { img: 'assets/chua-khmer.jpg', n: 'Chùa Khmer & nhạc ngũ âm', m: '46 ngôi chùa trong vùng' },
+            { img: 'assets/nui-cam-3.jpg', n: 'Tín ngưỡng núi Thất Sơn', m: 'Truyền thuyết bảy ngọn núi' },
+            { img: 'assets/chua-ta-pa.jpg', n: 'Chữ Khmer cổ trên bia đá', m: 'Chùa Tà Pạ, Tri Tôn' },
+          ] },
+          places: { h: 'Địa điểm nên khám phá', d: 'Các điểm mang đậm dấu ấn Khmer, xếp theo khoảng cách từ trung tâm Tri Tôn.', items: [
+            { img: 'assets/chua-ta-pa.jpg', n: 'Chùa Tà Pạ', m: '2.4 km · Kiến trúc Khmer trên đồi' },
+            { img: 'assets/ho-ta-pa.jpg', n: 'Hồ Tà Pạ', m: '1.2 km · Hồ đá xanh dưới chân chùa' },
+            { img: 'assets/chua-khmer.jpg', n: 'Chùa Xvayton', m: '0.8 km · Chùa Khmer hơn 200 năm' },
+          ] },
+          food: { h: 'Món ăn nên thử', d: 'Ẩm thực Khmer Bảy Núi gắn với cây thốt nốt, lá chúc và các loại rau rừng.', items: [
+            { img: 'assets/nui-cam-2.jpg', n: 'Gà đốt lá chúc Ô Thum', m: 'khoảng 260.000₫' },
+            { img: 'assets/tra-su.jpg', n: 'Bánh bò thốt nốt', m: 'khoảng 10.000₫' },
+            { img: 'assets/camping-nui-cam.jpg', n: 'Cốm dẹp Ambok', m: 'khoảng 25.000₫' },
+          ] },
+          fest: { h: 'Lễ hội trong năm', d: 'Ba lễ lớn của người Khmer và hội đua bò đặc trưng chỉ có ở Bảy Núi.', items: [
+            { img: 'assets/chua-khmer.jpg', n: 'Chôl Chnăm Thmây', m: '14–16 tháng 4' },
+            { img: 'assets/chua-ta-pa.jpg', n: 'Sene Đôn Ta', m: 'tháng 9 âm lịch' },
+            { img: 'assets/nui-cam-1.jpg', n: 'Hội đua bò Bảy Núi', m: 'dịp Đôn Ta, Tri Tôn' },
+          ] },
+          exp: { h: 'Trải nghiệm cùng người bản địa', d: 'Không chỉ xem — bạn tham gia vào công việc thường ngày của người Khmer.', items: [
+            { img: 'assets/camping-nui-cam.jpg', n: 'Học đánh nhạc ngũ âm', m: '90 phút · tại chùa' },
+            { img: 'assets/tra-su.jpg', n: 'Leo thốt nốt lấy nước', m: 'buổi sáng · Tịnh Biên' },
+            { img: 'assets/homestay.jpg', n: 'Nấu ăn cùng gia đình Khmer', m: 'nửa ngày' },
+          ] },
+          craft: { h: 'Làng nghề', d: 'Nghề gắn với cây thốt nốt và dệt truyền thống, phần lớn do phụ nữ Khmer giữ.', items: [
+            { img: 'assets/tra-su.jpg', n: 'Nấu đường thốt nốt', m: 'Tịnh Biên' },
+            { img: 'assets/stay-bungalow.jpg', n: 'Dệt thổ cẩm Khmer', m: 'Tri Tôn' },
+            { img: 'assets/nui-cam-3.jpg', n: 'Đan lát lá thốt nốt', m: 'Tri Tôn' },
+          ] },
+          story: { h: 'Verified Local Stories', d: 'Người Bảy Núi kể chuyện của chính họ — nội dung được cộng đồng xác thực.', items: [
+            { img: 'assets/chua-khmer.jpg', n: 'Chau Sóc Kim · nhạc ngũ âm', m: '4:12 · audio' },
+            { img: 'assets/tra-su.jpg', n: 'Neáng Thị Sà Vy · thốt nốt', m: '3:28 · audio' },
+            { img: 'assets/nui-cam-1.jpg', n: 'Nguyễn Văn Bảy · dẫn đường', m: '5:03 · audio' },
+          ] },
+        };
+        return B[T] || B.overview;
+      })(),
+      // ── Explore screen (destinations · experiences · festivals)
+      isExplore: st.screen === 'explore',
+      exploreTabs: [
+        { k: 'dest', vi: 'Điểm đến', en: 'Destinations' },
+        { k: 'exp', vi: 'Trải nghiệm', en: 'Experiences' },
+        { k: 'fest', vi: 'Lễ hội', en: 'Festivals' },
+      ].map(t => ({
+        label: this.L(t), pick: () => this.setState({ exploreTab: t.k }),
+        bg: st.exploreTab === t.k ? '#c67139' : '#fffdf8',
+        ink: st.exploreTab === t.k ? '#fff9ef' : '#474238',
+      })),
+      showExploreDest: st.exploreTab === 'dest',
+      showExploreExp: st.exploreTab === 'exp',
+      showExploreFest: st.exploreTab === 'fest',
+
+      // ── Food screen
+      isFood: st.screen === 'food',
+
+      // ── Stay / Tour / Services screen
+      isStay: st.screen === 'stay',
+      stayTabs: [
+        { k: 'stay', vi: 'Lưu trú', en: 'Stays' },
+        { k: 'tour', vi: 'Tour', en: 'Tours' },
+        { k: 'food', vi: 'Ăn uống', en: 'Dining' },
+        { k: 'service', vi: 'Dịch vụ', en: 'Services' },
+      ].map(t => ({
+        label: this.L(t),
+        bg: st.stayTab === t.k ? '#c67139' : '#fffdf8',
+        ink: st.stayTab === t.k ? '#fff9ef' : '#474238',
+        pick: () => this.setState({ stayTab: t.k }),
+      })),
+      showStayList: st.stayTab === 'stay',
+      showTourList: st.stayTab === 'tour',
+      showFoodList: st.stayTab === 'food',
+      showServiceList: st.stayTab === 'service',
+
+      // ── Booking flow
+      bookOpen: st.bookOpen,
+      bookName: st.bookItem ? st.bookItem.name : '',
+      bookPrice: st.bookItem ? st.bookItem.price : '',
+      bookStepsUi: [
+        { n: '1', vi: 'Chọn dịch vụ', en: 'Service' },
+        { n: '2', vi: 'Thông tin', en: 'Details' },
+        { n: '3', vi: 'Xác nhận', en: 'Confirm' },
+      ].map((s, i) => ({
+        label: this.L(s), n: s.n,
+        bg: st.bookStep >= i ? '#c67139' : '#ebddc5',
+        ink: st.bookStep >= i ? '#fff9ef' : '#82796a',
+        line: st.bookStep > i ? '#c67139' : 'rgba(32,30,29,.14)',
+      })),
+      isBook0: st.bookStep === 0, isBook1: st.bookStep === 1, isBook2: st.bookStep === 2, isBook3: st.bookStep === 3,
+      bookNext: () => this.setState(s => ({ bookStep: Math.min(s.bookStep + 1, 3) })),
+      bookBack: () => this.setState(s => ({ bookStep: Math.max(s.bookStep - 1, 0) })),
+      closeBook: () => this.setState({ bookOpen: false, bookStep: 0 }),
+      fName: st.bookName, fPhone: st.bookPhone,
+      onFName: e => this.setState({ bookName: e.target.value }),
+      onFPhone: e => this.setState({ bookPhone: e.target.value }),
+
+      // ── Live trip mode
+      isTrip: st.screen === 'trip',
+      tripApplied: st.tripApplied,
+      tripProgress: st.tripDone + ' / 7',
+      tripPct: Math.round((st.tripDone / 7) * 100) + '%',
+      applySuggestion: () => this.setState({ tripApplied: true }),
+      keepSchedule: () => this.setState({ tripApplied: false }),
+      tripItems: [
+        { t: '08:00', vi: 'Chùa Xvayton', s: 'done' },
+        { t: '10:00', vi: 'Hồ Tà Pạ — check-in', s: 'done' },
+        { t: '11:30', vi: 'Làng nghề thốt nốt', s: 'done' },
+        { t: '12:30', vi: 'Gà đốt lá chúc Ô Thum', s: 'now' },
+        { t: st.tripApplied ? '16:30' : '14:00', vi: 'Đồi Tức Dụp', s: 'next' },
+        { t: '17:30', vi: 'Chợ chiều Tri Tôn', s: 'next' },
+        { t: '19:00', vi: 'Về Tà Pạ Valley Villa', s: 'next' },
+      ].map(i => ({
+        t: i.t, label: i.vi,
+        icon: ICO(i.s === 'done' ? 'checkCircle' : i.s === 'now' ? 'loader' : 'circle', i.s === 'now' ? 2.6 : 2.2),
+        tone: i.s === 'done' ? '#728157' : i.s === 'now' ? '#c67139' : 'rgba(32,30,29,.28)',
+        ink: i.s === 'next' ? '#82796a' : '#201e1d',
+        bg: i.s === 'now' ? '#fff2eb' : 'transparent',
+        bd: i.s === 'now' ? '1px solid #ffc6a5' : '1px solid transparent',
+        anim: i.s === 'now' ? 'bnSpin 1.4s linear infinite' : 'none',
+        status: i.s === 'done' ? 'Đã hoàn thành' : i.s === 'now' ? 'Đang diễn ra' : 'Tiếp theo',
+      })),
+
+      // ── Passport & profile
+      isPassport: st.screen === 'passport',
+      isProfile: st.screen === 'profile',
+      collection: [
+        { n: 'Núi Cấm', at: '04 · 2026' }, { n: 'Hồ Tà Pạ', at: '04 · 2026' },
+        { n: 'Chùa Tà Pạ', at: '04 · 2026' }, { n: 'Rừng tràm Trà Sư', at: '05 · 2026' },
+        { n: 'Đồi Tức Dụp', at: '05 · 2026' }, { n: 'Chùa Xvayton', at: '06 · 2026' },
+        { n: 'Làng thốt nốt', at: '06 · 2026' }, { n: 'Chợ Tịnh Biên', at: '06 · 2026' },
+      ],
+      profileTiles: [
+        { icon: ICO('route'), vi: 'Chuyến đi sắp tới', n: '1', go: this.go('trip') },
+        { icon: ICO('ticket'), vi: 'Đơn đã đặt', n: '3', go: this.go('stay') },
+        { icon: ICO('heart'), vi: 'Đã lưu', n: '2', go: this.go('home') },
+        { icon: ICO('sparkles'), vi: 'Hành trình AI', n: '4', go: this.go('ai') },
+        { icon: ICO('stamp'), vi: 'Passport', n: '3 dấu', go: this.go('passport') },
+        { icon: ICO('card'), vi: 'Voucher', n: '2', go: this.go('stay') },
+      ].map(t => ({ icon: t.icon, label: t.vi, n: t.n, go: t.go })),
+    };
+  }
+}
+</script>
+</body>
+</html>

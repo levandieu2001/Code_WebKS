@@ -1,0 +1,44 @@
+// ============================================================
+// Cần triển khai lại rules sau khi kiểm thử để áp dụng kiểm tra dữ liệu phòng.
+// LƯU Ý: quyền cũ bên dưới chỉ kiểm tra đăng nhập, chưa phân biệt admin.
+// Không coi việc chặn giao diện admin là thay thế cho phân quyền Firestore.
+//
+// Hồ sơ đối tác KHÔNG lưu ở Firestore mà lưu tại data/partners.json trên máy
+// chủ (xem lib/store.js), nên không phải mở thêm quyền cho collection mới.
+// Đơn đặt dịch vụ vẫn ở Firestore và dùng đúng rules sẵn có bên dưới.
+// ============================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Rooms: public read, admin write
+    match /rooms/{roomId} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.price is int && request.resource.data.price > 0
+        && request.resource.data.capacity is int && request.resource.data.capacity >= 1
+        && request.resource.data.order is int && request.resource.data.order >= 1;
+      allow delete: if request.auth != null;
+    }
+
+    // Bookings: anyone can create, admin reads/manages
+    match /bookings/{bookingId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Contacts: anyone can create, admin reads/manages
+    match /contacts/{contactId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Settings: public read, admin write
+    match /settings/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

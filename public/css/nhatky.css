@@ -1,0 +1,162 @@
+/* ============================================================
+   Nhật ký chuyến đi
+   ============================================================
+   Dùng lại biến màu của design system chung nên tự khớp với các trang khác.
+   Dòng thời gian là phần chính: một cột dọc, mỗi mục một chấm tròn.
+   ============================================================ */
+
+.nk-card {
+    max-width: 780px;
+    margin: 0 auto 3rem;
+    background: var(--surface, #fffdf8);
+    border-radius: 24px;
+    padding: 1.75rem;
+    box-shadow: 0 14px 40px rgba(46, 43, 37, .1);
+}
+
+.nk-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.nk-eyebrow {
+    font-size: .75rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--brand, #c67139);
+    font-weight: 700;
+}
+.nk-head h2 { margin: .25rem 0 0; font-size: 1.6rem; }
+.nk-range { margin: .25rem 0 0; color: var(--muted, #6f7168); font-size: .9rem; }
+.nk-share { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+
+/* ── Bốn con số tổng kết ── */
+.nk-stats {
+    display: grid;
+    /* auto-fit để trên điện thoại hẹp nó tự xuống thành 2 cột thay vì bóp chữ */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: .75rem;
+    margin: 1.5rem 0;
+}
+.nk-stat {
+    background: var(--cream, #fff9ef);
+    border: 1px solid rgba(198, 113, 57, .16);
+    border-radius: 16px;
+    padding: .9rem .75rem;
+    text-align: center;
+}
+.nk-stat b { display: block; font-size: 1.4rem; color: var(--brand, #c67139); }
+.nk-stat span { font-size: .8rem; color: var(--muted, #6f7168); }
+
+/* ── Con dấu ── */
+.nk-stamps h3, .nk-timeline h3 {
+    font-size: 1.05rem;
+    margin: 1.5rem 0 .75rem;
+}
+.nk-stamp-row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.nk-stamp {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--cream, #fff9ef);
+    border: 1.5px dashed var(--brand, #c67139);
+    border-radius: 999px;
+    padding: .4rem .9rem .4rem .5rem;
+}
+.nk-stamp b {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--brand, #c67139);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: .85rem;
+}
+.nk-stamp span { font-size: .85rem; }
+
+/* ── Dòng thời gian ── */
+.nk-timeline ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+/* Đường dọc nối các chấm. Vẽ bằng ::before của danh sách chứ không phải viền
+   của từng mục — làm bằng viền thì mục cuối vẫn kéo một đoạn thừa xuống dưới. */
+.nk-timeline ul::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: rgba(198, 113, 57, .22);
+}
+.nk-item {
+    position: relative;
+    display: flex;
+    gap: .9rem;
+    padding: .7rem 0;
+}
+.nk-dot {
+    flex: 0 0 40px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--surface, #fffdf8);
+    border: 2px solid rgba(198, 113, 57, .3);
+    display: grid; place-items: center;
+    color: var(--brand, #c67139);
+    z-index: 1;
+}
+.nk-dot i { width: 18px; height: 18px; }
+.nk-content { flex: 1; min-width: 0; }
+.nk-when { font-size: .78rem; color: var(--muted, #6f7168); }
+.nk-title { font-weight: 600; margin: .15rem 0; overflow-wrap: anywhere; }
+.nk-symbol {
+    display: inline-grid; place-items: center;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--brand, #c67139);
+    color: #fff;
+    font-size: .7rem;
+    vertical-align: middle;
+}
+.nk-detail { font-size: .85rem; color: var(--muted, #6f7168); }
+.nk-amount { font-size: .9rem; font-weight: 600; color: var(--brand, #c67139); margin-top: .2rem; }
+.nk-cancel {
+    display: inline-block;
+    margin-top: .3rem;
+    font-size: .75rem;
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    background: rgba(140, 73, 26, .1);
+    color: var(--muted, #6f7168);
+}
+/* Đơn đã huỷ vẫn hiện nhưng mờ đi — giấu hẳn thì khách tưởng hệ thống mất đơn */
+.nk-item.cancelled .nk-title,
+.nk-item.cancelled .nk-dot { opacity: .5; }
+
+/* ── Chưa có gì ── */
+.nk-empty {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2.5rem 1.25rem;
+}
+.nk-empty h2 { margin: 0 0 .5rem; }
+.nk-empty p { color: var(--muted, #6f7168); }
+.nk-empty-actions {
+    display: flex;
+    gap: .75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+}
+
+@media (max-width: 640px) {
+    /* Chua le ra hai ben: the sat mep man hinh nhin nhu bi cat */
+    .nk-card { padding: 1.1rem; border-radius: 18px; margin: 0 12px 2rem; }
+    .nk-head h2 { font-size: 1.3rem; }
+    .nk-share { width: 100%; justify-content: center; }
+}

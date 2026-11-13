@@ -1,0 +1,279 @@
+/* ============================================
+   ENHANCEMENTS - Premium Features
+   ============================================ */
+
+/* ── LOADING SCREEN ── */
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #8c491a 0%, #402310 100%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading-logo {
+    display: flex; align-items: center; gap: 0.75rem;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+}
+.loading-logo-icon {
+    width: 3.5rem; height: 3.5rem; background: rgba(255,255,255,0.15);
+    border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: white;
+}
+.loading-logo-text { font-size: 2rem; font-weight: 800; color: white; letter-spacing: -0.03em; }
+.loading-logo-text .accent { color: #f6a06b; }
+.loading-bar-wrap { width: 200px; height: 3px; background: rgba(255,255,255,0.15); border-radius: 3px; margin-top: 2rem; overflow: hidden; }
+.loading-bar { height: 100%; width: 0; background: white; border-radius: 3px; animation: loading-fill 1.5s ease-out forwards; }
+@keyframes loading-fill { to { width: 100%; } }
+@keyframes loading-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* ── SCROLL PROGRESS BAR ── */
+.scroll-progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, #c67139, #f6a06b);
+    z-index: 10000; transition: width 0.05s linear;
+    box-shadow: 0 0 8px rgba(74,120,86,0.4);
+}
+
+/* ── BACK TO TOP ── */
+.back-to-top {
+    position: fixed; bottom: 2rem; left: 2rem;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--color-primary-light, #c67139); color: white;
+    border: none; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    opacity: 0; transform: translateY(20px);
+    transition: all 0.3s ease; z-index: 90;
+}
+.back-to-top.show { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+/* ── STICKY BOOKING BAR ── */
+.sticky-booking-bar {
+    position: fixed; top: -80px; left: 0; right: 0;
+    background: rgba(30,58,26,0.95); backdrop-filter: blur(12px);
+    padding: 0.75rem 2rem; z-index: 99;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    transition: top 0.4s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.sticky-booking-bar.show { top: 0; }
+.sticky-booking-bar .sticky-label { color: rgba(255,255,255,0.8); font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
+.sticky-booking-bar input, .sticky-booking-bar select {
+    padding: 0.5rem 0.75rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1); color: white; font-size: 0.8125rem; font-family: inherit;
+}
+.sticky-booking-bar input::placeholder { color: rgba(255,255,255,0.5); }
+.sticky-booking-bar select option { color: #201e1d; background: white; }
+.sticky-booking-bar .sticky-book-btn {
+    padding: 0.5rem 1.5rem; border-radius: 0.5rem; border: none;
+    background: #f6a06b; color: #201e1d; font-weight: 700; font-size: 0.875rem;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.sticky-booking-bar .sticky-book-btn:hover { background: #ffc6a5; transform: scale(1.03); }
+
+/* ── TESTIMONIAL CAROUSEL ── */
+.testimonial-carousel { position: relative; overflow: hidden; }
+.testimonial-track {
+    display: flex; transition: transform 0.5s ease;
+}
+.testimonial-slide { min-width: 100%; padding: 0 1rem; box-sizing: border-box; }
+.testimonial-slide .testimonial-card { max-width: 600px; margin: 0 auto; }
+.carousel-controls { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+.carousel-dot {
+    width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--color-primary-light, #c67139);
+    background: transparent; cursor: pointer; transition: all 0.3s; padding: 0;
+}
+.carousel-dot.active { background: var(--color-primary-light, #c67139); transform: scale(1.2); }
+.carousel-nav-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.9); color: var(--color-text-main, #201e1d);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: all 0.2s; z-index: 2;
+}
+.carousel-nav-btn:hover { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.carousel-nav-btn.prev { left: 0; }
+.carousel-nav-btn.next { right: 0; }
+
+/* ── ROOM COMPARISON MODAL ── */
+.compare-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.compare-modal-overlay.show { opacity: 1; pointer-events: all; }
+.compare-modal {
+    background: white; border-radius: 1.25rem; padding: 2rem; max-width: 900px; width: 100%;
+    max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: fadeInUp 0.3s ease-out;
+}
+.compare-table { width: 100%; border-collapse: collapse; }
+.compare-table th { background: #f0fae1; padding: 0.75rem 1rem; text-align: left; font-weight: 700; font-size: 0.875rem; color: #8c491a; border-bottom: 2px solid #ebddc5; }
+.compare-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #ebddc5; font-size: 0.875rem; vertical-align: top; }
+.compare-table tr:hover td { background: #f9f4ed; }
+.compare-table .room-col-header { text-align: center; }
+.compare-table .room-col-header img { width: 100%; height: 120px; object-fit: cover; border-radius: 0.75rem; margin-bottom: 0.5rem; }
+.compare-table .room-col-header h4 { font-size: 0.9375rem; font-weight: 700; }
+.compare-table .check-icon { color: #728157; font-weight: 700; }
+.compare-table .cross-icon { color: #ef4444; }
+.compare-btn-trigger {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 999px; border: 2px solid var(--color-primary-light, #c67139);
+    background: white; color: var(--color-primary, #8c491a); font-weight: 700; font-size: 0.875rem;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.compare-btn-trigger:hover { background: var(--color-primary-light, #c67139); color: white; transform: translateY(-2px); }
+
+/* ── BOOKING CALENDAR ── */
+.booking-calendar { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #ebddc5; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.cal-header h4 { font-size: 1rem; font-weight: 700; }
+.cal-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ebddc5; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.cal-nav-btn:hover { border-color: #c67139; color: #c67139; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; text-align: center; }
+.cal-day-header { font-size: 0.6875rem; font-weight: 600; color: #82796a; padding: 0.25rem; text-transform: uppercase; }
+.cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 0.5rem; font-size: 0.8125rem; cursor: default; transition: all 0.15s;
+}
+.cal-day.empty { background: transparent; }
+.cal-day.available { background: #f0fae1; color: #3d472b; cursor: pointer; font-weight: 500; }
+.cal-day.available:hover { background: #c67139; color: white; }
+.cal-day.booked { background: #fef2f2; color: #dc2626; text-decoration: line-through; font-size: 0.75rem; }
+.cal-day.today { border: 2px solid #c67139; font-weight: 700; }
+.cal-legend { display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.75rem; color: #645c50; }
+.cal-legend span { display: flex; align-items: center; gap: 0.375rem; }
+.cal-legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+.cal-legend .dot.avail { background: #f0fae1; border: 1px solid #dcead0; }
+.cal-legend .dot.full { background: #fef2f2; border: 1px solid #fecaca; }
+
+/* ── WEATHER WIDGET ── */
+.weather-widget {
+    background: linear-gradient(135deg, #8c491a 0%, #402310 100%);
+    border-radius: 1rem; padding: 1.5rem; color: white; position: relative; overflow: hidden;
+}
+.weather-widget::before {
+    content: ''; position: absolute; top: -20px; right: -20px;
+    width: 100px; height: 100px; background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+}
+.weather-widget h4 { font-size: 0.875rem; font-weight: 600; opacity: 0.8; margin-bottom: 0.75rem; }
+.weather-main { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.weather-temp { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+.weather-icon { font-size: 2.5rem; }
+.weather-desc { font-size: 0.875rem; opacity: 0.9; font-weight: 500; }
+.weather-details { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.15); }
+.weather-detail { font-size: 0.75rem; opacity: 0.7; }
+.weather-detail strong { display: block; font-size: 0.875rem; opacity: 1; }
+
+/* ── INTERACTIVE MAP ── */
+.explore-map-container { border-radius: 1rem; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #ebddc5; }
+.explore-map-container iframe, .explore-map-container #explore-map { width: 100%; height: 400px; display: block; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 1rem; background: white; }
+.map-legend-item { display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; font-weight: 500; color: #474238; }
+.map-legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+/* ── SCROLL ANIMATIONS ── */
+.scroll-animate {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.scroll-animate.visible { opacity: 1; transform: translateY(0); }
+.scroll-animate.delay-1 { transition-delay: 0.1s; }
+.scroll-animate.delay-2 { transition-delay: 0.2s; }
+.scroll-animate.delay-3 { transition-delay: 0.3s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .sticky-booking-bar { flex-wrap: wrap; padding: 0.5rem 1rem; gap: 0.5rem; }
+    .sticky-booking-bar .sticky-label { display: none; }
+    .compare-modal { padding: 1rem; }
+    .compare-table { font-size: 0.75rem; }
+    .compare-table td, .compare-table th { padding: 0.5rem; }
+    .back-to-top { left: 1rem; bottom: 1.5rem; }
+}
+
+/* ============================================================
+   LOCALMATE — đồng bộ widget phụ với design system mới
+   ============================================================ */
+.booking-calendar,
+.weather-widget {
+    background: var(--surface, #fffdf8);
+    border: 1px solid var(--line, rgba(32,30,29,.08));
+    border-radius: var(--r-lg, 26px);
+    padding: 24px;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(46,43,37,.1));
+}
+
+.cal-header h4 {
+    font-family: var(--font-display, Lora, serif);
+    font-size: 20px; font-weight: 600;
+    text-transform: capitalize;
+    color: var(--ink, #201e1d);
+}
+.cal-nav-btn {
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--line-2, rgba(32,30,29,.14));
+    background: var(--surface-2, #f9f4ed);
+    color: var(--ink-2, #2e2b25);
+    cursor: pointer; font-size: 18px; line-height: 1;
+    transition: background .2s, color .2s;
+}
+.cal-nav-btn:hover { background: var(--brand, #c67139); border-color: var(--brand, #c67139); color: #fff9ef; }
+
+.cal-day-header { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: var(--subtle, #82796a); }
+.cal-day { border-radius: 12px; font-size: 13.5px; font-weight: 500; }
+.cal-day.available { background: var(--leaf, #f0fae1); color: var(--moss, #3d472b); }
+.cal-day.booked { background: #f6e0dd; color: #9a3d2c; text-decoration: line-through; }
+.cal-day.today { outline: 2px solid var(--brand, #c67139); outline-offset: -2px; font-weight: 700; }
+.cal-day.empty { color: var(--subtle, #82796a); opacity: .4; }
+.cal-legend { font-size: 12.5px; color: var(--muted, #645c50); }
+.cal-legend .dot.avail { background: var(--sage-2, #728157); }
+.cal-legend .dot.full { background: #c0705f; }
+
+.weather-widget h4 {
+    font-family: var(--font-body, 'Be Vietnam Pro', sans-serif);
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--brand-dark, #8c491a);
+}
+.weather-temp { font-family: var(--font-display, Lora, serif); color: var(--ink, #201e1d); }
+.weather-desc { color: var(--muted, #645c50); }
+.weather-detail { background: var(--surface-2, #f9f4ed); border-radius: 14px; color: var(--muted, #645c50); }
+.weather-detail strong { color: var(--ink, #201e1d); }
+
+.back-to-top {
+    left: auto; right: 2rem; bottom: 10.5rem;
+    background: var(--surface, #fffdf8);
+    color: var(--brand-dark, #8c491a);
+    border: 1px solid var(--line-2, rgba(32,30,29,.14));
+    box-shadow: 0 8px 22px rgba(46,43,37,.18);
+}
+.back-to-top:hover { background: var(--brand, #c67139); color: #fff9ef; }
+
+.compare-modal {
+    background: var(--surface, #fffdf8);
+    border-radius: 28px;
+}
+.compare-modal h2 { font-family: var(--font-display, Lora, serif); }
+.compare-btn-trigger {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line-2, rgba(32,30,29,.14));
+    background: transparent;
+    color: var(--ink-2, #2e2b25);
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+.compare-btn-trigger:hover { background: rgba(198,113,57,.14); border-color: var(--brand, #c67139); color: var(--brand-dark, #8c491a); }
+
+@media (max-width: 640px) {
+    .back-to-top { right: 1rem; bottom: 8rem; }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Biểu tượng thích ứng: Android tự cắt theo hình của từng máy (tròn, bo góc,
+    vuông). Lớp nền để màu kem của thương hiệu, lớp trước là logo đã chừa sẵn
+    vùng an toàn nên cắt kiểu nào logo LOCALMATE cũng không bị cụt.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>
